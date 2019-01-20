@@ -35,10 +35,12 @@ public class onPlayerJoin implements Listener {
 
         try {
             // Check if the player exists in the database
-            JSONObject checkUserJson = new JSONObject();
-            checkUserJson.put("uuid", loginEvent.getPlayer().getUniqueId().toString());
-            checkUserJson.put("server_id", MCNotify.server_id);
-            Response response = MCNotify.requestManager.sendRequest("users.php", "GET", checkUserJson.toJSONString());
+
+            String endpoint = "users.php";
+            endpoint += "?uuid=" + loginEvent.getPlayer().getUniqueId().toString();
+            endpoint += "&server_id=" + MCNotify.server_id;
+
+            Response response = MCNotify.requestManager.sendRequest("GET", endpoint, null);
 
             // The server is not validated, or the secret key is wrong, or not connected to the internet.
             if(response.getResponseCode() != 200){
@@ -48,12 +50,13 @@ public class onPlayerJoin implements Listener {
             boolean isVerified = false;
             String verificationCode = "";
 
-            // extract the user's id
+            // Try to get the user's id
             JSONObject json = response.getResponseBody();
-            int userid = (Integer) json.get("user_id");
+            int userid = Math.toIntExact((Long) json.get("user_id"));
 
             // If the user is not in the database, add them to the database.
             if(userid == -1){
+
                 // The user does not exist. Add them to the database.
                 JSONObject newUserJson = new JSONObject();
                 newUserJson.put("uuid", loginEvent.getPlayer().getUniqueId().toString());
@@ -70,11 +73,11 @@ public class onPlayerJoin implements Listener {
 
                 newUserJson.put("minecraft_verification_code", token.toString());
 
-                Response newUserResponse = MCNotify.requestManager.sendRequest("users.php", "POST", checkUserJson.toJSONString());
+                Response newUserResponse = MCNotify.requestManager.sendRequest("POST", "users.php", newUserJson.toJSONString());
                 verificationCode = token.toString();
                 isVerified = false;
             } else {
-                isVerified = (boolean) json.get("verified_minecraft");
+                isVerified = Math.toIntExact((Long)json.get("verified_minecraft")) == 1;
                 verificationCode = (String) json.get("minecraft_verification_code");
             }
 

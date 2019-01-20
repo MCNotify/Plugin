@@ -33,11 +33,12 @@ public class EventSubscriptionManager {
 
     public void loadSubscriptions(Player player){
         try {
-            // Get a list of the player's subscriptions
-            JSONObject subscriptionRequestJson = new JSONObject();
-            subscriptionRequestJson.put("uuid", player.getUniqueId().toString());
-            subscriptionRequestJson.put("server_id", MCNotify.server_id);
-            Response subscriptionResponse = MCNotify.requestManager.sendRequest("GET", "subscriptions.php", subscriptionRequestJson.toJSONString());
+            // Configure the GET endpoint
+            String endpoint = "subscriptions.php?";
+            endpoint += "uuid=" + player.getUniqueId().toString();
+            endpoint += "&server_id=" + MCNotify.server_id;
+
+            Response subscriptionResponse = MCNotify.requestManager.sendRequest("GET", endpoint, null);
 
             JSONObject subscriptions = subscriptionResponse.getResponseBody();
             JSONArray array = (JSONArray) subscriptions.get("events");
@@ -47,7 +48,7 @@ public class EventSubscriptionManager {
 
                 // Parse the values of the json object
                 Events eventName = Events.valueOf((String) eventJson.get("event_name"));
-                int event_id = (Integer) eventJson.get("event_id");
+                int event_id = Math.toIntExact((Long)eventJson.get("subscription_id"));
                 String subscriptionData = (String) eventJson.get("event_properties");
 
                 // Determine the subscription data
@@ -101,7 +102,7 @@ public class EventSubscriptionManager {
             }
 
             JSONObject responsejson = subscriptionResponse.getResponseBody();
-            int subscription_id = (Integer) responsejson.get("subscription_id");
+            int subscription_id = Math.toIntExact((Long)responsejson.get("subscription_id"));
             subscription.setEventId(subscription_id);
             subscriptions.add(subscription);
             subscription.getSubscriber().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "Successfully subscribed to event!");
@@ -120,7 +121,7 @@ public class EventSubscriptionManager {
             subscriptionRequestJson.put("server_id", MCNotify.server_id);
 
             // Send request
-            Response deleteResponse = MCNotify.requestManager.sendRequest("POST", "subscriptions.php", subscriptionRequestJson.toJSONString());
+            Response deleteResponse = MCNotify.requestManager.sendRequest("DELETE", "subscriptions.php", subscriptionRequestJson.toJSONString());
 
             if(deleteResponse.getResponseCode() != 200){
                 subscription.getSubscriber().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Unable to unsubscribe from the event!");

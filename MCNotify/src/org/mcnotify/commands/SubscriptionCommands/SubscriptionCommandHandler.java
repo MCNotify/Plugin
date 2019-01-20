@@ -8,6 +8,7 @@ import org.mcnotify.MCNotify;
 import org.mcnotify.events.Events;
 import org.mcnotify.events.subscriptions.Subscription;
 import org.mcnotify.events.subscriptions.subscriptiondata.onPlayerJoinSubscriptionData;
+import org.mcnotify.events.subscriptions.subscriptiondata.onPlayerMoveSubscriptionData;
 
 public class SubscriptionCommandHandler extends CommandHandler{
 
@@ -15,7 +16,7 @@ public class SubscriptionCommandHandler extends CommandHandler{
     public void onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         switch(args[0].toLowerCase()){
             case "onplayermove":
-                MCNotify.eventSubscriptionManager.addSubscription(new Subscription((Player)commandSender, Events.ON_PLAYER_MOVE, null));
+                MCNotify.eventSubscriptionManager.addSubscription(new Subscription((Player)commandSender, Events.ON_PLAYER_MOVE, new onPlayerMoveSubscriptionData()));
                 break;
             case "onplayerjoin":
                 if(args.length == 2) {

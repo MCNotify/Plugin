@@ -6,4 +6,4 @@ database: false
 commands:
   mcnotify:
     description: Type "/mcnotify help" for more informaiton!
-    usage: /mcnotify help
+    usage: /mcnotify

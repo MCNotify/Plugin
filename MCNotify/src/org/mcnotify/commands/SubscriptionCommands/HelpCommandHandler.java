@@ -12,17 +12,23 @@ public class HelpCommandHandler extends CommandHandler {
 
         commandSender.sendMessage("-------------Page # of #-----------");
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify help <page>");
+        commandSender.sendMessage(ChatColor.GOLD + "/mcnotify about"); //dev email, github link, and app download links
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify verify");
 
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify login <player>");
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify playerEnters <areaName>");
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify explosionIn <areaName>");
+        commandSender.sendMessage(ChatColor.GOLD + "/mcnotify blockBreak <areaName>");
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify redstoneActiveIn <areaName>");
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify hopperFull <optional:hopperName>");
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify hopperOverCapacity <capacityPercentage> <optional:hopperName>");
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify hoppersFull <capacityPercentage> <areaName>");
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify hoppersOverCapacity <capacityPercentage> <areaName>");
-
+        commandSender.sendMessage(ChatColor.GOLD + "/mcnotify cropGrown <areaName>");
+        commandSender.sendMessage(ChatColor.GOLD + "/mcnotify mobsCapped <limit> <areaName>");
+        commandSender.sendMessage(ChatColor.GOLD + "/mcnotify playerEnterNether <playerName>");
+        commandSender.sendMessage(ChatColor.GOLD + "/mcnotify playerEnterEnd <playerName>");
+        commandSender.sendMessage(ChatColor.GOLD + "/mcnotify playerEnterOverworld <playerName>");
 
         // Maybe not implement these if an ally is in a pvp arena it will notify when its not a real threat
         commandSender.sendMessage(ChatColor.GOLD + "/mcnotify attackAlly");

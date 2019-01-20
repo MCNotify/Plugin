@@ -1,6 +1,7 @@
 package org.mcnotify.utility;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -10,28 +11,38 @@ import org.mcnotify.config.Configuration;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
+import java.util.Collections;
+import java.util.List;
 
 public class RequestManager {
 
     private static final String USER_AGENT = "Mozilla/5.0";
     private static final String BASE_URL = "http://localhost/MCNotify-CloudServer/";
+    private JavaPlugin plugin;
+
+    public RequestManager(JavaPlugin plugin){
+        // Used to shutdown the plugin if a request is unauthorized.
+        this.plugin = plugin;
+    }
 
     public void init(){
         JSONObject obj = new JSONObject();
-        obj.put("server_name", Bukkit.getServer().getIp());
+        obj.put("server_name", this.getIPAddress(true));
         obj.put("server_port", Bukkit.getServer().getPort());
-        obj.put("server_secret_key", Configuration.SECRET_KEY);
+        obj.put("server_secret_key", Configuration.SECRET_KEY.getValue());
+        obj.put("recovery_email", Configuration.RECOVERY_EMAIL.getValue());
         try {
-            Response response = this.sendRequestWithoutCookies("servers.php", "POST", obj.toJSONString());
+            Response response = this.sendRequestWithoutCookies("POST", "servers.php", obj.toJSONString());
             if(response.getResponseCode() == 200){
                 JSONObject json = response.getResponseBody();
-                MCNotify.server_id = (Integer) json.get("server_id");
+                MCNotify.server_id = Math.toIntExact((Long) json.get("server_id"));
                 return;
+            } else if (response.getResponseCode() == 401) {
+                System.out.println("[MCNotify] ERROR: Your server is unauthorized! Disabling plugin.");
+                plugin.getServer().getPluginManager().disablePlugin(plugin);
             } else {
-                System.out.println("[MCNotify] ERROR: Could not reach the cloud servers. Are you connected to the internet?");
+                    System.out.println("[MCNotify] ERROR: Could not reach the cloud servers. Are you connected to the internet?");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,6 +62,12 @@ public class RequestManager {
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod(method);
         con.setRequestProperty("User-Agent", USER_AGENT);
+        if(body != null) {
+            con.setDoOutput(true);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Content-Length", Integer.toString(body.length()));
+            con.getOutputStream().write(body.getBytes());
+        }
         int responseCode = con.getResponseCode();
 
         if (responseCode == HttpURLConnection.HTTP_OK) { // success
@@ -65,7 +82,7 @@ public class RequestManager {
 
             // Return result
             return new Response(responseCode, response.toString());
-        } else {
+        }  else {
             // Request was invalid!
             return null;
         }
@@ -82,7 +99,14 @@ public class RequestManager {
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod(method);
         con.setRequestProperty("User-Agent", USER_AGENT);
-        con.setRequestProperty("Cookie", "server_secret_key:" + Configuration.SECRET_KEY);
+        con.setRequestProperty("Cookie", "server_secret_key=" + Configuration.SECRET_KEY.getValue());
+        if(body != null) {
+            con.setDoOutput(true);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Content-Length", Integer.toString(body.length()));
+            con.getOutputStream().write(body.getBytes());
+        }
+        con.connect();
         int responseCode = con.getResponseCode();
 
         if (responseCode == HttpURLConnection.HTTP_OK) { // success
@@ -97,9 +121,58 @@ public class RequestManager {
 
             // Return result
             return new Response(responseCode, response.toString());
-        } else {
+        } else if (responseCode == 401) {
+            System.out.println("[MCNotify] ERROR: Your server is unauthorized! Disabling plugin.");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            // Return result
+            System.out.println("[MCNotify] ERROR: Endpoint: " + endpoint + " Server response: " + response.toString());
+
+            //plugin.getServer().getPluginManager().disablePlugin(plugin);
+            return null;
+        }  else {
             // Request was invalid!
             return null;
         }
+    }
+
+    /**
+     * Get IP address from first non-localhost interface
+     * @param useIPv4   true=return ipv4, false=return ipv6
+     * @return  address or empty string
+     */
+    private static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = sAddr.indexOf(':')<0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) { } // for now eat exceptions
+        return "";
     }
 }

@@ -3,19 +3,22 @@ package org.mcnotify.config;
 import org.mcnotify.MCNotify;
 
 public enum Configuration {
-    SECRET_KEY("server.secret_key", randomAlphaNumeric(64)),
-    RECOVERY_EMAIL("server.recovery_email", "");
+    SECRET_KEY("server.secret_key", randomAlphaNumeric(64), true),
+    RECOVERY_EMAIL("server.recovery_email", " ", true),
+    ON_PLAYER_JOIN_APPROVAL("events.onplayerjoin.approval_required", "false", false);
 
 
     private final String yamlName;
     private final String defaultValue;
+    private final boolean isRequired;
 
-    Configuration(String name, String defaultValue){
+    Configuration(String name, String defaultValue, boolean isRequired){
         this.yamlName = name;
         this.defaultValue = defaultValue;
+        this.isRequired = isRequired;
     }
 
-    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}\\/<>";
+    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     public static String randomAlphaNumeric(int count) {
         StringBuilder builder = new StringBuilder();
@@ -43,5 +46,8 @@ public enum Configuration {
         MCNotify.config.setConfigValue(this.yamlName, this.defaultValue);
     }
 
+    public boolean isRequired(){
+        return this.isRequired;
+    }
 
 }

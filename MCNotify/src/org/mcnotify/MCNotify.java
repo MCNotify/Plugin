@@ -21,9 +21,16 @@ public class MCNotify extends JavaPlugin {
         // Generate the configuration file if it doesn't exist. Otherwise, load the configuration file.
         config = new ConfigurationManager(this);
         // Has to be executed after the configuration manager is created.
-        config.checkConfig();
+        boolean isConfigured = config.isConfigured();
 
-        requestManager = new RequestManager();
+        if(!isConfigured){
+            // Shutdown the plugin if it is not properly configured.
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        requestManager = new RequestManager(this);
+        requestManager.init();
 
         // Load the event subscriptions
         eventSubscriptionManager = new EventSubscriptionManager();

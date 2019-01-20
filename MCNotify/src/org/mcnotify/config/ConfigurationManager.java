@@ -1,9 +1,11 @@
 package org.mcnotify.config;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcnotify.MCNotify;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +31,8 @@ public class ConfigurationManager {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            plugin.saveResource(plugin.getDataFolder() + "MCNotify.yml", false);
+            System.out.println("[MCNotify] WARNING: Plugin disabled until configuring /plugins/MCNotify/MCNotify.yml");
+            Bukkit.getServer().getPluginManager().disablePlugin(plugin);
         }
 
         customConfig= new YamlConfiguration();
@@ -53,14 +56,28 @@ public class ConfigurationManager {
         }
     }
 
-    public void checkConfig(){
+    public boolean isConfigured(){
         System.out.println("[MCNotify] Checking configuration files...");
+        boolean configured = true;
         for(Configuration configuration : Configuration.values()){
             // If the configuration value does not exist in the file,
             // Set the configuration to the default value.
             if(configuration.getValue() == null){
+
+                if(configuration.isRequired()){
+                    System.out.println("[MCNotify] ERROR: " + configuration.getYamlName() + " is required to be configued.");
+                    configured = false;
+                }
+
                 configuration.setDefaultValue();
             }
         }
+
+        if(!configured) {
+            System.out.println("[MCNotify] ERROR: Plugin disabled until configured /plugins/MCNotify/MCNotify.yml.");
+        }
+
+        return configured;
+
     }
 }
