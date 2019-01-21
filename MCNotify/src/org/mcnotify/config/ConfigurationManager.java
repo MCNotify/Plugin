@@ -76,7 +76,7 @@ public class ConfigurationManager {
         if(!configured) {
             System.out.println("[MCNotify] ERROR: Plugin disabled until configured /plugins/MCNotify/MCNotify.yml.");
         }
-
+        System.out.println("[MCNotify] Configuration OK.");
         return configured;
 
     }

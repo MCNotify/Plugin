@@ -1,4 +1,4 @@
-package org.mcnotify.events.eventhandlers;
+package org.mcnotify.events.subscriptionevents;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -7,15 +7,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
-import org.mcnotify.events.Events;
 import org.mcnotify.events.subscriptions.Subscription;
 import org.mcnotify.events.subscriptions.subscriptiondata.onPlayerJoinSubscriptionData;
 import org.mcnotify.utility.Response;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Random;
 
 public class onPlayerJoin implements Listener {
@@ -38,7 +34,6 @@ public class onPlayerJoin implements Listener {
 
             String endpoint = "users.php";
             endpoint += "?uuid=" + loginEvent.getPlayer().getUniqueId().toString();
-            endpoint += "&server_id=" + MCNotify.server_id;
 
             Response response = MCNotify.requestManager.sendRequest("GET", endpoint, null);
 
@@ -47,7 +42,6 @@ public class onPlayerJoin implements Listener {
                 return;
             }
 
-            boolean isVerified = false;
             String verificationCode = "";
 
             // Try to get the user's id
@@ -60,7 +54,6 @@ public class onPlayerJoin implements Listener {
                 // The user does not exist. Add them to the database.
                 JSONObject newUserJson = new JSONObject();
                 newUserJson.put("uuid", loginEvent.getPlayer().getUniqueId().toString());
-                newUserJson.put("server_id", MCNotify.server_id);
                 newUserJson.put("username", loginEvent.getPlayer().getName());
 
                 // Generate a minecraft token to validate in the app
@@ -75,17 +68,13 @@ public class onPlayerJoin implements Listener {
 
                 Response newUserResponse = MCNotify.requestManager.sendRequest("POST", "users.php", newUserJson.toJSONString());
                 verificationCode = token.toString();
-                isVerified = false;
             } else {
-                isVerified = Math.toIntExact((Long)json.get("verified_minecraft")) == 1;
                 verificationCode = (String) json.get("minecraft_verification_code");
             }
 
-            if(!isVerified){
-                loginEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "Welcome to the server! MCNotify lets you receive push notifications on your mobile device.");
-                loginEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "Download the app here: " + ChatColor.GREEN + "MCNotify downloadLink");
-                loginEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "Your verification code is: " + verificationCode);
-            }
+            loginEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "Welcome to the server! MCNotify lets you receive push notifications on your mobile device.");
+            loginEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "Download the app here: " + ChatColor.GREEN + "MCNotify downloadLink");
+            loginEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "Your verification code is: " + verificationCode);
 
         } catch (ParseException e1) {
         e1.printStackTrace();
@@ -95,5 +84,7 @@ public class onPlayerJoin implements Listener {
 
         // Check if the player has any subscriptions and load them
         MCNotify.eventSubscriptionManager.loadSubscriptions(loginEvent.getPlayer());
+        // Check if the player has any areas and load them
+        MCNotify.areaManager.loadAreas(loginEvent.getPlayer());
     }
 }

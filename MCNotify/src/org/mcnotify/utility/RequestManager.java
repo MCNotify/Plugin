@@ -10,6 +10,7 @@ import org.mcnotify.config.Configuration;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.util.Collections;
@@ -27,6 +28,8 @@ public class RequestManager {
     }
 
     public void init(){
+        System.out.println("[MCNotify] Connecting to MCNotify servers...");
+
         JSONObject obj = new JSONObject();
         obj.put("server_name", this.getIPAddress(true));
         obj.put("server_port", Bukkit.getServer().getPort());
@@ -37,6 +40,7 @@ public class RequestManager {
             if(response.getResponseCode() == 200){
                 JSONObject json = response.getResponseBody();
                 MCNotify.server_id = Math.toIntExact((Long) json.get("server_id"));
+                System.out.println("[MCNotify] Connection successful.");
                 return;
             } else if (response.getResponseCode() == 401) {
                 System.out.println("[MCNotify] ERROR: Your server is unauthorized! Disabling plugin.");
@@ -99,7 +103,7 @@ public class RequestManager {
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod(method);
         con.setRequestProperty("User-Agent", USER_AGENT);
-        con.setRequestProperty("Cookie", "server_secret_key=" + Configuration.SECRET_KEY.getValue());
+        con.setRequestProperty("Cookie", "server_secret_key=" + Configuration.SECRET_KEY.getValue() + ";server_id=" + MCNotify.server_id);
         if(body != null) {
             con.setDoOutput(true);
             con.setRequestProperty("Content-Type", "application/json");
@@ -108,33 +112,16 @@ public class RequestManager {
         }
         con.connect();
         int responseCode = con.getResponseCode();
+        // For debugging requests to the server
+        // System.out.println(readStream(con.getErrorStream()));
+        // System.out.println(readStream(con.getInputStream()));
 
         if (responseCode == HttpURLConnection.HTTP_OK) { // success
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
             // Return result
-            return new Response(responseCode, response.toString());
+            return new Response(responseCode, readStream(con.getInputStream()));
         } else if (responseCode == 401) {
             System.out.println("[MCNotify] ERROR: Your server is unauthorized! Disabling plugin.");
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            // Return result
-            System.out.println("[MCNotify] ERROR: Endpoint: " + endpoint + " Server response: " + response.toString());
+            System.out.println("[MCNotify] ERROR: Endpoint: " + endpoint + " Server response: " + readStream(con.getErrorStream()));
 
             //plugin.getServer().getPluginManager().disablePlugin(plugin);
             return null;
@@ -142,6 +129,22 @@ public class RequestManager {
             // Request was invalid!
             return null;
         }
+    }
+
+    private String readStream(InputStream stream) throws IOException {
+        if(stream == null){
+            return "";
+        }
+        BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        return response.toString();
     }
 
     /**

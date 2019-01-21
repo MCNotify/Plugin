@@ -7,6 +7,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
+import org.mcnotify.events.subscriptionevents.Events;
 import org.mcnotify.events.subscriptions.Subscription;
 import org.mcnotify.events.subscriptions.subscriptiondata.SubscriptionData;
 import org.mcnotify.events.subscriptions.subscriptiondata.onPlayerJoinSubscriptionData;
@@ -32,11 +33,11 @@ public class EventSubscriptionManager {
     }
 
     public void loadSubscriptions(Player player){
+        System.out.println("[MCNotify] Loading subscriptions for online players....");
         try {
             // Configure the GET endpoint
             String endpoint = "subscriptions.php?";
             endpoint += "uuid=" + player.getUniqueId().toString();
-            endpoint += "&server_id=" + MCNotify.server_id;
 
             Response subscriptionResponse = MCNotify.requestManager.sendRequest("GET", endpoint, null);
 
@@ -71,14 +72,7 @@ public class EventSubscriptionManager {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    public void unloadSubscriptions(Player player){
-        for(Subscription subscription : subscriptions){
-            if(subscription.getSubscriber() == player){
-                subscriptions.remove(subscription);
-            }
-        }
+        System.out.println("[MCNotify] Loaded subscriptions.");
     }
 
     public void addSubscription(Subscription subscription){
@@ -88,7 +82,6 @@ public class EventSubscriptionManager {
             // Insert a new subscription to the table
             JSONObject subscriptionRequestJson = new JSONObject();
             subscriptionRequestJson.put("uuid", subscription.getSubscriber().getUniqueId().toString());
-            subscriptionRequestJson.put("server_id", MCNotify.server_id);
             subscriptionRequestJson.put("event_name", subscription.getEventType().toString());
             subscriptionRequestJson.put("event_properties", subscription.getSubscriptionData().toJSON());
 
@@ -118,7 +111,6 @@ public class EventSubscriptionManager {
             // Insert a new subscription to the table
             JSONObject subscriptionRequestJson = new JSONObject();
             subscriptionRequestJson.put("subscription_id", subscription.getEventId());
-            subscriptionRequestJson.put("server_id", MCNotify.server_id);
 
             // Send request
             Response deleteResponse = MCNotify.requestManager.sendRequest("DELETE", "subscriptions.php", subscriptionRequestJson.toJSONString());

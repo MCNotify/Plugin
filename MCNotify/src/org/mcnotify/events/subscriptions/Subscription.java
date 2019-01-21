@@ -1,7 +1,7 @@
 package org.mcnotify.events.subscriptions;
 
 import org.bukkit.entity.Player;
-import org.mcnotify.events.Events;
+import org.mcnotify.events.subscriptionevents.Events;
 import org.mcnotify.events.subscriptions.subscriptiondata.SubscriptionData;
 
 public class Subscription {

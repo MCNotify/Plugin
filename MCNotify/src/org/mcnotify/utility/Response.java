@@ -17,9 +17,14 @@ public class Response {
 
 
     public JSONObject getResponseBody() throws ParseException {
-        Object jsonobj = new JSONParser().parse(this.responseBody);
-        JSONObject jsonObject = (JSONObject) jsonobj;
-        return jsonObject;
+
+        if(!this.responseBody.equals("")) {
+            Object jsonobj = new JSONParser().parse(this.responseBody);
+            JSONObject jsonObject = (JSONObject) jsonobj;
+            return jsonObject;
+        } else {
+            return null;
+        }
     }
 
     public int getResponseCode() {

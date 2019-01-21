@@ -29,6 +29,10 @@ public class onPlayerJoinSubscriptionData extends SubscriptionData {
     @Override
     public SubscriptionData fromJSON(String json) {
 
+        if(json == null || json == ""){
+            return this;
+        }
+
         try {
             Object obj = new JSONParser().parse(json);
             JSONObject jsonObject = (JSONObject) obj;

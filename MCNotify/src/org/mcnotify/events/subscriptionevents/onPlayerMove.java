@@ -1,10 +1,9 @@
-package org.mcnotify.events.eventhandlers;
+package org.mcnotify.events.subscriptionevents;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.mcnotify.MCNotify;
-import org.mcnotify.events.Events;
 import org.mcnotify.events.subscriptions.Subscription;
 
 public class onPlayerMove implements Listener {
