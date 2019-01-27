@@ -8,8 +8,7 @@ import org.mcnotify.MCNotify;
 import org.mcnotify.areas.Area;
 import org.mcnotify.events.subscriptionevents.Events;
 import org.mcnotify.events.subscriptions.Subscription;
-import org.mcnotify.events.subscriptions.subscriptiondata.onPlayerJoinSubscriptionData;
-import org.mcnotify.events.subscriptions.subscriptiondata.onPlayerMoveSubscriptionData;
+import org.mcnotify.events.subscriptions.subscriptiondata.*;
 
 import java.util.ArrayList;
 
@@ -45,6 +44,63 @@ public class SubscriptionCommandHandler extends CommandHandler{
                 } else {
                     player.sendMessage("You need to specify a player name!");
                 }
+                break;
+            case "explosionin":
+                if(args.length == 2){
+                    String areaName = args[1];
+                    ArrayList<Area> playerAreas = MCNotify.areaManager.getAreas(player);
+                    for(Area area : playerAreas){
+                        if(area.getAreaName().equals(areaName)){
+                            // Create a new subscription
+                            MCNotify.eventSubscriptionManager.addSubscription(new Subscription(player, Events.ON_BLOCK_EXPLODE, new onBlockExplosionSubscriptionData(area.getAreaId())));
+                            return;
+                        }
+                    }
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You do not have an area with that name. Create an area with /mcnotify area add");
+                }
+                break;
+            case "blockbreak":
+                if(args.length == 2){
+                    String areaName = args[1];
+                    ArrayList<Area> playerAreas = MCNotify.areaManager.getAreas(player);
+                    for(Area area : playerAreas){
+                        if(area.getAreaName().equals(areaName)){
+                            // Create a new subscription
+                            MCNotify.eventSubscriptionManager.addSubscription(new Subscription(player, Events.ON_BLOCK_BREAK, new onBlockBreakSubscriptionData(area.getAreaId())));
+                            return;
+                        }
+                    }
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You do not have an area with that name. Create an area with /mcnotify area add");
+                }
+                break;
+            case "redstoneactive":
+                if(args.length == 2){
+                    String areaName = args[1];
+                    ArrayList<Area> playerAreas = MCNotify.areaManager.getAreas(player);
+                    for(Area area : playerAreas){
+                        if(area.getAreaName().equals(areaName)){
+                            // Create a new subscription
+                            MCNotify.eventSubscriptionManager.addSubscription(new Subscription(player, Events.ON_REDSTONE_ACTIVE, new onRedstoneActiveSubscriptionData(area.getAreaId())));
+                            return;
+                        }
+                    }
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You do not have an area with that name. Create an area with /mcnotify area add");
+                }
+                break;
+            case "cropgrow":
+                if(args.length == 2){
+                    String areaName = args[1];
+                    ArrayList<Area> playerAreas = MCNotify.areaManager.getAreas(player);
+                    for(Area area : playerAreas){
+                        if(area.getAreaName().equals(areaName)){
+                            // Create a new subscription
+                            MCNotify.eventSubscriptionManager.addSubscription(new Subscription(player, Events.ON_CROP_GROWN, new onCropGrowSubscriptionData(area.getAreaId())));
+                            return;
+                        }
+                    }
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You do not have an area with that name. Create an area with /mcnotify area add");
+                }
+                break;
         }
     }
 }

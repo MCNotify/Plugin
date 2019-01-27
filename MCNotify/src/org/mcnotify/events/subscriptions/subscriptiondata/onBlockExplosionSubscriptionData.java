@@ -6,14 +6,14 @@ import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
 import org.mcnotify.utility.Polygon;
 
-public class onPlayerMoveSubscriptionData extends AreaSubscriptionData {
+public class onBlockExplosionSubscriptionData extends AreaSubscriptionData {
 
 
-    public onPlayerMoveSubscriptionData(int areaId){
+    public onBlockExplosionSubscriptionData(int areaId){
         super(areaId);
     }
 
-    public onPlayerMoveSubscriptionData(){
+    public onBlockExplosionSubscriptionData(){
         super();
     }
 

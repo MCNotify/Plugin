@@ -76,6 +76,16 @@ public class EventSubscriptionManager {
         System.out.println("[MCNotify] Loaded subscriptions.");
     }
 
+    public ArrayList<Subscription> getPlayerSubscriptions(Player player){
+        ArrayList<Subscription> subscriptions = new ArrayList<>();
+        for(Subscription subscription : this.subscriptions){
+            if(subscription.getSubscriber() == player){
+                subscriptions.add(subscription);
+            }
+        }
+        return subscriptions;
+    }
+
     public void addSubscription(Subscription subscription){
         int user_id = -1;
 

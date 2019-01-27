@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
 import org.mcnotify.commands.subscriptioncommands.AreaCommandHandler;
+import org.mcnotify.commands.subscriptioncommands.EventCommandHandler;
 import org.mcnotify.events.multipartcommandevents.MultiPartCommandManager;
 import org.mcnotify.commands.subscriptioncommands.HelpCommandHandler;
 import org.mcnotify.commands.subscriptioncommands.SubscriptionCommandHandler;
@@ -68,6 +69,8 @@ public class BaseCommandHandler extends AsyncCommandExecutor {
                 case "area":
                     new AreaCommandHandler().onCommand(player, command, s, strings);
                     break;
+                case "event":
+                    new EventCommandHandler().onCommand(player, command, s, strings);
                 default:
                     new SubscriptionCommandHandler().onCommand(player, command, s, strings);
                     break;
