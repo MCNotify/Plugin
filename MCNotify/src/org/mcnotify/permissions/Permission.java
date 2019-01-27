@@ -2,8 +2,8 @@ package org.mcnotify.permissions;
 
 public enum Permission {
     MCNOTIFY_AREAS_ADD("mcnofity.areas.add"),
-    MCNOTIFY_EVENTS_PLAYERJOIN("mcnofity.events.playerjoin"),
-    MCNOTIFY_EVENTS_PLAYERMOVE("mcnofity.events.playermove");
+    MCNOTIFY_EVENTS_PLAYER_LOGIN("mcnofity.events.player.login"),
+    MCNOTIFY_EVENTS_PLAYER_ENTER("mcnofity.events.player.enter");
 
     private String permissionNode;
 
