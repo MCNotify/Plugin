@@ -11,6 +11,7 @@ import org.mcnotify.events.subscriptionevents.Events;
 import org.mcnotify.events.subscriptions.Subscription;
 import org.mcnotify.events.subscriptions.subscriptiondata.SubscriptionData;
 import org.mcnotify.events.subscriptions.subscriptiondata.onPlayerJoinSubscriptionData;
+import org.mcnotify.events.subscriptions.subscriptiondata.onPlayerMoveSubscriptionData;
 import org.mcnotify.utility.Response;
 
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class EventSubscriptionManager {
                         subData = new onPlayerJoinSubscriptionData().fromJSON(subscriptionData);
                         break;
                     case ON_PLAYER_MOVE:
-                        subData = null;
+                        subData = new onPlayerMoveSubscriptionData().fromJSON(subscriptionData);
                         break;
                 }
 

@@ -21,6 +21,7 @@ public class AreaCommandHandler extends CommandHandler {
             case "add":
                 if(args.length != 4){
                     player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "You must specify a name for the area you would like to create.");
+                    return;
                 }
                 // Generate a new multi-part command listener
                 new MultiPartOnAreaAddCommand(player, args[2]);

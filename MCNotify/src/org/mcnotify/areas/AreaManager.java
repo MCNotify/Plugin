@@ -101,4 +101,13 @@ public class AreaManager {
         return playerAreas;
     }
 
+    public Area getArea(int areaId){
+        for(Area area : this.areaList){
+            if(area.getAreaId() == areaId){
+                return area;
+            }
+        }
+        return null;
+    }
+
 }
