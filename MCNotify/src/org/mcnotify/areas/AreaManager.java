@@ -1,14 +1,10 @@
 package org.mcnotify.areas;
 
+import net.minecraft.server.v1_14_R1.Packet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
-import org.mcnotify.authenticator.Response;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,23 +43,30 @@ public class AreaManager {
                 }
             }
         }
-
     }
 
-    public void addArea(Area area){
-        this.areaList.add(area);
+    public boolean addArea(Area area){
+        if(MCNotify.database.areaTable().insert(area)){
+            areaList.add(area);
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void removeArea(Area area){
-        this.areaList.remove(area);
+    public boolean removeArea(Area area){
+        if(MCNotify.database.areaTable().delete(area)){
+            areaList.remove(area);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean removeAreaId(int id){
         for(Area area : this.areaList){
             if(area.getAreaId() == id){
-
-                // TODO: Generate delete function
-                return false;
+                return this.removeArea(area);
             }
         }
         return false;

@@ -8,11 +8,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
-import org.mcnotify.commands.subscriptioncommands.AreaCommandHandler;
-import org.mcnotify.commands.subscriptioncommands.EventCommandHandler;
-import org.mcnotify.events.multipartcommandevents.MultiPartCommandManager;
-import org.mcnotify.commands.subscriptioncommands.HelpCommandHandler;
-import org.mcnotify.commands.subscriptioncommands.SubscriptionCommandHandler;
+import org.mcnotify.commands.commands.AreaCommandHandler;
+import org.mcnotify.commands.commands.EventCommandHandler;
+import org.mcnotify.commands.multipartcommand.MultiPartCommandManager;
+import org.mcnotify.commands.commands.HelpCommandHandler;
+import org.mcnotify.commands.commands.SubscriptionCommandHandler;
 import org.mcnotify.authenticator.Response;
 
 import java.io.IOException;

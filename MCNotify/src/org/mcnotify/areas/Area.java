@@ -18,6 +18,13 @@ public class Area {
         this.world = world;
     }
 
+    public Area(Player owner, Polygon area, String areaName, String world){
+        this.owner = owner;
+        this.polygon = area;
+        this.areaName = areaName;
+        this.world = world;
+    }
+
     public Player getOwner(){
         return this.owner;
     }
@@ -35,5 +42,9 @@ public class Area {
     }
 
     public String getWorld(){return world;}
+
+    public void setAreaId(int areaId){
+        this.areaId = areaId;
+    }
 
 }

@@ -5,8 +5,8 @@ import org.mcnotify.authenticator.Authenticator;
 import org.mcnotify.areas.AreaManager;
 import org.mcnotify.commands.BaseCommandHandler;
 import org.mcnotify.database.Database;
-import org.mcnotify.events.EventRegistry;
-import org.mcnotify.events.EventSubscriptionManager;
+import org.mcnotify.config.EventRegistry;
+import org.mcnotify.subscriptions.EventSubscriptionManager;
 import org.mcnotify.config.ConfigurationManager;
 import org.mcnotify.authenticator.RequestManager;
 
