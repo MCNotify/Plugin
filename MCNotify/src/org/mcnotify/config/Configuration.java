@@ -4,8 +4,14 @@ import org.mcnotify.MCNotify;
 
 public enum Configuration {
     SECRET_KEY("server.secret_key", randomAlphaNumeric(64), true),
-    RECOVERY_EMAIL("server.recovery_email", " ", true),
-    ON_PLAYER_JOIN_APPROVAL("events.onplayerjoin.approval_required", "false", false);
+    RECOVERY_EMAIL("server.recovery_email", "", true),
+    ON_PLAYER_JOIN_APPROVAL("events.onplayerjoin.approval_required", "false", false),
+    DATABASE_HOST("server.database.host", "localhost", true),
+    DATABASE_PORT("server.database.port", "3306", true),
+    DATABASE_DATABASE("server.database.database", "MCNotify", true),
+    DATABSE_USERNAME("server.database.username", "root", true),
+    DATABASE_PASSWORD("server.database.password", "", true);
+
 
 
     private final String yamlName;

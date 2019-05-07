@@ -78,6 +78,5 @@ public class ConfigurationManager {
         }
         System.out.println("[MCNotify] Configuration OK.");
         return configured;
-
     }
 }

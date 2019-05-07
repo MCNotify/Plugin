@@ -19,7 +19,7 @@ public class AreaCommandHandler extends CommandHandler {
     public void onCommand(Player player, Command command, String s, String[] args) {
         switch(args[1].toLowerCase()) {
             case "add":
-                if(args.length != 4){
+                if(args.length != 3){
                     player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "You must specify a name for the area you would like to create.");
                     return;
                 }

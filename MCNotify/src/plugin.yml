@@ -2,7 +2,7 @@ name: MCNotify
 version: 0.0.1
 authors: [QuinnBast]
 main: org.mcnotify.MCNotify
-database: false
+database: true
 commands:
   mcnotify:
     description: Type "/mcnotify help" for more informaiton!

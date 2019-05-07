@@ -4,7 +4,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
-import org.mcnotify.utility.Polygon;
+import org.mcnotify.areas.Polygon;
 
 public abstract class AreaSubscriptionData extends SubscriptionData {
 

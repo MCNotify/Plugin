@@ -13,7 +13,7 @@ import org.mcnotify.commands.subscriptioncommands.EventCommandHandler;
 import org.mcnotify.events.multipartcommandevents.MultiPartCommandManager;
 import org.mcnotify.commands.subscriptioncommands.HelpCommandHandler;
 import org.mcnotify.commands.subscriptioncommands.SubscriptionCommandHandler;
-import org.mcnotify.utility.Response;
+import org.mcnotify.authenticator.Response;
 
 import java.io.IOException;
 

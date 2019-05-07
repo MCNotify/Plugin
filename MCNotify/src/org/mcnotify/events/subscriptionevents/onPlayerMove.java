@@ -1,14 +1,12 @@
 package org.mcnotify.events.subscriptionevents;
 
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.mcnotify.MCNotify;
-import org.mcnotify.areas.Area;
 import org.mcnotify.events.subscriptions.Subscription;
 import org.mcnotify.events.subscriptions.subscriptiondata.onPlayerMoveSubscriptionData;
-import org.mcnotify.utility.Polygon;
+import org.mcnotify.areas.Polygon;
 
 import java.awt.*;
 

@@ -7,7 +7,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.mcnotify.MCNotify;
 import org.mcnotify.events.subscriptions.Subscription;
 import org.mcnotify.events.subscriptions.subscriptiondata.onBlockExplosionSubscriptionData;
-import org.mcnotify.utility.Polygon;
+import org.mcnotify.areas.Polygon;
 
 import java.awt.*;
 

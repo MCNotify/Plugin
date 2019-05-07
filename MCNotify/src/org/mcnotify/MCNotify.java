@@ -1,20 +1,25 @@
 package org.mcnotify;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcnotify.authenticator.Authenticator;
 import org.mcnotify.areas.AreaManager;
 import org.mcnotify.commands.BaseCommandHandler;
+import org.mcnotify.database.Database;
 import org.mcnotify.events.EventRegistry;
 import org.mcnotify.events.EventSubscriptionManager;
 import org.mcnotify.config.ConfigurationManager;
-import org.mcnotify.utility.RequestManager;
+import org.mcnotify.authenticator.RequestManager;
+
+import java.sql.SQLException;
 
 public class MCNotify extends JavaPlugin {
 
+    public static Authenticator auth;
     public static ConfigurationManager config;
     public static EventSubscriptionManager eventSubscriptionManager;
     public static AreaManager areaManager;
     public static RequestManager requestManager;
-    public static int server_id = -1;
+    public static Database database;
 
     public static EventRegistry eventRegistry;
 
@@ -31,16 +36,26 @@ public class MCNotify extends JavaPlugin {
             return;
         }
 
-        // Create a new request manager to send requests to the MCNotify servers.
-        requestManager = new RequestManager(this);
-        requestManager.init();
+        // Initializes authentication to the MCNotify servers and checks if the users is authenticated.
+        auth = new Authenticator();
+
+        // Sets up/loads the local databases to keep track of areas
+        database = new Database();
 
         // Load the player areas
         areaManager = new AreaManager();
-        areaManager.loadDatabase();
+        try {
+            areaManager.loadDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         // Load the event subscriptions
-        eventSubscriptionManager = new EventSubscriptionManager();
+        try {
+            eventSubscriptionManager = new EventSubscriptionManager();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         // Register events
         eventRegistry = new EventRegistry(this);

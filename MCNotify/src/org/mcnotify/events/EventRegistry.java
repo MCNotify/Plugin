@@ -1,12 +1,18 @@
 package org.mcnotify.events;
 
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnotify.events.multipartcommandevents.multipartevents.MultiPartBlockPlaceEvent;
 import org.mcnotify.events.multipartcommandevents.multipartevents.MultiPartItemSpawnEvent;
 import org.mcnotify.events.subscriptionevents.*;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EventRegistry {
 
@@ -14,6 +20,7 @@ public class EventRegistry {
     JavaPlugin plugin;
 
     public EventRegistry(JavaPlugin plugin){
+
         this.plugin = plugin;
 
         System.out.println("[MCNotify] Registering events...");
@@ -32,6 +39,13 @@ public class EventRegistry {
         }
 
         System.out.println("[MCNotify] Events registered.");
+    }
+
+
+    // Allows other plugins to link their events to the notification system by simply linking their listeners!
+    public void addEvent(Listener newListener){
+        listeners.add(newListener);
+        plugin.getServer().getPluginManager().registerEvents(newListener, plugin);
     }
 
 

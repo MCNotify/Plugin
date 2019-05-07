@@ -17,11 +17,11 @@ public class Subscription {
         this.subscriptionData = subscriptionData;
     }
 
-    public Subscription(int event_id, Player subscriber, Events eventType, SubscriptionData subscriptionData){
+    public Subscription(int event_id, Player subscriber, Events eventType, String subscriptionData){
         this.event_id = event_id;
         this.subscriber = subscriber;
         this.eventType = eventType;
-        this.subscriptionData = subscriptionData;
+        this.subscriptionData = eventType.getSubscriptionData().fromJSON(subscriptionData);
     }
 
     protected void pushnotification(){

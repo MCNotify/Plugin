@@ -6,10 +6,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
-import org.mcnotify.utility.Polygon;
-import org.mcnotify.utility.Response;
+import org.mcnotify.authenticator.Response;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class AreaManager {
@@ -20,44 +21,31 @@ public class AreaManager {
 
     }
 
-    public void loadDatabase(){
-        System.out.println("[MCNotify] Loading areas...");
+    public void loadDatabase() throws SQLException {
+        System.out.println("[MCNotify] Loading areas for online players...");
         for(Player p : Bukkit.getServer().getOnlinePlayers()){
             this.loadAreas(p);
         }
         System.out.println("[MCNotify] Areas loaded.");
     }
 
-    public void loadAreas(Player player){
+    public void loadAreas(Player player) throws SQLException {
+        ResultSet results = MCNotify.database.areaTable().selectWhereUuid(player.getUniqueId().toString());
+        if(results != null) {
+            while (results.next()) {
+                try {
+                    int areaId = results.getInt("id");
+                    String areaName = results.getString("area_name");
+                    String jsonPoly = results.getString("polygon");
+                    String world = results.getString("world");
 
-        String endpoint = "areas.php?";
-        endpoint += "uuid=" + player.getUniqueId().toString();
+                    areaList.add(new Area(areaId, player, new Polygon(jsonPoly), areaName, world));
 
-        try {
-            Response response = MCNotify.requestManager.sendRequest("GET", endpoint, null);
-
-            if(response.getResponseCode() == 200){
-
-                JSONObject jsonResponse = response.getResponseBody();
-                JSONArray areaArray = (JSONArray) jsonResponse.get("areas");
-
-                for(Object obj : areaArray){
-                    JSONObject areaJson = (JSONObject) obj;
-
-                    // Get the data from the db
-                    int areaId = Math.toIntExact((Long) areaJson.get("area_id"));
-                    Polygon polygon = new Polygon((String) areaJson.get("polygon"));
-                    String areaName = (String) areaJson.get("area_name");
-
-                    this.areaList.add(new Area(areaId, player, polygon, areaName));
-
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    continue;
                 }
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
     }
@@ -74,18 +62,8 @@ public class AreaManager {
         for(Area area : this.areaList){
             if(area.getAreaId() == id){
 
-                JSONObject removeJson = new JSONObject();
-                removeJson.put("area_id", id);
-
-                Response deleteResponse = null;
-                try {
-                    deleteResponse = MCNotify.requestManager.sendRequest("DELETE", "areas.php", removeJson.toJSONString());
-                    this.areaList.remove(area);
-                    return deleteResponse.getResponseCode() == 200;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
+                // TODO: Generate delete function
+                return false;
             }
         }
         return false;

@@ -1,9 +1,8 @@
-package org.mcnotify.utility;
+package org.mcnotify.authenticator;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.mcnotify.MCNotify;
 
 public class Response {
 

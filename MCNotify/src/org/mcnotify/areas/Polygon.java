@@ -1,4 +1,4 @@
-package org.mcnotify.utility;
+package org.mcnotify.areas;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -60,6 +60,10 @@ public class Polygon {
 
     public void addPoint(Point point){
         this.points.add(point);
+    }
+
+    public ArrayList<Point> getPoints(){
+        return this.points;
     }
 
     public JSONObject getJson(){

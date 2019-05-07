@@ -1,20 +1,21 @@
 package org.mcnotify.areas;
 
 import org.bukkit.entity.Player;
-import org.mcnotify.utility.Polygon;
 
 public class Area {
 
-    Player owner;
-    Polygon polygon;
-    String areaName;
-    int areaId;
+    private Player owner;
+    private Polygon polygon;
+    private String areaName;
+    private int areaId;
+    private String world;
 
-    public Area(int areaId, Player owner, Polygon area, String areaName){
+    public Area(int areaId, Player owner, Polygon area, String areaName, String world){
         this.owner = owner;
         this.polygon = area;
         this.areaId = areaId;
         this.areaName = areaName;
+        this.world = world;
     }
 
     public Player getOwner(){
@@ -32,5 +33,7 @@ public class Area {
     public int getAreaId() {
         return areaId;
     }
+
+    public String getWorld(){return world;}
 
 }
