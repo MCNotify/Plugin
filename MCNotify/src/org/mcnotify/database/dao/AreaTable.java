@@ -6,6 +6,7 @@ import org.mcnotify.areas.Area;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class AreaTable {
 
@@ -17,7 +18,7 @@ public class AreaTable {
             statement.setString(1, uuid);
             ResultSet results = statement.executeQuery();
 
-            if(results.next()){
+            if(results != null){
                 return results;
             } else {
                 return null;
@@ -36,7 +37,7 @@ public class AreaTable {
             statement.setInt(1, id);
             ResultSet results = statement.executeQuery();
 
-            if(results.next()){
+            if(results != null){
                 return results;
             } else {
                 return null;
@@ -50,7 +51,7 @@ public class AreaTable {
     public boolean insert(Area area){
         PreparedStatement statement = null;
         try {
-            statement = MCNotify.database.getConnection().prepareStatement("INSERT INTO areas (uuid, polygon, area_name, world) VALUES (?, ?, ?, ?)");
+            statement = MCNotify.database.getConnection().prepareStatement("INSERT INTO areas (uuid, polygon, area_name, world) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, area.getOwner().getUniqueId().toString());
             statement.setString(2, area.getPolygon().getJson().toJSONString());

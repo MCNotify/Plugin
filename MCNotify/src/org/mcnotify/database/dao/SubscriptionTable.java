@@ -6,6 +6,7 @@ import org.mcnotify.subscriptions.Subscription;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class SubscriptionTable {
 
@@ -17,7 +18,7 @@ public class SubscriptionTable {
             statement.setString(1, uuid);
             ResultSet results = statement.executeQuery();
 
-            if(results.next()){
+            if(results != null){
                 return results;
             } else {
                 return null;
@@ -31,7 +32,7 @@ public class SubscriptionTable {
     public boolean insert(Subscription subscription){
         PreparedStatement statement = null;
         try {
-            statement = MCNotify.database.getConnection().prepareStatement("INSERT INTO subscriptions (uuid, event_name, event_properties) VALUES (?, ?, ?)");
+            statement = MCNotify.database.getConnection().prepareStatement("INSERT INTO subscriptions (uuid, event_name, event_properties) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, subscription.getSubscriber().getUniqueId().toString());
             statement.setString(2, subscription.getEventType().toString());

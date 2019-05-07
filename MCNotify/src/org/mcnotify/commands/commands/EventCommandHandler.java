@@ -14,7 +14,7 @@ public class EventCommandHandler extends CommandHandler {
         switch(args[1].toLowerCase()){
             case "list":
                 ArrayList<Subscription> playerSubscriptions = new ArrayList<>();
-                for(Subscription subscription : MCNotify.eventSubscriptionManager.getSubscriptions()){
+                for(Subscription subscription : MCNotify.subscriptionManager.getSubscriptions()){
                     if(subscription.getSubscriber() == player){
                         playerSubscriptions.add(subscription);
                     }
@@ -37,9 +37,9 @@ public class EventCommandHandler extends CommandHandler {
                 }
 
                 int subscriptionId = Integer.valueOf(args[2]);
-                for(Subscription subscription : MCNotify.eventSubscriptionManager.getPlayerSubscriptions(player)){
+                for(Subscription subscription : MCNotify.subscriptionManager.getPlayerSubscriptions(player)){
                     if(subscription.getSubscriptionId() == subscriptionId){
-                        MCNotify.eventSubscriptionManager.removeSubscription(subscription);
+                        MCNotify.subscriptionManager.removeSubscription(subscription);
                         return;
                     }
                 }

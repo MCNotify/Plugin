@@ -64,24 +64,24 @@ ALTER TABLE `migrations`
 
 
 CREATE TABLE `areas` (
- `area_id` int(11) NOT NULL AUTO_INCREMENT,
- `uuid` int(11) NOT NULL,
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `uuid` VARCHAR(255) NOT NULL,
  `polygon` text NOT NULL,
  `area_name` varchar(255) NOT NULL,
  `world` VARCHAR(255) NOT NULL,
  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  `modified_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  `deleted_on` timestamp NULL DEFAULT NULL,
- PRIMARY KEY (`area_id`)
+ PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 CREATE TABLE `subscriptions` (
- `subscription_id` int(11) NOT NULL AUTO_INCREMENT,
- `uuid` int(11) NOT NULL,
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `uuid` VARCHAR(255) NOT NULL,
  `event_name` varchar(255) NOT NULL,
  `event_properties` text NOT NULL,
  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  `modified_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  `deleted_on` timestamp NULL DEFAULT NULL,
- PRIMARY KEY (`subscription_id`)
+ PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;

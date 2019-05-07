@@ -46,6 +46,13 @@ public class AreaManager {
     }
 
     public boolean addArea(Area area){
+        // Check if an area with that name already exists.
+        for(Area a : this.areaList){
+            if(a.getOwner() == area.getOwner() && a.getAreaName().toLowerCase().equals(area.getAreaName().toLowerCase())){
+                return false;
+            }
+        }
+
         if(MCNotify.database.areaTable().insert(area)){
             areaList.add(area);
             return true;
@@ -85,6 +92,15 @@ public class AreaManager {
     public Area getArea(int areaId){
         for(Area area : this.areaList){
             if(area.getAreaId() == areaId){
+                return area;
+            }
+        }
+        return null;
+    }
+
+    public Area getPlayerNamedArea(Player player, String areaName){
+        for(Area area : this.areaList){
+            if(area.getOwner() == player && area.getAreaName().toLowerCase().equals(areaName.toLowerCase())){
                 return area;
             }
         }

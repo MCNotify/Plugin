@@ -16,7 +16,7 @@ public class onPlayerJoin implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent loginEvent){
         // Check subscriptions
-        for(Subscription subscription : MCNotify.eventSubscriptionManager.getSubscriptions()){
+        for(Subscription subscription : MCNotify.subscriptionManager.getSubscriptions()){
             if(subscription.getEventType() == Events.ON_PLAYER_JOIN){
 
                 Player watchedPlayer = Bukkit.getPlayer((String)subscription.getSubscriptionJson().get("watchedPlayer"));
@@ -39,7 +39,7 @@ public class onPlayerJoin implements Listener {
 
         // Check if the player has any subscriptions and load them
         try {
-            MCNotify.eventSubscriptionManager.loadSubscriptions(loginEvent.getPlayer());
+            MCNotify.subscriptionManager.loadSubscriptions(loginEvent.getPlayer());
         } catch (SQLException e) {
             e.printStackTrace();
         }

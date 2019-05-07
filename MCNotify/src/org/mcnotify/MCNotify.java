@@ -6,7 +6,7 @@ import org.mcnotify.areas.AreaManager;
 import org.mcnotify.commands.BaseCommandHandler;
 import org.mcnotify.database.Database;
 import org.mcnotify.config.EventRegistry;
-import org.mcnotify.subscriptions.EventSubscriptionManager;
+import org.mcnotify.subscriptions.SubscriptionManager;
 import org.mcnotify.config.ConfigurationManager;
 import org.mcnotify.authenticator.RequestManager;
 
@@ -16,7 +16,7 @@ public class MCNotify extends JavaPlugin {
 
     public static Authenticator auth;
     public static ConfigurationManager config;
-    public static EventSubscriptionManager eventSubscriptionManager;
+    public static SubscriptionManager subscriptionManager;
     public static AreaManager areaManager;
     public static RequestManager requestManager;
     public static Database database;
@@ -52,7 +52,7 @@ public class MCNotify extends JavaPlugin {
 
         // Load the event subscriptions
         try {
-            eventSubscriptionManager = new EventSubscriptionManager();
+            subscriptionManager = new SubscriptionManager();
         } catch (SQLException e) {
             e.printStackTrace();
         }

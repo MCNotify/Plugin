@@ -1,5 +1,6 @@
 package org.mcnotify.commands.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
@@ -28,11 +29,29 @@ public class SubscriptionCommandHandler extends CommandHandler {
                 JSONObject subscriptionJson = new JSONObject();
                 // Generate JSON data for the command
                 for (String key : eventType.getJsonKeys()) {
-                    subscriptionJson.put(key, args[1 + i]);
+
+                    switch(key){
+                        case "areaId":
+                            subscriptionJson.put(key, MCNotify.areaManager.getPlayerNamedArea(player, args[1 + i]).getAreaId());
+                            break;
+                        case "watchedPlayer":
+                            Player targetPlayer = Bukkit.getPlayer(args[i + 1]);
+                            if(targetPlayer != null){
+                                subscriptionJson.put(key, targetPlayer.getUniqueId().toString());
+                            } else {
+                                player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " That player does not exist.");
+                                return;
+                            }
+                            break;
+                        default:
+                            subscriptionJson.put(key, args[1 + i]);
+                            break;
+                    }
+
                     i++;
                 }
 
-                if (MCNotify.eventSubscriptionManager.addSubscription(new Subscription(player, eventType, subscriptionJson))) {
+                if (MCNotify.subscriptionManager.addSubscription(new Subscription(player, eventType, subscriptionJson))) {
                     player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Successfully subscribed to " + eventType + " event.");
                 } else {
                     player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Unable to subscribe to event.");
@@ -40,10 +59,16 @@ public class SubscriptionCommandHandler extends CommandHandler {
                 return;
 
             } else {
-                String arguments = "";
-                for (String string : eventType.getJsonKeys()) {
-                    arguments += string = " ";
+                String arguments = "<";
+                for (String string : eventType.getPlayerFriendlyKeyNames()) {
+                    if(eventType.getPlayerFriendlyKeyNames().length > 1) {
+                        arguments += string + ", ";
+                    } else {
+                        arguments += string;
+                    }
                 }
+                arguments = arguments.trim();
+                arguments += ">";
                 player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " The following arguments are required for this command: " + arguments);
             }
         }

@@ -12,11 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class EventSubscriptionManager {
+public class SubscriptionManager {
 
     ArrayList<Subscription> subscriptions = new ArrayList<>();
 
-    public EventSubscriptionManager() throws SQLException {
+    public SubscriptionManager() throws SQLException {
         // Get a list of the online players and add their subscribed events to the list.
         this.loadDatabase();
     }
@@ -34,7 +34,7 @@ public class EventSubscriptionManager {
         ResultSet results = MCNotify.database.subscriptionTable().selectWhereUuid(player.getUniqueId().toString());
         if(results != null) {
             while (results.next()) {
-                int subscriptionId = results.getInt("subscription_id");
+                int subscriptionId = results.getInt("id");
                 String eventName = results.getString("event_name");
                 String eventProperties = results.getString("event_properties");
 
