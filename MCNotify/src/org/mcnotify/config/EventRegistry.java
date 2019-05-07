@@ -21,7 +21,7 @@ public class EventRegistry {
 
         listeners.add(new onPlayerMove());
         listeners.add(new onPlayerJoin());
-        listeners.add(new onBlockExplodeEvent());
+        listeners.add(new onEntityExplodeEvent());
         listeners.add(new onBlockBreakEvent());
         listeners.add(new onRedstoneActiveEvent());
         listeners.add(new onCropGrownEvent());

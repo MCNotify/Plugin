@@ -14,21 +14,19 @@ public class onRedstoneActiveEvent implements Listener {
 
     @EventHandler
     public void onRedstoneActiveEvent(BlockRedstoneEvent redstoneEvent){
-        for(Subscription subscription : MCNotify.subscriptionManager.getSubscriptions()){
-            if(subscription.getEventType() == Events.ON_BLOCK_EXPLODE){
-                // Determine if the explosion happened in a boundary
-                Location blockLocation = redstoneEvent.getBlock().getLocation();
-                Point blockPoint = new Point(blockLocation.getBlockX(), blockLocation.getBlockZ());
+        for(Subscription subscription : MCNotify.subscriptionManager.getSubscriptions(Events.ON_REDSTONE_ACTIVE)){
+            // Determine if the explosion happened in a boundary
+            Location blockLocation = redstoneEvent.getBlock().getLocation();
+            Point blockPoint = new Point(blockLocation.getBlockX(), blockLocation.getBlockZ());
 
-                int areaId = ((Long)(subscription.getSubscriptionJson().get("areaId"))).intValue();
+            int areaId = ((Long)(subscription.getSubscriptionJson().get("areaId"))).intValue();
 
-                Polygon poly = MCNotify.areaManager.getArea(areaId).getPolygon();
+            Polygon poly = MCNotify.areaManager.getArea(areaId).getPolygon();
 
-                // Only trigger if the player moves into the boundary.
-                if(poly.contains(blockPoint)) {
-                    // Player is inside the boundary.
-                    subscription.onEvent();
-                }
+            // Only trigger if the player moves into the boundary.
+            if(poly.contains(blockPoint)) {
+                // Player is inside the boundary.
+                subscription.onEvent();
             }
         }
     }

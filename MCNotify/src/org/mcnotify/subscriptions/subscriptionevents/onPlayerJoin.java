@@ -16,14 +16,12 @@ public class onPlayerJoin implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent loginEvent){
         // Check subscriptions
-        for(Subscription subscription : MCNotify.subscriptionManager.getSubscriptions()){
-            if(subscription.getEventType() == Events.ON_PLAYER_JOIN){
+        for(Subscription subscription : MCNotify.subscriptionManager.getSubscriptions(Events.ON_PLAYER_JOIN)){
 
-                Player watchedPlayer = Bukkit.getPlayer((String)subscription.getSubscriptionJson().get("watchedPlayer"));
+            Player watchedPlayer = Bukkit.getPlayer((String)subscription.getSubscriptionJson().get("watchedPlayer"));
 
-                if(watchedPlayer == loginEvent.getPlayer()) {
-                    subscription.onEvent();
-                }
+            if(watchedPlayer == loginEvent.getPlayer()) {
+                subscription.onEvent();
             }
         }
 

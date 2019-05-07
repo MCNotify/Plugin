@@ -83,4 +83,14 @@ public class SubscriptionManager {
         return this.subscriptions;
     }
 
+    public ArrayList<Subscription> getSubscriptions(Events eventType){
+        ArrayList<Subscription> eventSubscriptions = new ArrayList<>();
+        for(Subscription s : this.subscriptions){
+            if(s.eventType == eventType){
+                eventSubscriptions.add(s);
+            }
+        }
+        return eventSubscriptions;
+    }
+
 }
