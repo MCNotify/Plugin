@@ -34,18 +34,5 @@ public class onPlayerJoin implements Listener {
             // Lookup the user's verification code.
             loginEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + "Your verification code is: <TODO>");
         }
-
-        // Check if the player has any subscriptions and load them
-        try {
-            MCNotify.subscriptionManager.loadSubscriptions(loginEvent.getPlayer());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        // Check if the player has any areas and load them
-        try {
-            MCNotify.areaManager.loadAreas(loginEvent.getPlayer());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }

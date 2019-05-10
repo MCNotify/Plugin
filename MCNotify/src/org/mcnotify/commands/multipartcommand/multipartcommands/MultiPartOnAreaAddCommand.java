@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.mcnotify.MCNotify;
 import org.mcnotify.areas.Area;
+import org.mcnotify.commands.BaseCommandHandler;
 import org.mcnotify.commands.multipartcommand.MultiPartCommand;
 import org.mcnotify.areas.Polygon;
 
@@ -60,35 +61,9 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         this.poly.addPoint(new Point(location.getBlockX(), location.getBlockZ()));
 
         // Show particles around the area that is selected.
-        if(poly.getLength() == 2){
-
-            particleThread = new Thread(() -> {
-                while(true) {
-                    try {
-                        TimeUnit.MILLISECONDS.sleep(75);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    for (int i = 0; i < poly.getLength() - 1; i++) {
-                        // Get the next point
-                        Point nextPoint = poly.getPoints().get(i + 1);
-
-                        for (int j = 0; j < 15; j++) {
-                            Point interp = interpolate(poly.getPoints().get(i), poly.getPoints().get(i + 1), (float) j / 15);
-                            PacketPlayOutWorldParticles packet1 = new PacketPlayOutWorldParticles(Particles.NOTE, true, (float) interp.x, (float) player.getLocation().getY(), (float) interp.y, (float) 0, (float) 0, (float) 0, (float) 0, 1);
-                            PacketPlayOutWorldParticles packet2 = new PacketPlayOutWorldParticles(Particles.NOTE, true, (float) interp.x, (float) player.getLocation().getY() + 2, (float) interp.y, (float) 0, (float) 0, (float) 0, (float) 0, 1);
-                            PacketPlayOutWorldParticles packet3 = new PacketPlayOutWorldParticles(Particles.NOTE, true, (float) interp.x, (float) player.getLocation().getY() + 4, (float) interp.y, (float) 0, (float) 0, (float) 0, (float) 0, 1);
-                            PacketPlayOutWorldParticles packet4 = new PacketPlayOutWorldParticles(Particles.NOTE, true, (float) interp.x, (float) player.getLocation().getY() - 2, (float) interp.y, (float) 0, (float) 0, (float) 0, (float) 0, 1);
-                            ((CraftPlayer) ((BlockPlaceEvent) event).getPlayer()).getHandle().playerConnection.sendPacket(packet1);
-                            ((CraftPlayer) ((BlockPlaceEvent) event).getPlayer()).getHandle().playerConnection.sendPacket(packet2);
-                            ((CraftPlayer) ((BlockPlaceEvent) event).getPlayer()).getHandle().playerConnection.sendPacket(packet3);
-                            ((CraftPlayer) ((BlockPlaceEvent) event).getPlayer()).getHandle().playerConnection.sendPacket(packet4);
-                        }
-                    }
-                }
-            });
-
-            particleThread.start();
+        if(poly.getLength() == 2) {
+            BaseCommandHandler.particleManager.startAreaVeiwParticleThread(((BlockPlaceEvent) event).getPlayer(), poly);
+            return;
         }
 
 
@@ -126,13 +101,6 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         }
 
         return true;
-    }
-
-    private Point interpolate(Point p1, Point p2, float scale){
-        Point interp = new Point();
-        interp.x = (int)(p1.x + (scale)*(p2.x - p1.x));
-        interp.y = (int)(p1.y + (scale)*(p2.y - p1.y));
-        return interp;
     }
 
     @Override

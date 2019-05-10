@@ -1,16 +1,23 @@
 package org.mcnotify.commands.commands;
 
+import net.minecraft.server.v1_14_R1.PacketPlayOutWorldParticles;
+import net.minecraft.server.v1_14_R1.Particles;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.mcnotify.MCNotify;
 import org.mcnotify.areas.Area;
+import org.mcnotify.commands.BaseCommandHandler;
 import org.mcnotify.commands.multipartcommand.multipartcommands.MultiPartOnAreaAddCommand;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class AreaCommandHandler extends CommandHandler {
 
@@ -63,6 +70,23 @@ public class AreaCommandHandler extends CommandHandler {
                     player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You must specify the area id to remove.");
                 }
                 break;
+            case "view":
+                if(args.length != 3){
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You must specify the name of the area to view.");
+                }
+
+                String areaName = args[2];
+                Area area = MCNotify.areaManager.getArea(player.getUniqueId(), areaName);
+
+                if(area != null) {
+                    if (BaseCommandHandler.particleManager.isViewingArea(player)) {
+                        BaseCommandHandler.particleManager.stopAreaViewParticleThread(player);
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Stopped viewing area.");
+                    } else {
+                        BaseCommandHandler.particleManager.startAreaVeiwParticleThread(player, area.getPolygon());
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Started viewing area. Type the command again to hide the area.");
+                    }
+                }
             default:
                 break;
         }

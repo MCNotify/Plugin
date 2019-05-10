@@ -3,6 +3,7 @@ version: 0.0.1
 authors: [QuinnBast]
 main: org.mcnotify.MCNotify
 database: true
+api-version: 1.14
 commands:
   mcnotify:
     description: Type "/mcnotify help" for more informaiton!

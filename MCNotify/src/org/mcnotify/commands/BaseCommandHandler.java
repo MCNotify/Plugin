@@ -14,6 +14,7 @@ import org.mcnotify.commands.multipartcommand.MultiPartCommandManager;
 import org.mcnotify.commands.commands.HelpCommandHandler;
 import org.mcnotify.commands.commands.SubscriptionCommandHandler;
 import org.mcnotify.authenticator.Response;
+import org.mcnotify.particles.ParticleManager;
 
 import java.io.IOException;
 
@@ -24,6 +25,7 @@ public class BaseCommandHandler extends AsyncCommandExecutor {
     }
 
     public static MultiPartCommandManager mutiPartManager = new MultiPartCommandManager();
+    public static ParticleManager particleManager = new ParticleManager();
 
     @Override
     public void doAsyncCommand(CommandSender commandSender, Command command, String s, String[] strings) {

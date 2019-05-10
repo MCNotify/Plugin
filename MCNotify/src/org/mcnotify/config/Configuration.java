@@ -13,7 +13,6 @@ public enum Configuration {
     DATABASE_PASSWORD("server.database.password", "", true),
 
     AREA_DEFAULT_PROTECT("areas.default.protect", "true", true),
-    AREA_DEFAULT_MOBLOCK("areas.default.mobLock", "false", true),
     AREA_DEFAULT_MOBPROTECT("areas.default.mobProtect", "true", true),
     AREA_DEFAULT_STOPLIQUID("areas.default.stopLiquid", "true", true),
     AREA_DEFAULT_CHESTLOCK("areas.default.chestLock", "true", true),

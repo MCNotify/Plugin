@@ -10,6 +10,23 @@ import java.sql.Statement;
 
 public class AreaTable {
 
+    public ResultSet selectAll(){
+        PreparedStatement statement = null;
+        try {
+            statement = MCNotify.database.getConnection().prepareStatement("SELECT * FROM areas");
+            ResultSet results = statement.executeQuery();
+
+            if(results != null){
+                return results;
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public ResultSet selectWhereUuid(String uuid) {
         PreparedStatement statement = null;
         try {

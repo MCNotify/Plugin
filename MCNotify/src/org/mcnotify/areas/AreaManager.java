@@ -23,19 +23,15 @@ public class AreaManager {
     }
 
     public void loadDatabase() throws SQLException {
-        System.out.println("[MCNotify] Loading areas for online players...");
-        for(Player p : Bukkit.getServer().getOnlinePlayers()){
-            this.loadAreas(p);
-        }
-        System.out.println("[MCNotify] Areas loaded.");
-    }
+        System.out.println("[MCNotify] Loading areas.");
 
-    public void loadAreas(Player player) throws SQLException {
-        ResultSet results = MCNotify.database.areaTable().selectWhereUuid(player.getUniqueId().toString());
-        if(results != null) {
-            while (results.next()) {
+        ResultSet results = MCNotify.database.areaTable().selectAll();
+
+        if(results != null){
+            while(results.next()){
                 try {
                     int areaId = results.getInt("id");
+                    String ownerUuid = results.getString("uuid");
                     String areaName = results.getString("area_name");
                     String jsonPoly = results.getString("polygon");
                     String world = results.getString("world");
@@ -56,7 +52,19 @@ public class AreaManager {
                         }
                     }
 
-                    this.addOldArea(new Area(areaId, player, new Polygon(jsonPoly), areaName, world, Protection.fromString(protectionString), playerList));
+                    Player owner = null;
+
+                    if(ownerUuid != null && ownerUuid != "") {
+                        UUID uuid = UUID.fromString(ownerUuid);
+                        if(uuid != null) {
+                            OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(ownerUuid));
+                            if (op != null) {
+                                owner = (Player) op;
+                            }
+                        }
+                    }
+
+                    this.addOldArea(new Area(areaId, owner, new Polygon(jsonPoly), areaName, world, Protection.fromString(protectionString), playerList));
 
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -64,6 +72,8 @@ public class AreaManager {
                 }
             }
         }
+
+        System.out.println("[MCNotify] Areas loaded.");
     }
 
     public boolean addOldArea(Area area){

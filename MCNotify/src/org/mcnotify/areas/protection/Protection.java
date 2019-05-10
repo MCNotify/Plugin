@@ -7,7 +7,6 @@ import java.util.ArrayList;
 public enum Protection {
 
     PROTECT("Protect", "Prevents blocks from being placed and broken", "protect", Configuration.AREA_DEFAULT_PROTECT),
-    MOB_LOCK("Mob Lock", "Prevents any mobs from entering the area", "mobLock", Configuration.AREA_DEFAULT_MOBLOCK),
     MOB_PROTECT("Mob Protect", "Prevents damage to peaceful mobs", "mobProtect", Configuration.AREA_DEFAULT_MOBPROTECT),
     STOP_LIQUID("Stop Liquid", "Prevents liquid from flowing into the area", "stopLiquid", Configuration.AREA_DEFAULT_STOPLIQUID),
     CHEST_LOCK("Chest Lock", "Prevents players from opening your chests", "chestLock", Configuration.AREA_DEFAULT_CHESTLOCK),
