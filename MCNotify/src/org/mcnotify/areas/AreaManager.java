@@ -39,28 +39,23 @@ public class AreaManager {
                     String whitelist = results.getString("whitelist");
 
                     String[] playerStrings = whitelist.split(",");
-                    ArrayList<Player> playerList = new ArrayList<>();
+                    ArrayList<OfflinePlayer> playerList = new ArrayList<>();
                     for(String s : playerStrings){
                         if(s != null && s != "") {
                             UUID uuid = UUID.fromString(s);
                             if(uuid != null) {
                                 OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(s));
-                                if (op != null) {
-                                    playerList.add((Player) op);
-                                }
+                                playerList.add(op);
                             }
                         }
                     }
 
-                    Player owner = null;
+                    OfflinePlayer owner = null;
 
                     if(ownerUuid != null && ownerUuid != "") {
                         UUID uuid = UUID.fromString(ownerUuid);
                         if(uuid != null) {
-                            OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(ownerUuid));
-                            if (op != null) {
-                                owner = (Player) op;
-                            }
+                            owner = Bukkit.getOfflinePlayer(UUID.fromString(ownerUuid));
                         }
                     }
 

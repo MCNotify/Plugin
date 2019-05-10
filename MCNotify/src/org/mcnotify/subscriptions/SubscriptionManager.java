@@ -35,14 +35,14 @@ public class SubscriptionManager {
                 String eventProperties = results.getString("event_properties");
 
 
-                Player subscriber = null;
+                OfflinePlayer subscriber = null;
 
                 if(subsciberUuid != null && subsciberUuid != "") {
                     UUID uuid = UUID.fromString(subsciberUuid);
                     if(uuid != null) {
                         OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
                         if (op != null) {
-                            subscriber = (Player) op;
+                            subscriber = op;
                         }
                     }
                 }

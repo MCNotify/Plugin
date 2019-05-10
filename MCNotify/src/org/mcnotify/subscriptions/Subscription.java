@@ -1,6 +1,6 @@
 package org.mcnotify.subscriptions;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.json.simple.JSONObject;
 import org.mcnotify.subscriptions.subscriptionevents.Events;
 
@@ -8,36 +8,39 @@ public class Subscription {
 
     int subscriptionId;
     Events eventType;
-    Player subscriber;
+    OfflinePlayer subscriber;
     JSONObject subscriptionJson;
 
-    public Subscription(Player subscriber, Events eventType, JSONObject subscriptionData){
+    public Subscription(OfflinePlayer subscriber, Events eventType, JSONObject subscriptionData){
         this.subscriber = subscriber;
         this.eventType = eventType;
         this.subscriptionJson = subscriptionData;
     }
 
-    public Subscription(int event_id, Player subscriber, Events eventType, JSONObject subscriptionData){
+    public Subscription(int event_id, OfflinePlayer subscriber, Events eventType, JSONObject subscriptionData){
         this.subscriptionId = event_id;
         this.subscriber = subscriber;
         this.eventType = eventType;
         this.subscriptionJson = subscriptionData;
     }
 
-    protected void pushnotification(){
+    private void pushnotification(){
         // Send a push notification to the player
     }
 
     public void onEvent(){
-        this.pushnotification();
-        this.subscriber.sendMessage(this.eventType.toString() + " event triggered!");
+        if(this.subscriber.isOnline()) {
+            this.subscriber.getPlayer().sendMessage(this.eventType.toString() + " event triggered!");
+        } else {
+            this.pushnotification();
+        }
     }
 
     public Events getEventType() {
         return eventType;
     }
 
-    public Player getSubscriber() {
+    public OfflinePlayer getSubscriber() {
         return subscriber;
     }
 

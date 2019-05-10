@@ -1,5 +1,6 @@
 package org.mcnotify.areas;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.mcnotify.areas.protection.Protection;
 
@@ -7,15 +8,15 @@ import java.util.ArrayList;
 
 public class Area {
 
-    private Player owner;
+    private OfflinePlayer owner;
     private Polygon polygon;
     private String areaName;
     private int areaId;
     private String world;
     private ArrayList<Protection> protections;
-    private ArrayList<Player> whitelist;
+    private ArrayList<OfflinePlayer> whitelist;
 
-    public Area(int areaId, Player owner, Polygon area, String areaName, String world, ArrayList<Protection> protections, ArrayList<Player> whitelist){
+    public Area(int areaId, OfflinePlayer owner, Polygon area, String areaName, String world, ArrayList<Protection> protections, ArrayList<OfflinePlayer> whitelist){
         this.owner = owner;
         this.polygon = area;
         this.areaId = areaId;
@@ -25,7 +26,7 @@ public class Area {
         this.whitelist = whitelist;
     }
 
-    public Area(Player owner, Polygon area, String areaName, String world){
+    public Area(OfflinePlayer owner, Polygon area, String areaName, String world){
         this.owner = owner;
         this.polygon = area;
         this.areaName = areaName;
@@ -34,7 +35,7 @@ public class Area {
         this.whitelist = new ArrayList<>();
     }
 
-    public Player getOwner(){
+    public OfflinePlayer getOwner(){
         return this.owner;
     }
 
@@ -74,8 +75,8 @@ public class Area {
         }
     }
 
-    public void addWhitelist(Player newPlayer){
-        for(Player p : whitelist){
+    public void addWhitelist(OfflinePlayer newPlayer){
+        for(OfflinePlayer p : whitelist){
             if(p == newPlayer){
                 return;
             }
@@ -83,8 +84,8 @@ public class Area {
         whitelist.add(newPlayer);
     }
 
-    public void removeWhitelist(Player removePlayer){
-        for(Player p : whitelist){
+    public void removeWhitelist(OfflinePlayer removePlayer){
+        for(OfflinePlayer p : whitelist){
             if(p == removePlayer){
                 whitelist.remove(removePlayer);
             }
@@ -101,18 +102,18 @@ public class Area {
 
     public String getWhitelistAsString(){
         String whitelist = "";
-        for(Player p : this.whitelist){
+        for(OfflinePlayer p : this.whitelist){
             whitelist += p.getUniqueId().toString() + ",";
         }
         return whitelist;
     }
 
-    public boolean isAllowed(Player player){
+    public boolean isAllowed(OfflinePlayer player){
         if(player == this.owner){
             return true;
         }
 
-        for(Player p : this.whitelist){
+        for(OfflinePlayer p : this.whitelist){
             if(p == player){
                 return true;
             }

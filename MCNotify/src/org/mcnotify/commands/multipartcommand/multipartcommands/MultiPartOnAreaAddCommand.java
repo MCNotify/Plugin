@@ -29,7 +29,6 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
     Polygon poly = new Polygon();
     ArrayList<Location> selectedLocations = new ArrayList<>();
     String areaName;
-    Thread particleThread;
 
     public MultiPartOnAreaAddCommand(Player player, String areaName) {
         super(player);
@@ -38,7 +37,6 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
 
     @Override
     public void onFinish(Event event) {
-        this.particleThread.interrupt();
         if(this.poly.getLength() >= 3){
 
             if(MCNotify.areaManager.addNewArea(new Area(player, this.poly, this.areaName, player.getWorld().getName()))){
@@ -130,6 +128,7 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
 
     @Override
     public void cleanup() {
+        BaseCommandHandler.particleManager.stopAreaViewParticleThread(player);
         // Get the player's barrier item and destroy it.
         for(ItemStack itemstack : this.player.getInventory().getContents()){
             if(itemstack == null){
