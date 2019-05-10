@@ -1,4 +1,4 @@
-package org.mcnotify.permissions;
+package org.mcnotify.config;
 
 public enum Permission {
     MCNOTIFY_AREAS_ADD("mcnofity.areas.add"),
@@ -11,7 +11,7 @@ public enum Permission {
         this.permissionNode = perm;
     }
 
-    public String toString(){
+    public String getPermissionNode(){
         return this.permissionNode;
     }
 

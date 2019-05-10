@@ -1,17 +1,22 @@
 package org.mcnotify.areas;
 
-import net.minecraft.server.v1_14_R1.Packet;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.mcnotify.MCNotify;
+import org.mcnotify.areas.protection.Protection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class AreaManager {
 
-    ArrayList<Area> areaList = new ArrayList<>();
+    HashMap<UUID, ArrayList<Area>> areaList = new HashMap<>();
 
     public AreaManager(){
 
@@ -34,8 +39,24 @@ public class AreaManager {
                     String areaName = results.getString("area_name");
                     String jsonPoly = results.getString("polygon");
                     String world = results.getString("world");
+                    String protectionString = results.getString("protections");
+                    String whitelist = results.getString("whitelist");
 
-                    areaList.add(new Area(areaId, player, new Polygon(jsonPoly), areaName, world));
+                    String[] playerStrings = whitelist.split(",");
+                    ArrayList<Player> playerList = new ArrayList<>();
+                    for(String s : playerStrings){
+                        if(s != null && s != "") {
+                            UUID uuid = UUID.fromString(s);
+                            if(uuid != null) {
+                                OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(s));
+                                if (op != null) {
+                                    playerList.add((Player) op);
+                                }
+                            }
+                        }
+                    }
+
+                    this.addOldArea(new Area(areaId, player, new Polygon(jsonPoly), areaName, world, Protection.fromString(protectionString), playerList));
 
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -45,63 +66,87 @@ public class AreaManager {
         }
     }
 
-    public boolean addArea(Area area){
-        // Check if an area with that name already exists.
-        for(Area a : this.areaList){
+    public boolean addOldArea(Area area){
+
+        if(this.areaList.get(area.getOwner().getUniqueId()) == null){
+            this.areaList.put(area.getOwner().getUniqueId(), new ArrayList<Area>());
+        }
+
+        ArrayList<Area> playerAreas = this.areaList.get(area.getOwner().getUniqueId());
+        for(Area a : playerAreas){
+            if(a.getAreaName().equals(area.getAreaName())){
+                return false;
+            }
+        }
+
+        playerAreas.add(area);
+        return true;
+    }
+
+    public boolean addNewArea(Area area){
+        ArrayList<Area> playerAreas;
+        if(this.areaList.get(area.getOwner().getUniqueId()) == null){
+            playerAreas = new ArrayList<Area>();
+            this.areaList.put(area.getOwner().getUniqueId(), playerAreas);
+        } else {
+            playerAreas = this.areaList.get(area.getOwner().getUniqueId());
+        }
+
+
+        for(Area a : playerAreas){
             if(a.getOwner() == area.getOwner() && a.getAreaName().toLowerCase().equals(area.getAreaName().toLowerCase())){
                 return false;
             }
         }
 
         if(MCNotify.database.areaTable().insert(area)){
-            areaList.add(area);
+            playerAreas.add(area);
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean removeArea(Area area){
-        if(MCNotify.database.areaTable().delete(area)){
-            areaList.remove(area);
-            return true;
-        } else {
-            return false;
-        }
-    }
+    public boolean removeArea(UUID uuid, String areaName){
 
-    public boolean removeAreaId(int id){
-        for(Area area : this.areaList){
-            if(area.getAreaId() == id){
-                return this.removeArea(area);
+        ArrayList<Area> playerAreas = this.areaList.get(uuid);
+
+        for(Area area : playerAreas){
+            if(area.getAreaName().toLowerCase().equals(areaName.toLowerCase())){
+                if(MCNotify.database.areaTable().delete(area)){
+                    playerAreas.remove(area);
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
         return false;
     }
 
-    public ArrayList<Area> getAreas(Player player){
-        ArrayList<Area> playerAreas = new ArrayList<>();
-        for(Area area : this.areaList){
-            if(area.getOwner() == player){
-                playerAreas.add(area);
-            }
-        }
-        return playerAreas;
+    public ArrayList<Area> getAreas(UUID uuid){
+        return this.areaList.get(uuid);
     }
 
-    public Area getArea(int areaId){
-        for(Area area : this.areaList){
-            if(area.getAreaId() == areaId){
+    public Area getArea(UUID uuid, String areaName){
+
+        ArrayList<Area> playerAreas = this.areaList.get(uuid);
+
+        for(Area area : playerAreas){
+            if(area.getAreaName().equals(areaName)){
                 return area;
             }
         }
         return null;
     }
 
-    public Area getPlayerNamedArea(Player player, String areaName){
-        for(Area area : this.areaList){
-            if(area.getOwner() == player && area.getAreaName().toLowerCase().equals(areaName.toLowerCase())){
-                return area;
+    public Area getAreaAtLocation(Location location){
+        //TODO: Access cache to check areas.
+        for(Map.Entry<UUID, ArrayList<Area>> mapEntry : this.areaList.entrySet()){
+            for(Area a : mapEntry.getValue()){
+                if(a.getPolygon().contains(location)){
+                    return a;
+                }
             }
         }
         return null;

@@ -2,6 +2,7 @@ package org.mcnotify.areas;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.bukkit.Location;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -56,6 +57,11 @@ public class Polygon {
             }
         }
         return result;
+    }
+
+    public boolean contains(Location location){
+        Point testPoint = new Point(location.getBlockX(), location.getBlockZ());
+        return this.contains(testPoint);
     }
 
     public void addPoint(Point point){

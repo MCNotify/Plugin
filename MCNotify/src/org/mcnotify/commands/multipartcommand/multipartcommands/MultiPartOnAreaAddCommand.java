@@ -40,7 +40,7 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         this.particleThread.interrupt();
         if(this.poly.getLength() >= 3){
 
-            if(MCNotify.areaManager.addArea(new Area(player, this.poly, this.areaName, player.getWorld().getName()))){
+            if(MCNotify.areaManager.addNewArea(new Area(player, this.poly, this.areaName, player.getWorld().getName()))){
                 this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Area created successfully.");
             } else {
                 this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Error creating area.");

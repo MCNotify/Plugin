@@ -69,10 +69,9 @@ public class BaseCommandHandler extends AsyncCommandExecutor {
                 case "area":
                     new AreaCommandHandler().onCommand(player, command, s, strings);
                     break;
-                case "event":
-                    new EventCommandHandler().onCommand(player, command, s, strings);
-                default:
+                case "watch":
                     new SubscriptionCommandHandler().onCommand(player, command, s, strings);
+                default:
                     break;
             }
         }

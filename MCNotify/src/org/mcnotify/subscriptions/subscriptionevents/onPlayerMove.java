@@ -20,9 +20,9 @@ public class onPlayerMove implements Listener {
             Point newPlayerPoint = new Point(moveEvent.getTo().getBlockX(), moveEvent.getTo().getBlockZ());
             Point oldPlayerPoint = new Point(moveEvent.getFrom().getBlockX(), moveEvent.getFrom().getBlockZ());
 
-            int areaId = ((Long)(subscription.getSubscriptionJson().get("areaId"))).intValue();
+            String areaName = (String)subscription.getSubscriptionJson().get("areaName");
 
-            Polygon poly = MCNotify.areaManager.getArea(areaId).getPolygon();
+            Polygon poly = MCNotify.areaManager.getArea(subscription.getSubscriber().getUniqueId(), areaName).getPolygon();
 
             // Only trigger if the player moves into the boundary.
             if(!poly.contains(oldPlayerPoint) && poly.contains(newPlayerPoint)) {

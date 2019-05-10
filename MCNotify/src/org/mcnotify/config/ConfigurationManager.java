@@ -43,7 +43,7 @@ public class ConfigurationManager {
         }
     }
 
-    String getConfigValue(String key){
+    public String getConfigValue(String key){
         return this.customConfig.getString(key);
     }
 

@@ -36,7 +36,7 @@ public class AreaCommandHandler extends CommandHandler {
                 player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Using the item, create your bounding area.");
                 break;
             case "list":
-                ArrayList<Area> playerAreas = MCNotify.areaManager.getAreas(player);
+                ArrayList<Area> playerAreas = MCNotify.areaManager.getAreas(player.getUniqueId());
                 player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You have " + playerAreas.size() + " area(s).");
                 if(playerAreas.size() > 0){
                     player.sendMessage(ChatColor.GOLD + "===Area Id : Area Name===");
@@ -48,12 +48,12 @@ public class AreaCommandHandler extends CommandHandler {
                 break;
             case "remove":
                 if(args.length != 3){
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You must specify the area id to remove.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You must specify the name of the area to remove.");
                 }
                 try {
-                    int areaId = Integer.valueOf(args[2]);
+                    String areaName = args[2];
 
-                    if(MCNotify.areaManager.removeAreaId(areaId)){
+                    if(MCNotify.areaManager.removeArea(player.getUniqueId(), areaName)){
                         player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Area removed.");
                     } else {
                         player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Unable to remove area.");

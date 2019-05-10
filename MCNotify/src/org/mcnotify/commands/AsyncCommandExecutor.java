@@ -21,7 +21,7 @@ public abstract class AsyncCommandExecutor implements CommandExecutor {
             doAsyncCommand(commandSender, command, s, strings);
         });
 
-        return false;
+        return true;
     }
 
     public abstract void doAsyncCommand(CommandSender commandSender, Command command, String s, String[] strings);

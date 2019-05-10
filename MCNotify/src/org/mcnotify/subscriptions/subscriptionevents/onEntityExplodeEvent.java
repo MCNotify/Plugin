@@ -19,9 +19,9 @@ public class onEntityExplodeEvent implements Listener {
             Location explodeLocation = explodeEvent.getLocation();
             Point explodePoint = new Point(explodeLocation.getBlockX(), explodeLocation.getBlockZ());
 
-            int areaId = ((Long)(subscription.getSubscriptionJson().get("areaId"))).intValue();
+            String areaName = (String)subscription.getSubscriptionJson().get("areaName");
 
-            Polygon poly = MCNotify.areaManager.getArea(areaId).getPolygon();
+            Polygon poly = MCNotify.areaManager.getArea(subscription.getSubscriber().getUniqueId(), areaName).getPolygon();
 
             // Only trigger if the player moves into the boundary.
             if(poly.contains(explodePoint)) {

@@ -19,9 +19,9 @@ public class onBlockBreakEvent implements Listener {
             Location blockLocation = breakEvent.getBlock().getLocation();
             Point blockPoint = new Point(blockLocation.getBlockX(), blockLocation.getBlockZ());
 
-            int areaId = ((Long)(subscription.getSubscriptionJson().get("areaId"))).intValue();
+            String areaName = (String)subscription.getSubscriptionJson().get("areaName");
 
-            Polygon poly = MCNotify.areaManager.getArea(areaId).getPolygon();
+            Polygon poly = MCNotify.areaManager.getArea(subscription.getSubscriber().getUniqueId(), areaName).getPolygon();
 
             // Only trigger if the player moves into the boundary.
             if(poly.contains(blockPoint)) {

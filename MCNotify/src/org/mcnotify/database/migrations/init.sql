@@ -69,6 +69,8 @@ CREATE TABLE `areas` (
  `polygon` text NOT NULL,
  `area_name` varchar(255) NOT NULL,
  `world` VARCHAR(255) NOT NULL,
+ `protections` text,
+ `whitelist` text,
  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  `modified_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  `deleted_on` timestamp NULL DEFAULT NULL,
