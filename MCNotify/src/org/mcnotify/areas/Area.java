@@ -1,7 +1,7 @@
 package org.mcnotify.areas;
 
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
+import org.mcnotify.MCNotify;
 import org.mcnotify.areas.protection.Protection;
 
 import java.util.ArrayList;
@@ -57,39 +57,51 @@ public class Area {
         this.areaId = areaId;
     }
 
-    public void addProtection(Protection newProtection){
+    public boolean toggleProtection(Protection protection){
         for(Protection p : this.protections){
-            if(p == newProtection){
-                return;
+            if(p == protection){
+                this.protections.remove(p);
+                if(MCNotify.database.areaTable().update(this)){
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
-        this.protections.add(newProtection);
-    }
-
-    public void removeProection(Protection removeProtection){
-        for(Protection p : this.protections){
-            if(p == removeProtection){
-                this.protections.remove(removeProtection);
-                return;
-            }
+        this.protections.add(protection);
+        if(MCNotify.database.areaTable().update(this)){
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public void addWhitelist(OfflinePlayer newPlayer){
+    public boolean addWhitelist(OfflinePlayer newPlayer){
         for(OfflinePlayer p : whitelist){
             if(p == newPlayer){
-                return;
+                return true;
             }
         }
         whitelist.add(newPlayer);
+        if(MCNotify.database.areaTable().update(this)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void removeWhitelist(OfflinePlayer removePlayer){
+    public boolean removeWhitelist(OfflinePlayer removePlayer){
         for(OfflinePlayer p : whitelist){
             if(p == removePlayer){
                 whitelist.remove(removePlayer);
+                if(MCNotify.database.areaTable().update(this)){
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
+        return true;
     }
 
     public String getProtectionsAsString(){

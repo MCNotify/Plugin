@@ -94,6 +94,24 @@ public class AreaTable {
         }
     }
 
+    public boolean update(Area area){
+        PreparedStatement statement = null;
+        try {
+            statement = MCNotify.database.getConnection().prepareStatement("UPDATE areas SET protections = ?, whitelist = ? where id = ?");
+
+            statement.setString(1, area.getProtectionsAsString());
+            statement.setString(2, area.getWhitelistAsString());
+
+            int affectedRows = statement.executeUpdate();
+
+            return affectedRows != 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public boolean delete(Area area){
         PreparedStatement statement = null;
         try {

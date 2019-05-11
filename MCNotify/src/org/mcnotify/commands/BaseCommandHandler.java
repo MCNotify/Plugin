@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
+import org.mcnotify.areas.protection.Protection;
 import org.mcnotify.commands.commands.AreaCommandHandler;
 import org.mcnotify.commands.commands.EventCommandHandler;
 import org.mcnotify.commands.multipartcommand.MultiPartCommandManager;
@@ -15,6 +16,7 @@ import org.mcnotify.commands.commands.HelpCommandHandler;
 import org.mcnotify.commands.commands.SubscriptionCommandHandler;
 import org.mcnotify.authenticator.Response;
 import org.mcnotify.particles.ParticleManager;
+import org.mcnotify.subscriptions.subscriptionevents.Events;
 
 import java.io.IOException;
 
@@ -33,7 +35,7 @@ public class BaseCommandHandler extends AsyncCommandExecutor {
             Player player = (Player) commandSender;
             // Execute different module functions based on the argument parameters
             switch(strings[0].toLowerCase()){
-                case "verify":
+                case "verify": {
                     // Validate the user's MC account to the application and apply the database updates to register the user's device.
                     // Set registered flag, allowing user to get notifications on their device.
                     String endpoint = "users.php";
@@ -44,13 +46,13 @@ public class BaseCommandHandler extends AsyncCommandExecutor {
                         response = MCNotify.requestManager.sendRequest("GET", endpoint, null);
 
                         // The server is not validated, or the secret key is wrong, or not connected to the internet.
-                        if(response.getResponseCode() != 200){
+                        if (response.getResponseCode() != 200) {
                             return;
                         }
 
                         JSONObject json = response.getResponseBody();
                         int userid = Math.toIntExact((Long) json.get("user_id"));
-                        if(userid != -1) {
+                        if (userid != -1) {
                             String verificationCode = (String) json.get("minecraft_verification_code");
                             player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Your verification code is: " + verificationCode);
                             return;
@@ -65,14 +67,42 @@ public class BaseCommandHandler extends AsyncCommandExecutor {
                         e.printStackTrace();
                     }
                     break;
-                case "help":
+                }
+                case "help": {
                     new HelpCommandHandler().onCommand(player, command, s, strings);
                     break;
-                case "area":
+                }
+                case "area": {
                     new AreaCommandHandler().onCommand(player, command, s, strings);
                     break;
-                case "watch":
+                }
+                case "watch": {
                     new SubscriptionCommandHandler().onCommand(player, command, s, strings);
+                }
+                case "protection": {
+
+                    player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   [MCNotify] ProtectionTypes   " + ChatColor.GOLD + "========");
+
+                    for (Protection p : Protection.values()) {
+                        player.sendMessage(ChatColor.GOLD + p.getCommand() + ":" + ChatColor.GRAY + " " + p.getDescription());
+                    }
+                    break;
+                }
+                case "events": {
+                    player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   [MCNotify] EventTypes   " + ChatColor.GOLD + "========");
+
+                    for (Events e : Events.values()) {
+
+                        String commandUsage = e.getCommandName();
+                        for (String commandKey : e.getPlayerFriendlyKeyNames()) {
+                            commandUsage += " <" + s + ">";
+                        }
+
+                        player.sendMessage(ChatColor.GOLD + commandUsage + ":" + ChatColor.GRAY + " " + e.getDescription());
+                    }
+
+                    break;
+                }
                 default:
                     break;
             }

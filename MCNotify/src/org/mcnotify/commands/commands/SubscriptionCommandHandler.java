@@ -40,7 +40,19 @@ public class SubscriptionCommandHandler extends CommandHandler {
                     return;
                 }
 
-                int subscriptionId = Integer.valueOf(args[2]);
+                int subscriptionId;
+
+                try {
+                    subscriptionId = Integer.valueOf(args[2]);
+                } catch (NumberFormatException e){
+
+                    if(args[2].toLowerCase().equals("help")){
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This command stops a subscription that you are watching. Usage: /mcnotify watch remove <subscriptionId>. This command requires a subcsriptionId (number) to remove. View your subscriptions with /mcnotify list to obtain the subscriptionId.");
+                    } else {
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Invalid subscriptionId. The subscriptionId must be a number relating to one of your subscriptions. See /mcnotify watch list");
+                    }
+                    return;
+                }
                 for(Subscription subscription : MCNotify.subscriptionManager.getPlayerSubscriptions(player)){
                     if(subscription.getSubscriptionId() == subscriptionId){
                         MCNotify.subscriptionManager.removeSubscription(subscription);
@@ -49,6 +61,16 @@ public class SubscriptionCommandHandler extends CommandHandler {
                 }
                 break;
             default:
+
+                if(args[1].toLowerCase().equals("help")){
+                    player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   [MCNotify] /mcnotify watch   " + ChatColor.GOLD + "========");
+                    player.sendMessage(ChatColor.GOLD + "<eventName>: " + ChatColor.GRAY + "Subscribes you to the event. See /mcnotify events for a list of events you can watch.");
+                    player.sendMessage(ChatColor.GOLD + "remove <eventName>: " + ChatColor.GRAY + "Unsubscribes you from the event.");
+                    player.sendMessage(ChatColor.GOLD + "list: " + ChatColor.GRAY + "Shows a list of all your subscriptions.");
+                    player.sendMessage(ChatColor.GOLD + "help: " + ChatColor.GRAY + "This information page.");
+                    return;
+                }
+
                 //Try to get an event from their event name
                 Events eventType = Events.fromCommand(args[1].toLowerCase());
 
