@@ -24,7 +24,12 @@ public class SubscriptionManager {
     }
 
     private void loadDatabase() throws SQLException {
-        System.out.println("[MCNotify] Loading subscriptions for online players (if any).");
+
+        if(!MCNotify.database.isConnected()){
+            return;
+        }
+
+        System.out.println("[MCNotify] Loading subscriptions...");
 
         ResultSet results = MCNotify.database.subscriptionTable().selectAll();
         if(results != null) {
@@ -73,20 +78,32 @@ public class SubscriptionManager {
     }
 
     public boolean addSubscription(Subscription subscription){
-        if(MCNotify.database.subscriptionTable().insert(subscription)){
+
+        if(MCNotify.database.isConnected()) {
+            if (MCNotify.database.subscriptionTable().insert(subscription)) {
+                subscriptions.add(subscription);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
             subscriptions.add(subscription);
             return true;
-        } else {
-            return false;
         }
     }
 
     public boolean removeSubscription(Subscription subscription){
-        if(MCNotify.database.subscriptionTable().delete(subscription)){
+
+        if(MCNotify.database.isConnected()) {
+            if (MCNotify.database.subscriptionTable().delete(subscription)) {
+                subscriptions.remove(subscription);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
             subscriptions.remove(subscription);
             return true;
-        } else {
-            return false;
         }
     }
 

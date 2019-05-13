@@ -83,8 +83,10 @@ public class ParticleManager {
 
     public void stopAreaViewParticleThread(Player player){
         Thread thread = particleThreads.get(player.getUniqueId());
-        thread.interrupt();
-        particleThreads.remove(player.getUniqueId());
+        if(thread != null) {
+            thread.interrupt();
+            particleThreads.remove(player.getUniqueId());
+        }
     }
 
     public boolean isViewingArea(Player player){

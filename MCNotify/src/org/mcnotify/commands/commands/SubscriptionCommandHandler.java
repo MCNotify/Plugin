@@ -55,7 +55,11 @@ public class SubscriptionCommandHandler extends CommandHandler {
                 }
                 for(Subscription subscription : MCNotify.subscriptionManager.getPlayerSubscriptions(player)){
                     if(subscription.getSubscriptionId() == subscriptionId){
-                        MCNotify.subscriptionManager.removeSubscription(subscription);
+                        if(MCNotify.subscriptionManager.removeSubscription(subscription)){
+                            player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You have unsubscribed from watching " + subscription.getEventType().getDescription());
+                        } else {
+                            player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " An error occured while try to unsubscribe.");
+                        }
                         return;
                     }
                 }

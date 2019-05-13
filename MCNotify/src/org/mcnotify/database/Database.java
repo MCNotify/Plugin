@@ -21,6 +21,7 @@ public class Database {
     private String databaseName = Configuration.DATABASE_DATABASE.getValue();
 
     private Connection connection;
+    private boolean isConnected = false;
 
     public Database() {
         System.out.println("[MCNotify] Attempting to connect to database...");
@@ -41,6 +42,8 @@ public class Database {
             if(connection != null && !connection.isClosed()) {
                 this.check_migrations();
             }
+
+            this.isConnected = true;
 
         } catch (SQLException e) {
             System.out.println("[MCNotify] CRITICAL: Unable to connect to database! No areas will be saved!");
@@ -93,20 +96,36 @@ public class Database {
         }
     }
 
+    public boolean isConnected(){
+        return this.isConnected;
+    }
+
     public Connection getConnection(){
-        return connection;
+        if(this.isConnected) {
+            return connection;
+        } else {
+            return null;
+        }
     }
 
     public AreaTable areaTable(){
-        return new AreaTable();
+        if(this.isConnected) {
+            return new AreaTable();
+        } else {
+            return null;
+        }
     }
 
     public SubscriptionTable subscriptionTable(){
-        return new SubscriptionTable();
+        if(this.isConnected) {
+            return new SubscriptionTable();
+        } else {
+            return null;
+        }
     }
 
     private void runScript(String pathToScript){
-            System.out.println("[MCNotify] Attempting to run " + pathToScript);
+        System.out.println("[MCNotify] Attempting to run " + pathToScript);
         Scanner s = null;
         s = new Scanner(getClass().getResourceAsStream(pathToScript));
         s.useDelimiter("(;(\r)?\n)|(--\n)");

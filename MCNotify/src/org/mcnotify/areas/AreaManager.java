@@ -23,7 +23,12 @@ public class AreaManager {
     }
 
     public void loadDatabase() throws SQLException {
-        System.out.println("[MCNotify] Loading areas.");
+
+        if(!MCNotify.database.isConnected()){
+            return;
+        }
+
+        System.out.println("[MCNotify] Loading areas...");
 
         ResultSet results = MCNotify.database.areaTable().selectAll();
 
@@ -104,11 +109,16 @@ public class AreaManager {
             }
         }
 
-        if(MCNotify.database.areaTable().insert(area)){
+        if(MCNotify.database.isConnected()) {
+            if (MCNotify.database.areaTable().insert(area)) {
+                playerAreas.add(area);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
             playerAreas.add(area);
             return true;
-        } else {
-            return false;
         }
     }
 
@@ -118,11 +128,16 @@ public class AreaManager {
 
         for(Area area : playerAreas){
             if(area.getAreaName().toLowerCase().equals(areaName.toLowerCase())){
-                if(MCNotify.database.areaTable().delete(area)){
+                if(MCNotify.database.isConnected()) {
+                    if (MCNotify.database.areaTable().delete(area)) {
+                        playerAreas.remove(area);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
                     playerAreas.remove(area);
                     return true;
-                } else {
-                    return false;
                 }
             }
         }
@@ -130,7 +145,11 @@ public class AreaManager {
     }
 
     public ArrayList<Area> getAreas(UUID uuid){
-        return this.areaList.get(uuid);
+        ArrayList<Area> areas = this.areaList.get(uuid);
+        if(areas == null){
+            areas = new ArrayList<>();
+        }
+        return areas;
     }
 
     public Area getArea(UUID uuid, String areaName){

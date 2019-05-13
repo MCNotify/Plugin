@@ -1,13 +1,13 @@
 package org.mcnotify.commands.commands;
 
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
+import org.mcnotify.areas.protection.Protection;
+import org.mcnotify.subscriptions.subscriptionevents.Events;
 
-public class HelpCommandHandler extends CommandHandler {
+public class HelpFactory {
 
-    @Override
-    public void onCommand(Player player, Command command, String s, String[] args) {
+    public void sendCommandList(Player player){
         // TODO: Generate help pages
 
         player.sendMessage("-------------Page # of #-----------");
@@ -50,5 +50,27 @@ public class HelpCommandHandler extends CommandHandler {
         player.sendMessage(ChatColor.GOLD + "/mcnotify area <areaName>");
         player.sendMessage(ChatColor.GOLD + "/mcnotify area add <areaName>");
         player.sendMessage(ChatColor.GOLD + "/mcnotify area remove <areaName>");
+    }
+
+    public void sendProtectionList(Player player){
+        player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   [MCNotify] ProtectionTypes   " + ChatColor.GOLD + "========");
+
+        for (Protection p : Protection.values()) {
+            player.sendMessage(ChatColor.GOLD + p.getCommand() + ":" + ChatColor.GRAY + " " + p.getDescription());
+        }
+    }
+
+    public void sendEventList(Player player){
+        player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   [MCNotify] EventTypes   " + ChatColor.GOLD + "========");
+
+        for (Events e : Events.values()) {
+
+            String commandUsage = e.getCommandName();
+            for (String commandKey : e.getPlayerFriendlyKeyNames()) {
+                commandUsage += " <" + commandKey + ">";
+            }
+
+            player.sendMessage(ChatColor.GOLD + commandUsage + ":" + ChatColor.GRAY + " " + e.getDescription());
+        }
     }
 }

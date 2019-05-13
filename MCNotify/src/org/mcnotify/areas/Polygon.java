@@ -85,4 +85,34 @@ public class Polygon {
         return json;
     }
 
+    public String getPlayerFriendlyString(){
+        String points = "";
+        for(Point p : this.points){
+            points += "(" + p.x + ", " + p.y + "), ";
+        }
+        points = points.substring(0, points.length() - 2);
+        return points;
+    }
+
+    public float getArea(){
+
+        float yArea = 0;
+        float xArea = 0;
+
+        for(int i=0; i<this.points.size(); i++){
+            Point thisPoint = this.points.get(i);
+            Point nextPoint;
+            if((i + 1) == this.points.size()){
+                nextPoint = this.points.get(0);
+            } else {
+                nextPoint = this.points.get(i + 1);
+            }
+
+            xArea += thisPoint.x * nextPoint.y;
+            yArea += thisPoint.y * nextPoint.x;
+        }
+
+        return Math.abs((xArea - yArea)/2);
+    }
+
 }

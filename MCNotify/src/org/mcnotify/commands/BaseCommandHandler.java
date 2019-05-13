@@ -10,9 +10,8 @@ import org.json.simple.parser.ParseException;
 import org.mcnotify.MCNotify;
 import org.mcnotify.areas.protection.Protection;
 import org.mcnotify.commands.commands.AreaCommandHandler;
-import org.mcnotify.commands.commands.EventCommandHandler;
 import org.mcnotify.commands.multipartcommand.MultiPartCommandManager;
-import org.mcnotify.commands.commands.HelpCommandHandler;
+import org.mcnotify.commands.commands.HelpFactory;
 import org.mcnotify.commands.commands.SubscriptionCommandHandler;
 import org.mcnotify.authenticator.Response;
 import org.mcnotify.particles.ParticleManager;
@@ -69,7 +68,7 @@ public class BaseCommandHandler extends AsyncCommandExecutor {
                     break;
                 }
                 case "help": {
-                    new HelpCommandHandler().onCommand(player, command, s, strings);
+                    new HelpFactory().sendCommandList(player);
                     break;
                 }
                 case "area": {
@@ -78,29 +77,14 @@ public class BaseCommandHandler extends AsyncCommandExecutor {
                 }
                 case "watch": {
                     new SubscriptionCommandHandler().onCommand(player, command, s, strings);
+                    break;
                 }
                 case "protection": {
-
-                    player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   [MCNotify] ProtectionTypes   " + ChatColor.GOLD + "========");
-
-                    for (Protection p : Protection.values()) {
-                        player.sendMessage(ChatColor.GOLD + p.getCommand() + ":" + ChatColor.GRAY + " " + p.getDescription());
-                    }
+                    new HelpFactory().sendProtectionList(player);
                     break;
                 }
                 case "events": {
-                    player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   [MCNotify] EventTypes   " + ChatColor.GOLD + "========");
-
-                    for (Events e : Events.values()) {
-
-                        String commandUsage = e.getCommandName();
-                        for (String commandKey : e.getPlayerFriendlyKeyNames()) {
-                            commandUsage += " <" + s + ">";
-                        }
-
-                        player.sendMessage(ChatColor.GOLD + commandUsage + ":" + ChatColor.GRAY + " " + e.getDescription());
-                    }
-
+                    new HelpFactory().sendEventList(player);
                     break;
                 }
                 default:

@@ -66,37 +66,37 @@ public class AreaCommandHandler extends CommandHandler {
             }
             case "remove": {
                 if (args.length != 3) {
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You must specify the name of the area to remove.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "You must specify the name of the area to remove.");
                 }
                 try {
                     String areaName = args[2];
 
                     if(areaName.toLowerCase().equals("help")){
-                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This command deletes an area. Usage: /mcnotify area remove <areaName>");
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "This command deletes an area. Usage: /mcnotify area remove <areaName>");
                         return;
                     }
 
                     if (MCNotify.areaManager.removeArea(player.getUniqueId(), areaName)) {
-                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Area removed.");
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Area removed.");
                     } else {
-                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Unable to remove area.");
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Unable to remove area.");
                     }
 
                 } catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You must specify the area id to remove.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "You must specify the area id to remove.");
                 }
                 break;
             }
             case "view": {
                 if (args.length != 3) {
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You must specify the name of the area to view.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "You must specify the name of the area to view.");
                 }
 
                 String areaName = args[2];
 
 
                 if(areaName.toLowerCase().equals("help")){
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This command shows an outline of the specified area. Usage: /mcnotify area view <areaName>");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "This command shows an outline of the specified area. Usage: /mcnotify area view <areaName>");
                     return;
                 }
 
@@ -105,17 +105,17 @@ public class AreaCommandHandler extends CommandHandler {
                 if (area != null) {
                     if (BaseCommandHandler.particleManager.isViewingArea(player)) {
                         BaseCommandHandler.particleManager.stopAreaViewParticleThread(player);
-                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Stopped viewing area.");
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Stopped viewing area.");
                     } else {
                         BaseCommandHandler.particleManager.startAreaVeiwParticleThread(player, area.getPolygon());
-                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Started viewing area. Type the command again to hide the area.");
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Started viewing area. Type the command again to hide the area.");
                     }
                 }
                 break;
             }
             case "allow": {
                 if (args.length != 4) {
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " The proper syntax is /mcnotify area allow <playerName> <areaName>");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "The proper syntax is /mcnotify area allow <playerName> <areaName>");
                 }
 
                 String playerName = args[2];
@@ -123,7 +123,7 @@ public class AreaCommandHandler extends CommandHandler {
 
 
                 if(playerName.toLowerCase().equals("help")){
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This command allows a player to bypass any protection on your area. Usage: /mcnotify area allow <playerName> <areaName>");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "This command allows a player to bypass any protection on your area. Usage: /mcnotify area allow <playerName> <areaName>");
                     return;
                 }
 
@@ -131,17 +131,17 @@ public class AreaCommandHandler extends CommandHandler {
                 OfflinePlayer allowedPlayer = Bukkit.getOfflinePlayer(playerName);
 
                 if(area.addWhitelist(allowedPlayer)){
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + allowedPlayer.getName() + " is now allowed in your area.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + allowedPlayer.getName() + " is now allowed in your area.");
                 } else {
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + allowedPlayer.getName() + " is now allowed in your area.");
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.RED + "SAVE ERROR: " + ChatColor.GRAY + " This information was unable to be saved. Be aware that when the server is restarted these changes will NOT persist. Contact your server admins.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + allowedPlayer.getName() + " is now allowed in your area.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.RED + "SAVE ERROR: " + ChatColor.GRAY + " This information was unable to be saved. Be aware that when the server is restarted these changes will NOT persist. Contact your server admins.");
                 }
                 break;
             }
             case "deny": {
 
                 if (args.length != 4) {
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " The proper syntax is /mcnotify area deny <playerName> <areaName>");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "The proper syntax is /mcnotify area deny <playerName> <areaName>");
                 }
 
                 String playerName = args[2];
@@ -149,7 +149,7 @@ public class AreaCommandHandler extends CommandHandler {
 
 
                 if(playerName.toLowerCase().equals("help")){
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This command restricts a player to the protections on the area. Usage: /mcnotify area deny <playerName> <areaName>");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "This command restricts a player to the protections on the area. Usage: /mcnotify area deny <playerName> <areaName>");
                     return;
                 }
 
@@ -158,10 +158,10 @@ public class AreaCommandHandler extends CommandHandler {
                 OfflinePlayer allowedPlayer = Bukkit.getOfflinePlayer(playerName);
 
                 if(area.removeWhitelist(allowedPlayer)){
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + allowedPlayer.getName() + " is now denied from your area.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + allowedPlayer.getName() + " is now denied from your area.");
                 } else {
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + allowedPlayer.getName() + " is now denied from your area.");
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.RED + "SAVE ERROR: " + ChatColor.GRAY + " This information was unable to be saved. Be aware that when the server is restarted these changes will NOT persist. Contact your server admins.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + allowedPlayer.getName() + " is now denied from your area.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.RED + "SAVE ERROR: " + ChatColor.GRAY + " This information was unable to be saved. Be aware that when the server is restarted these changes will NOT persist. Contact your server admins.");
                 }
 
                 break;
@@ -171,39 +171,70 @@ public class AreaCommandHandler extends CommandHandler {
                 player.sendMessage(ChatColor.GOLD + "add <areaName>: " + ChatColor.GRAY + "Creates a new area.");
                 player.sendMessage(ChatColor.GOLD + "remove <areaName>: " + ChatColor.GRAY + "Deletes an area you own.");
                 player.sendMessage(ChatColor.GOLD + "list: " + ChatColor.GRAY + "Shows a list of all areas you own.");
+                player.sendMessage(ChatColor.GOLD + "info <areaName>: " + ChatColor.GRAY + "Provides detailed information about the specified area.");
                 player.sendMessage(ChatColor.GOLD + "allow <playerName> <areaName>: " + ChatColor.GRAY + "Allows a player to bypass all protections in an area.");
                 player.sendMessage(ChatColor.GOLD + "deny <playerName> <areaName>: " + ChatColor.GRAY + "Blocks a player based on the protections of the area.");
                 player.sendMessage(ChatColor.GOLD + "<protectionType> <areaName>: " + ChatColor.GRAY + "Enables/disables the protectionType on the area. See /mcnotify protection help.");
                 player.sendMessage(ChatColor.GOLD + "help: " + ChatColor.GRAY + "This information page.");
+                break;
             }
-
-            default: {
-                if (args.length != 3) {
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " The proper syntax is /mcnotify area <protectionType> <areaName>");
+            case "info":{
+                if(args.length != 3){
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "The proper syntax is /mcnotify area info <areaName>");
                 }
 
-                String areaName = args[3];
+                String areaName = args[2];
+
+                if(areaName.toLowerCase().equals("help")){
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "This command provides detailed information about a specific area. The proper syntax is /mcnotify area <protectionType> <areaName>");
+                }
+
                 Area area = MCNotify.areaManager.getArea(player.getUniqueId(), areaName);
 
-                Protection protection = Protection.fromCommand(args[2]);
+                player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   " + area.getAreaName() + "   " + ChatColor.GOLD + "========");
+                player.sendMessage(ChatColor.GREEN + "Protections: " + ChatColor.WHITE + area.getPlayerFriendlyProtectionString());
+                player.sendMessage(ChatColor.GREEN + "Allowed Players: " + ChatColor.WHITE + area.getPlayerFriendlyWhitelistString());
+                player.sendMessage(ChatColor.GREEN + "World: " + ChatColor.WHITE + area.getWorld());
+                player.sendMessage(ChatColor.GREEN + "Boundary: " + ChatColor.WHITE + area.getPolygon().getPlayerFriendlyString());
+                player.sendMessage(ChatColor.GREEN + "Area Size (blocks): " + ChatColor.WHITE + area.getPolygon().getArea());
+                player.sendMessage(ChatColor.GOLD + "================================");
+
+                break;
+            }
+            default: {
+                if (args.length != 3) {
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "The proper syntax is /mcnotify area <protectionType> <areaName>");
+                }
+
+                String areaName = args[2];
+
+
+                if(areaName.toLowerCase().equals("help")){
+                    new HelpFactory().sendProtectionList(player);
+                    return;
+                }
+
+                Area area = MCNotify.areaManager.getArea(player.getUniqueId(), areaName);
+
+                Protection protection = Protection.fromCommand(args[1]);
 
                 if(protection != null){
                     if(area.toggleProtection(protection)){
                         if(area.hasProtection(protection)) {
-                            player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + protection.getEnabledMessage() + " in " + area.getAreaName());
+                            player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + protection.getEnabledMessage() + " in " + area.getAreaName());
                         } else {
-                            player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + protection.getDisabledMessage() + " in " + area.getAreaName());
+                            player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + protection.getDisabledMessage() + " in " + area.getAreaName());
                         }
                     } else {
                         if(area.hasProtection(protection)) {
-                            player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + protection.getEnabledMessage() + " in " + area.getAreaName());
+                            player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + protection.getEnabledMessage() + " in " + area.getAreaName());
                         } else {
-                            player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + protection.getDisabledMessage() + " in " + area.getAreaName());
+                            player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + protection.getDisabledMessage() + " in " + area.getAreaName());
                         }
-                        player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.RED + "SAVE ERROR: " + ChatColor.GRAY + " This information was unable to be saved. Be aware that when the server is restarted these changes will NOT persist. Contact your server admins.");
+                        player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.RED + "SAVE ERROR: " + ChatColor.GRAY + " This information was unable to be saved. Be aware that when the server is restarted these changes will NOT persist. Contact your server admins.");
                     }
                 } else {
-                    player.sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " That is not a valid protection type. See " + ChatColor.GREEN + " /mcnotify protection help " + ChatColor.GRAY + " for a list of protection types.");
+                    player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + " That is not a valid protection type. See " + ChatColor.GREEN + " /mcnotify protection help " + ChatColor.GRAY + " for a list of protection types.");
                 }
 
                 break;
