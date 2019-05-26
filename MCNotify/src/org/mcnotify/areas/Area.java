@@ -70,7 +70,7 @@ public class Area {
 
     public boolean addWhitelist(OfflinePlayer newPlayer){
         for(OfflinePlayer p : whitelist){
-            if(p == newPlayer){
+            if(p.getUniqueId().equals(newPlayer.getUniqueId())){
                 return true;
             }
         }
@@ -80,7 +80,7 @@ public class Area {
 
     public boolean removeWhitelist(OfflinePlayer removePlayer){
         for(OfflinePlayer p : whitelist){
-            if(p == removePlayer){
+            if(p.getUniqueId().equals(removePlayer.getUniqueId())){
                 whitelist.remove(removePlayer);
                 return this.updateDatabase();
             }
@@ -132,12 +132,12 @@ public class Area {
     }
 
     public boolean isAllowed(OfflinePlayer player){
-        if(player == this.owner){
+        if(player.getUniqueId().equals(this.owner.getUniqueId())){
             return true;
         }
 
         for(OfflinePlayer p : this.whitelist){
-            if(p == player){
+            if(p.getUniqueId().equals(player.getUniqueId())){
                 return true;
             }
         }

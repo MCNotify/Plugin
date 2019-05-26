@@ -14,7 +14,8 @@ public enum Protection {
     NO_FIRE("No Fire", "Prevents fire from starting", "noFire", Configuration.AREA_DEFAULT_NOFIRE, "Fire cannot be started unless allowed", "Fire can be started"),
     DOOR_LOCK("Door Lock", "Prevents doors and trapdoors from being opened", "doorLock", Configuration.AREA_DEFAULT_DOORLOCK, "Doors cannot be used unless allowed", "Doors can be used"),
     NO_ENTER("No Enter", "Prevents players being able to walk into the area", "noEnter", Configuration.AREA_DEFAULT_NOENTER, "Players cannot enter the area unless allowed", "Players can enter the area"),
-    NO_INTERACT("No Interact", "Prevents players interacting with furnaces, brewing stands, etc.", "noInteract", Configuration.AREA_DEFAULT_NOINTERACT, "Players cannot interact with furnaces, etc. unless allowed", "Players can interact with furnaces, etc.");
+    NO_INTERACT("No Interact", "Prevents players interacting with furnaces, brewing stands, etc.", "noInteract", Configuration.AREA_DEFAULT_NOINTERACT, "Players cannot interact with furnaces, etc. unless allowed", "Players can interact with furnaces, etc."),
+    NO_PVP("No PvP", "Prevents other players from being able to attack players.", "noPvP", Configuration.AREA_DEFAULT_NOPVP, "Players cannot attack other players in the area.", "Players can attack players in the area.");
 
 
     private String name;

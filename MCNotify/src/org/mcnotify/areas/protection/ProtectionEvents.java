@@ -3,24 +3,34 @@ package org.mcnotify.areas.protection;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.util.Vector;
 import org.mcnotify.MCNotify;
 import org.mcnotify.areas.Area;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
-public class BlockProtectionEvents implements Listener {
+public class ProtectionEvents implements Listener {
 
     private static final Set<Material> BEDS = EnumSet.of(
             Material.BLACK_BED,
@@ -91,7 +101,7 @@ public class BlockProtectionEvents implements Listener {
         if(areaAtLocation != null){
             if(!areaAtLocation.isAllowed(breakEvent.getPlayer())){
                 breakEvent.setCancelled(true);
-                breakEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is protected.");
+                breakEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You cannot break blocks in this area.");
             }
         }
     }
@@ -102,7 +112,7 @@ public class BlockProtectionEvents implements Listener {
         if(areaAtLocation != null){
             if(!areaAtLocation.isAllowed(placeEvent.getPlayer())){
                 placeEvent.setCancelled(true);
-                placeEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is protected.");
+                placeEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You cannot place blocks in this area.");
             }
         }
     }
@@ -110,12 +120,31 @@ public class BlockProtectionEvents implements Listener {
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent explodeEvent){
         if(explodeEvent.getEntityType() == EntityType.CREEPER || explodeEvent.getEntityType() == EntityType.GHAST || explodeEvent.getEntityType() == EntityType.WITHER || explodeEvent.getEntityType() == EntityType.FIREBALL || explodeEvent.getEntityType() == EntityType.MINECART_TNT || explodeEvent.getEntityType() == EntityType.PRIMED_TNT) {
+            // If the explosion source is in a protected area, stop the explosion
             Area areaAtLocation = MCNotify.areaManager.getAreaAtLocation(explodeEvent.getLocation());
             if (areaAtLocation != null) {
                 if (areaAtLocation.hasProtection(Protection.MOB_PROTECT)) {
                     explodeEvent.setCancelled(true);
+                    return;
                 }
             }
+
+            List<Block> explodedBlocks = explodeEvent.blockList();
+            ArrayList<Block> toRemove = new ArrayList<>();
+
+            //If any broken block is in the protected area, stop the blocks from breaking
+            for(Block explodedBlock : explodedBlocks){
+                Area area = MCNotify.areaManager.getAreaAtLocation(explodedBlock.getLocation());
+                if(area != null){
+                    if(area.hasProtection(Protection.MOB_PROTECT)){
+                        //Prevent the block from breaking but allow neighbor blocks to break.
+                        toRemove.add(explodedBlock);
+                    }
+                }
+            }
+
+            explodeEvent.blockList().removeAll(toRemove);
+
         }
     }
 
@@ -147,7 +176,7 @@ public class BlockProtectionEvents implements Listener {
 
             if(areaAtLocation.hasProtection(Protection.CHEST_LOCK)){
                 interactEvent.setCancelled(true);
-                interactEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is protected.");
+                interactEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Chests in this area are protected.");
                 return;
             }
         }
@@ -155,7 +184,7 @@ public class BlockProtectionEvents implements Listener {
         if(INTERACTABLES.contains(interactedBlock) || BEDS.contains(interactedBlock)) {
             if(areaAtLocation.hasProtection(Protection.NO_INTERACT)){
                 interactEvent.setCancelled(true);
-                interactEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is protected.");
+                interactEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Blocks cannot be interacted with in this area.");
                 return;
             }
         }
@@ -163,7 +192,7 @@ public class BlockProtectionEvents implements Listener {
         if(interactedBlock.toString().contains("DOOR") || interactedBlock.toString().contains("FENCE")){
             if(areaAtLocation.hasProtection(Protection.DOOR_LOCK)){
                 interactEvent.setCancelled(true);
-                interactEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is protected.");
+                interactEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Doors in this area are protected.");
                 return;
             }
         }
@@ -171,7 +200,7 @@ public class BlockProtectionEvents implements Listener {
         if(REDSTONE_INTERACTABLES.contains(interactedBlock)){
             if(areaAtLocation.hasProtection(Protection.NO_REDSTONE)){
                 interactEvent.setCancelled(true);
-                interactEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is protected.");
+                interactEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Redstone cannot be activated in this area.");
                 return;
             }
         }
@@ -188,15 +217,37 @@ public class BlockProtectionEvents implements Listener {
             return;
         }
         if(areaAtDestination.hasProtection(Protection.NO_ENTER)){
-            playerMoveEvent.setCancelled(true);
-            playerMoveEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is protected.");
+            playerMoveEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This is a protected area.");
+
+            //Location moveLocation = new Location(playerMoveEvent.getPlayer().getWorld(), x, playerMoveEvent.getPlayer().getLocation().getBlockY(), z);
+            Location playerLocation = playerMoveEvent.getPlayer().getLocation();
+
+            // Create a vector of the player's direction, ensure no values are 0.
+            Vector playerDirection = playerMoveEvent.getPlayer().getLocation().getDirection();
+            if(playerDirection.getX() == 0) {
+                playerDirection.setX(0.01);
+            }
+            if(playerDirection.getY() == 0) {
+                playerDirection.setY(0.01);
+            }
+            if(playerDirection.getZ() == 0) {
+                playerDirection.setZ(0.01);
+            }
+
+
+            while(areaAtDestination.getPolygon().contains(playerLocation)){
+                playerLocation = playerLocation.subtract(playerDirection.multiply(2));
+            }
+
+            playerLocation.setY(playerMoveEvent.getPlayer().getLocation().getY());
+
+            playerMoveEvent.getPlayer().teleport(playerLocation);
         }
     }
 
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent blockIgniteEvent){
-
-        Area areaAtDestination = MCNotify.areaManager.getAreaAtLocation(blockIgniteEvent.getIgnitingBlock().getLocation());
+        Area areaAtDestination = MCNotify.areaManager.getAreaAtLocation(blockIgniteEvent.getBlock().getLocation());
         if(areaAtDestination == null){
             return;
         }
@@ -206,7 +257,7 @@ public class BlockProtectionEvents implements Listener {
         if(areaAtDestination.hasProtection(Protection.NO_FIRE)){
             blockIgniteEvent.setCancelled(true);
             if(blockIgniteEvent.getPlayer() != null) {
-                blockIgniteEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is protected.");
+                blockIgniteEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You cannot start fire in this area.");
             }
         }
     }
@@ -222,8 +273,55 @@ public class BlockProtectionEvents implements Listener {
 
         if(!areaAtDestination.isAllowed(emptyBucketEvent.getPlayer())){
             emptyBucketEvent.setCancelled(true);
-            emptyBucketEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is protected.");
+            emptyBucketEvent.getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " You cannot use buckets in this area.");
+        }
+    }
+
+    @EventHandler
+    public void onLiquidFlow(BlockFromToEvent fromToEvent){
+
+        Area source = MCNotify.areaManager.getAreaAtLocation(fromToEvent.getBlock().getLocation());
+        Area destination = MCNotify.areaManager.getAreaAtLocation(fromToEvent.getToBlock().getLocation());
+
+        // If the liquid is flowing within its own land, allow the flow.
+        if(source == destination){
+            return;
         }
 
+        if(destination != null){
+            if(destination.hasProtection(Protection.STOP_LIQUID)){
+                fromToEvent.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerAttack(EntityDamageByEntityEvent damageEvent){
+
+        Area attackLocation = MCNotify.areaManager.getAreaAtLocation(damageEvent.getEntity().getLocation());
+
+        if(attackLocation != null) {
+            if(damageEvent.getDamager().getType() == EntityType.PLAYER) {
+                if (damageEvent.getEntity().getType() == EntityType.PLAYER) {
+                    if (attackLocation.hasProtection(Protection.NO_PVP)) {
+                        damageEvent.setCancelled(true);
+                        damageEvent.getDamager().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " This area is PvP protected.");
+                        damageEvent.getEntity().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " " + damageEvent.getDamager().getName() + " tried to attack you!");
+                    }
+                } else {
+                    if (attackLocation.hasProtection((Protection.MOB_PROTECT))) {
+                        if(damageEvent.getEntity().getCustomName() != null){
+                            damageEvent.setCancelled(true);
+                            damageEvent.getDamager().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Named mobs are protected in this area.");
+                        }
+                        LivingEntity entity = (LivingEntity) damageEvent.getEntity();
+                        if(entity instanceof Animals) {
+                            damageEvent.setCancelled(true);
+                            damageEvent.getDamager().sendMessage(ChatColor.GREEN + "[MCNotify]" + ChatColor.GRAY + " Peaceful mobs are protected in this area.");
+                        }
+                    }
+                }
+            }
+        }
     }
 }

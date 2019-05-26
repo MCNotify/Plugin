@@ -192,6 +192,7 @@ public class AreaCommandHandler extends CommandHandler {
                 Area area = MCNotify.areaManager.getArea(player.getUniqueId(), areaName);
 
                 player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   " + area.getAreaName() + "   " + ChatColor.GOLD + "========");
+                player.sendMessage(ChatColor.GREEN + "Owner: " + ChatColor.WHITE + area.getOwner().getName());
                 player.sendMessage(ChatColor.GREEN + "Protections: " + ChatColor.WHITE + area.getPlayerFriendlyProtectionString());
                 player.sendMessage(ChatColor.GREEN + "Allowed Players: " + ChatColor.WHITE + area.getPlayerFriendlyWhitelistString());
                 player.sendMessage(ChatColor.GREEN + "World: " + ChatColor.WHITE + area.getWorld());

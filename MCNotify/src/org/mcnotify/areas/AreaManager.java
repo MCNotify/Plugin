@@ -157,7 +157,7 @@ public class AreaManager {
         ArrayList<Area> playerAreas = this.areaList.get(uuid);
 
         for(Area area : playerAreas){
-            if(area.getAreaName().equals(areaName)){
+            if(area.getAreaName().equalsIgnoreCase(areaName)){
                 return area;
             }
         }

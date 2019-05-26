@@ -2,7 +2,7 @@ package org.mcnotify.config;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcnotify.areas.protection.BlockProtectionEvents;
+import org.mcnotify.areas.protection.ProtectionEvents;
 import org.mcnotify.commands.multipartcommand.multipartevents.MultiPartBlockPlaceEvent;
 import org.mcnotify.commands.multipartcommand.multipartevents.MultiPartItemSpawnEvent;
 import org.mcnotify.subscriptions.subscriptionevents.*;
@@ -28,7 +28,7 @@ public class EventRegistry {
         listeners.add(new onCropGrownEvent());
         listeners.add(new MultiPartItemSpawnEvent());
         listeners.add(new MultiPartBlockPlaceEvent());
-        listeners.add(new BlockProtectionEvents());
+        listeners.add(new ProtectionEvents());
 
         for(Listener l : listeners){
             plugin.getServer().getPluginManager().registerEvents(l, plugin);

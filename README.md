@@ -37,6 +37,7 @@ To get started with MCNotify, you need to create an area. The following commands
 | `/mcnotify area list` | Lists all of the areas that you have defined. | None. |
 | `/mcnotify area remove <areaName>` | Removes the specified area. | **areaName:** The name of the area to remove. |
 | `/mcnotify area view <areaName>` | Allows you to view the boundary of the area specified. | **areaName:** The name of the area to view. |
+| `/mcnotify area info <areaName>` | Provides information about the specified area. | **areaName:** The name of the area to view. |
 
 # Setting permissions
 Once an area is created, accesss to the area can be limited to specific players. For moderators/admins of the server, players can be completely stopped from entering a specific area if not allowed access. The following commands can be used to set the permissions of a specific area.
@@ -50,15 +51,14 @@ Admins have additional access to protection commands and may be able to set spec
 
 | Command Name <img width=800/>| Description | Parameters |
 |---|---|---|
-| `/mcnotify area protect <areaName>` | Prevents blocks from being placed or broken within the area. | **areaName:** The area to protect. |
-| `/mcnotify area mobLock <areaName>` | Prevents hostile mobs from spawning or entering the area. | **areaName:** The area to mobLock. |
+| `/mcnotify area protect <areaName>` | Prevents blocks from being placed or broken within the area by unallowed players. | **areaName:** The area to protect. |
 | `/mcnotify area mobProtect <areaName>` | Protects peaceful animals from being harmed by unallowed players. | **areaName:** The area to mobProtect. |
 | `/mcnotify area stopLiquid <areaName>` | Stops lava and water from flowing into the area. | **areaName:** The area to stop liquids. |
-| `/mcnotify area chestLock <areaName>` | Prevents chests from being opened. | **areaName:** The area to block chests. |
-| `/mcnotify area noRS <areaName>` | Prevents any restone signals from activating | **areaName:** The area to stop redstone. |
-| `/mcnotify area noFire <areaName>` | Prevents fireSpread in the area | **areaName:** The area to stop redstone. |
-| `/mcnotify area doorLock <areaName>` | Prevents doors from being opened in the area. | **areaName:** The area to stop redstone. |
-| `/mcnotify area noEnter <areaName>` | Prevents players entering the area. | **areaName:** The area to stop redstone. |
+| `/mcnotify area chestLock <areaName>` | Prevents chests from being opened by unallowed players. | **areaName:** The area to block chests. |
+| `/mcnotify area noRS <areaName>` | Prevents any restone signals from being activated by unallowed players. | **areaName:** The area to stop redstone. |
+| `/mcnotify area noFire <areaName>` | Prevents fire spread in the area. | **areaName:** The area to stop redstone. |
+| `/mcnotify area doorLock <areaName>` | Prevents doors from being opened in the area by unallowed players. | **areaName:** The area to stop redstone. |
+| `/mcnotify area noEnter <areaName>` | Prevents unallowed players from entering the area. | **areaName:** The area to stop redstone. |
 | `/mcnotify area free <areaName>` | Resets the area back to the default protection. | **areaName:** The area to free. |
 
 By default, areas that are created by a player have the following protections:

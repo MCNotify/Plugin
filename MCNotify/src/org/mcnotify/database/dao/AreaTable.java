@@ -101,6 +101,7 @@ public class AreaTable {
 
             statement.setString(1, area.getProtectionsAsString());
             statement.setString(2, area.getWhitelistAsString());
+            statement.setInt(3, area.getAreaId());
 
             int affectedRows = statement.executeUpdate();
 
