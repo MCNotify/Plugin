@@ -40,12 +40,7 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         if(this.poly.getLength() >= 3){
 
             if(MCNotify.areaManager.addNewArea(new Area(player, this.poly, this.areaName, player.getWorld().getName()))){
-                if(MCNotify.database.isConnected()) {
-                    this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Area created successfully.");
-                } else {
-                    this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Area created successfully.");
-                    this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.RED + " WARNING: " + ChatColor.GRAY + "No database is configured. Data will not persist on server restart.");
-                }
+                this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Area created successfully.");
             } else {
                 this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Error creating area.");
             }

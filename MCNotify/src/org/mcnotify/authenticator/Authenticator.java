@@ -37,7 +37,7 @@ public class Authenticator {
             } else if (response.getResponseCode() == 401) {
                 System.out.println("[MCNotify] ERROR: Server Secret Key is required.");
             } else {
-                System.out.println("[MCNotify] ERROR: Could not reach the cloud servers. Are you connected to the internet?");
+                System.out.println("[MCNotify] ERROR: Could not reach MCNotify servers. Are you connected to the internet?");
             }
         } catch (IOException e) {
             e.printStackTrace();

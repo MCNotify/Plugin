@@ -25,44 +25,9 @@ public class SubscriptionManager {
 
     private void loadDatabase() throws SQLException {
 
-        if(!MCNotify.database.isConnected()){
-            return;
-        }
-
         System.out.println("[MCNotify] Loading subscriptions...");
 
-        ResultSet results = MCNotify.database.subscriptionTable().selectAll();
-        if(results != null) {
-            while (results.next()) {
-                int subscriptionId = results.getInt("id");
-                String subsciberUuid = results.getString("uuid");
-                String eventName = results.getString("event_name");
-                String eventProperties = results.getString("event_properties");
-
-
-                OfflinePlayer subscriber = null;
-
-                if(subsciberUuid != null && subsciberUuid != "") {
-                    UUID uuid = UUID.fromString(subsciberUuid);
-                    if(uuid != null) {
-                        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-                        if (op != null) {
-                            subscriber = op;
-                        }
-                    }
-                }
-
-                Object jsonobj = null;
-                try {
-                    jsonobj = new JSONParser().parse(eventProperties);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                JSONObject jsonObject = (JSONObject) jsonobj;
-
-                subscriptions.add(new Subscription(subscriptionId, subscriber, Events.valueOf(eventName), new JSONObject(jsonObject)));
-            }
-        }
+        this.subscriptions = MCNotify.datastore.subscriptionTable().selectAll();
 
         System.out.println("[MCNotify] Subscriptions loaded.");
     }
@@ -78,32 +43,20 @@ public class SubscriptionManager {
     }
 
     public boolean addSubscription(Subscription subscription){
-
-        if(MCNotify.database.isConnected()) {
-            if (MCNotify.database.subscriptionTable().insert(subscription)) {
-                subscriptions.add(subscription);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+        if (MCNotify.datastore.subscriptionTable().insert(subscription)) {
             subscriptions.add(subscription);
             return true;
+        } else {
+            return false;
         }
     }
 
     public boolean removeSubscription(Subscription subscription){
-
-        if(MCNotify.database.isConnected()) {
-            if (MCNotify.database.subscriptionTable().delete(subscription)) {
-                subscriptions.remove(subscription);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+        if (MCNotify.datastore.subscriptionTable().delete(subscription)) {
             subscriptions.remove(subscription);
             return true;
+        } else {
+            return false;
         }
     }
 

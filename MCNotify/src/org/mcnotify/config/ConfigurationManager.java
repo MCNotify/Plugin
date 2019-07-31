@@ -56,27 +56,15 @@ public class ConfigurationManager {
         }
     }
 
-    public boolean isConfigured(){
+    public void isConfigured(){
         System.out.println("[MCNotify] Checking configuration files...");
-        boolean configured = true;
         for(Configuration configuration : Configuration.values()){
             // If the configuration value does not exist in the file,
             // Set the configuration to the default value.
             if(configuration.getValue() == null){
-
-                if(configuration.isRequired()){
-                    System.out.println("[MCNotify] ERROR: " + configuration.getYamlName() + " is required to be configued.");
-                    configured = false;
-                }
-
                 configuration.setDefaultValue();
             }
         }
-
-        if(!configured) {
-            System.out.println("[MCNotify] ERROR: Plugin disabled until configured /plugins/MCNotify/MCNotify.yml.");
-        }
         System.out.println("[MCNotify] Configuration OK.");
-        return configured;
     }
 }

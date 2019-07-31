@@ -24,54 +24,13 @@ public class AreaManager {
 
     public void loadDatabase() throws SQLException {
 
-        if(!MCNotify.database.isConnected()){
-            return;
-        }
-
         System.out.println("[MCNotify] Loading areas...");
 
-        ResultSet results = MCNotify.database.areaTable().selectAll();
-
-        if(results != null){
-            while(results.next()){
-                try {
-                    int areaId = results.getInt("id");
-                    String ownerUuid = results.getString("uuid");
-                    String areaName = results.getString("area_name");
-                    String jsonPoly = results.getString("polygon");
-                    String world = results.getString("world");
-                    String protectionString = results.getString("protections");
-                    String whitelist = results.getString("whitelist");
-
-                    String[] playerStrings = whitelist.split(",");
-                    ArrayList<OfflinePlayer> playerList = new ArrayList<>();
-                    for(String s : playerStrings){
-                        if(s != null && s != "") {
-                            UUID uuid = UUID.fromString(s);
-                            if(uuid != null) {
-                                OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(s));
-                                playerList.add(op);
-                            }
-                        }
-                    }
-
-                    OfflinePlayer owner = null;
-
-                    if(ownerUuid != null && ownerUuid != "") {
-                        UUID uuid = UUID.fromString(ownerUuid);
-                        if(uuid != null) {
-                            owner = Bukkit.getOfflinePlayer(UUID.fromString(ownerUuid));
-                        }
-                    }
-
-                    this.addOldArea(new Area(areaId, owner, new Polygon(jsonPoly), areaName, world, Protection.fromString(protectionString), playerList));
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    continue;
-                }
-            }
+        for(Area area : MCNotify.datastore.areaTable().selectAll()){
+            this.addOldArea(area);
         }
+
+        ArrayList<Area> areaList = MCNotify.datastore.areaTable().selectAll();
 
         System.out.println("[MCNotify] Areas loaded.");
     }
@@ -109,17 +68,12 @@ public class AreaManager {
             }
         }
 
-        if(MCNotify.database.isConnected()) {
-            if (MCNotify.database.areaTable().insert(area)) {
-                playerAreas.add(area);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+        if(MCNotify.datastore.areaTable().insert(area)) {
             playerAreas.add(area);
             return true;
         }
+
+        return false;
     }
 
     public boolean removeArea(UUID uuid, String areaName){
@@ -128,17 +82,13 @@ public class AreaManager {
 
         for(Area area : playerAreas){
             if(area.getAreaName().toLowerCase().equals(areaName.toLowerCase())){
-                if(MCNotify.database.isConnected()) {
-                    if (MCNotify.database.areaTable().delete(area)) {
-                        playerAreas.remove(area);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
+
+                if(MCNotify.datastore.areaTable().delete(area)){
                     playerAreas.remove(area);
                     return true;
                 }
+
+                return false;
             }
         }
         return false;

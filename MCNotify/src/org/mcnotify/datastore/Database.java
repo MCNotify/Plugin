@@ -1,14 +1,9 @@
-package org.mcnotify.database;
+package org.mcnotify.datastore;
 
-import com.mysql.jdbc.Connection;
-import org.mcnotify.MCNotify;
-import org.mcnotify.database.dao.AreaTable;
+import org.mcnotify.datastore.dbModels.DbAreaTable;
 import org.mcnotify.config.Configuration;
-import org.mcnotify.database.dao.SubscriptionTable;
+import org.mcnotify.datastore.dbModels.DbSubscriptionTable;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -32,7 +27,7 @@ public class Database {
             System.out.println("[MCNotify] Successfully connected to database.");
             System.out.println("[MCNotify] Checking database tables...");
 
-            // Attempt to create the MCNotify database
+            // Attempt to create the MCNotify datastore
             Statement stmt = connection.createStatement();
             stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS `MCNotify`");
 
@@ -46,7 +41,7 @@ public class Database {
             this.isConnected = true;
 
         } catch (SQLException e) {
-            System.out.println("[MCNotify] CRITICAL: Unable to connect to database! No areas will be saved!");
+            System.out.println("[MCNotify] WARNING: Unable to connect to database! Falling back to flat file.");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -63,7 +58,7 @@ public class Database {
         // Check if the migration table exists.
         System.out.println("[MCNotify] Checking migrations...");
         try {
-            // Access the database's migration table to see if it exists.
+            // Access the datastore's migration table to see if it exists.
             DatabaseMetaData meta = connection.getMetaData();
             ResultSet results = meta.getTables(null, null, "Migrations", new String[]{"TABLE"});
             if(results.next()){
@@ -108,17 +103,17 @@ public class Database {
         }
     }
 
-    public AreaTable areaTable(){
+    public DbAreaTable areaTable(){
         if(this.isConnected) {
-            return new AreaTable();
+            return new DbAreaTable(connection);
         } else {
             return null;
         }
     }
 
-    public SubscriptionTable subscriptionTable(){
+    public DbSubscriptionTable subscriptionTable(){
         if(this.isConnected) {
-            return new SubscriptionTable();
+            return new DbSubscriptionTable(connection);
         } else {
             return null;
         }

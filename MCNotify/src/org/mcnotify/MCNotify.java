@@ -4,8 +4,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.mcnotify.authenticator.Authenticator;
 import org.mcnotify.areas.AreaManager;
 import org.mcnotify.commands.BaseCommandHandler;
-import org.mcnotify.database.Database;
+import org.mcnotify.datastore.Database;
 import org.mcnotify.config.EventRegistry;
+import org.mcnotify.datastore.Datastore;
 import org.mcnotify.subscriptions.SubscriptionManager;
 import org.mcnotify.config.ConfigurationManager;
 import org.mcnotify.authenticator.RequestManager;
@@ -19,7 +20,7 @@ public class MCNotify extends JavaPlugin {
     public static SubscriptionManager subscriptionManager;
     public static AreaManager areaManager;
     public static RequestManager requestManager;
-    public static Database database;
+    public static Datastore datastore;
 
     public static EventRegistry eventRegistry;
 
@@ -27,20 +28,12 @@ public class MCNotify extends JavaPlugin {
     public void onEnable(){
         // Generate the configuration file if it doesn't exist. Otherwise, load the configuration file.
         config = new ConfigurationManager(this);
-        // Has to be executed after the configuration manager is created.
-        boolean isConfigured = config.isConfigured();
-
-        if(!isConfigured){
-            // Shutdown the plugin if it is not properly configured.
-            this.getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
 
         // Initializes authentication to the MCNotify servers and checks if the users is authenticated.
         auth = new Authenticator();
 
-        // Sets up/loads the local databases to keep track of areas
-        database = new Database();
+        // Sets up/loads the datastore
+        datastore = new Datastore(getDataFolder().getAbsolutePath() + "/data/data.mcn");
 
         // Load the player areas
         areaManager = new AreaManager();

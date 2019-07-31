@@ -3,45 +3,44 @@ package org.mcnotify.config;
 import org.mcnotify.MCNotify;
 
 public enum Configuration {
-    SECRET_KEY("server.secret_key", randomAlphaNumeric(64), true),
-    RECOVERY_EMAIL("server.recovery_email", "", true),
+    SECRET_KEY("server.secret_key", randomAlphaNumeric(64)),
+    RECOVERY_EMAIL("server.recovery_email", ""),
 
-    DATABASE_HOST("server.database.host", "localhost", true),
-    DATABASE_PORT("server.database.port", "3306", true),
-    DATABASE_DATABASE("server.database.database", "MCNotify", true),
-    DATABSE_USERNAME("server.database.username", "root", true),
-    DATABASE_PASSWORD("server.database.password", "", true),
+    DATABASE_ENABLED("server.database.enabled", "false"),
+    DATABASE_HOST("server.database.host", "localhost"),
+    DATABASE_PORT("server.database.port", "3306"),
+    DATABASE_DATABASE("server.database.database", "MCNotify"),
+    DATABSE_USERNAME("server.database.username", "root"),
+    DATABASE_PASSWORD("server.database.password", ""),
 
-    AREA_DEFAULT_PROTECT("areas.default.protect", "true", true),
-    AREA_DEFAULT_MOBPROTECT("areas.default.mobProtect", "true", true),
-    AREA_DEFAULT_STOPLIQUID("areas.default.stopLiquid", "true", true),
-    AREA_DEFAULT_CHESTLOCK("areas.default.chestLock", "true", true),
-    AREA_DEFAULT_NOREDSTONE("areas.default.noRedstone", "true", true),
-    AREA_DEFAULT_NOFIRE("areas.default.noFire", "true", true),
-    AREA_DEFAULT_DOORLOCK("areas.default.doorLock", "false", true),
-    AREA_DEFAULT_NOENTER("areas.default.noEnter", "false", true),
-    AREA_DEFAULT_NOINTERACT("areas.default.noInteract", "true", true),
-    AREA_DEFAULT_NOPVP("areas.default.noPvp", "true", true),
-    AREA_LIMIT("areas.limit", "3", true),
+    AREA_DEFAULT_PROTECT("areas.default.protect", "true"),
+    AREA_DEFAULT_MOBPROTECT("areas.default.mobProtect", "true"),
+    AREA_DEFAULT_STOPLIQUID("areas.default.stopLiquid", "true"),
+    AREA_DEFAULT_CHESTLOCK("areas.default.chestLock", "true"),
+    AREA_DEFAULT_NOREDSTONE("areas.default.noRedstone", "true"),
+    AREA_DEFAULT_NOFIRE("areas.default.noFire", "true"),
+    AREA_DEFAULT_DOORLOCK("areas.default.doorLock", "false"),
+    AREA_DEFAULT_NOENTER("areas.default.noEnter", "false"),
+    AREA_DEFAULT_NOINTERACT("areas.default.noInteract", "true"),
+    AREA_DEFAULT_NOPVP("areas.default.noPvp", "true"),
+    AREA_LIMIT("areas.limit", "3"),
 
-    ON_PLAYER_JOIN_APPROVAL("events.onplayerjoin.approval_required", "true", true),
-    ON_PLAYER_JOIN_ALLOWED("events.onplayerjoin.allow", "false", true),
-    ON_PLAYER_ENTER_ALLOWED("events.onplayerenter.allow", "true", true),
-    ON_BLOCK_BREAK_ALLOWED("events.onblockbreak.allow", "true", true),
-    ON_CROP_GROW_ALLOWED("events.oncropgrow.allow", "true", true),
-    ON_ENTITY_EXPLODE_ALLOWED("events.onentityexplode.allow", "true", true),
-    ON_REDSTONE_ALLOWED("events.onredstone.allow", "true", true);
+    ON_PLAYER_JOIN_APPROVAL("events.onplayerjoin.approval_required", "true"),
+    ON_PLAYER_JOIN_ALLOWED("events.onplayerjoin.allow", "false"),
+    ON_PLAYER_ENTER_ALLOWED("events.onplayerenter.allow", "true"),
+    ON_BLOCK_BREAK_ALLOWED("events.onblockbreak.allow", "true"),
+    ON_CROP_GROW_ALLOWED("events.oncropgrow.allow", "true"),
+    ON_ENTITY_EXPLODE_ALLOWED("events.onentityexplode.allow", "true"),
+    ON_REDSTONE_ALLOWED("events.onredstone.allow", "true");
 
 
 
     private final String yamlName;
     private final String defaultValue;
-    private final boolean isRequired;
 
-    Configuration(String name, String defaultValue, boolean isRequired){
+    Configuration(String name, String defaultValue){
         this.yamlName = name;
         this.defaultValue = defaultValue;
-        this.isRequired = isRequired;
     }
 
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -70,10 +69,6 @@ public enum Configuration {
 
     public void setDefaultValue(){
         MCNotify.config.setConfigValue(this.yamlName, this.defaultValue);
-    }
-
-    public boolean isRequired(){
-        return this.isRequired;
     }
 
 }

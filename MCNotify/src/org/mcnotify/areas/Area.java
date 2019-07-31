@@ -154,15 +154,7 @@ public class Area {
     }
 
     private boolean updateDatabase(){
-        if(MCNotify.database.isConnected()) {
-            if (MCNotify.database.areaTable().update(this)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
+        return MCNotify.datastore.areaTable().update(this);
     }
 
 

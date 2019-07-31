@@ -35,7 +35,7 @@ public class BaseCommandHandler extends AsyncCommandExecutor {
             // Execute different module functions based on the argument parameters
             switch(strings[0].toLowerCase()){
                 case "verify": {
-                    // Validate the user's MC account to the application and apply the database updates to register the user's device.
+                    // Validate the user's MC account to the application and apply the datastore updates to register the user's device.
                     // Set registered flag, allowing user to get notifications on their device.
                     String endpoint = "users.php";
                     endpoint += "?uuid=" + player.getUniqueId().toString();
