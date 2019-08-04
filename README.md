@@ -1,10 +1,16 @@
-# MCNotify
+# ZoneX
 
-MCNotify is a Spigot plugin that allows players to create and protect various areas as well as subscribe to events that occur within their area. Is your furnace done? Are your hoppers full? Are your crops grown? MCNotify has support for many different events that will notify the player when the event has triggered within a specified area, allowing the player to focus on the most important issues at hand.
+ZoneX is a Spigot plugin that allows players to create and protect various areas as well as subscribe to events that occur within their area. Is your furnace done? Are your hoppers full? Are your crops grown? ZoneX has support for many different events that will notify the player when the event has triggered within a specified area, allowing the player to focus on the most important issues at hand.
 
 # For Server Owners:
-Installing MCNotify is easy. Simply download the .jar file and place it in the plugins forlder. After running your server once, MCNotify will create a folder within the plugins folder that will need to be configured beofre MCNotify can run. MCNotify requires a local database connection to save player areas and subscriptions. Once these configuration options have been configured, MCNotify will create your database tables and perform database upgrades automatically!
-Note: This plugin is free, with the ability to pay for additional features.
+Installing ZoneX is easy. Simply download the .jar file and place it in the plugins forlder. 
+After running your server once, ZoneX will create a folder within the plugins folder that will need to be configured beofre ZoneX can run.
+MCNofity allows flat file storage, however it is highly recommended to configure a database connection to store the data.
+Once these configuration options have been configured, ZoneX will create your database tables (or flat file) automatically!
+
+
+This plugin is currently free, however as development progresses, a paid version will be released in the future.
+Currently all of the premium features are avaliable, but the plan is to split functionality as follows:
 
 | | Free | Premium |
 |----|----|----|
@@ -20,33 +26,35 @@ Note: This plugin is free, with the ability to pay for additional features.
 | Real-time Support | ![#ff0000](https://placehold.it/15/ff0000/000000?text=+) | ![#00ff00](https://placehold.it/15/00ff00/000000?text=+)
 
 # Basic Commands:
-MCNotify offers the following basic commands:
+
+**NOTE:** The `<zoneName>` command parameter is optional if you are standing inside of an area you own. You only need to specify the `<zoneName>` parameter if you are not inside a zone or want to manage a different zone.
+
+ZoneX offers the following basic commands which provide information:
 
 | Command Name <img width=800/><br/>Permission Node| Description | Parameters |
 |---|---|---|
-| `/mcnotify help <page>`<br/>`mcnotify.*` | Shows a help page which lists the MCNotify commands and usage | **page:** The page of 'help' you would like to view. |
-| `/mcnotify about`<br/>`mcnotify.*` | Shows information about MCnotify, authors, and links | None |
-| `/mcnotify verify`<br/>`mcnotify.*` | Shows your minecraft verification code to link your mobile device with your minecraft account to get push notificaions. | None |
+| `/zx help <page>`<br/>`zx.*` | Shows a help page which lists the ZoneX commands and usage | **page:** The page of 'help' you would like to view. |
+| `/zx verify`<br/>`zx.*` | Shows your minecraft verification code to link your mobile device with your minecraft account to get push notificaions. | None |
 
 # Area commands
-To get started with MCNotify, you need to create an area. The following commands help with creating an area. NOTE: Areas are created with infinite vertical height. Only allowed players can break and place blocks within your area.
+To get started with ZoneX, you need to create an area. The following commands help with creating an area. NOTE: Areas are created with infinite vertical height. Only allowed players can break and place blocks within your area.
 
 | Command Name <img width=800/><br/>Permission Node| Description | Parameters |
 |---|---|---|
-| `/mcnotify area add <areaName>`<br/>`mcnotify.member.areas.add` | Starts the area creation process. The player is able to select points to define their area. | **areaName:** The desired name for the area. |
-| `/mcnotify area list`<br/>`mcnotify.member.areas.list` | Lists all of the areas that you have defined. | None. |
-| `/mcnotify area remove <areaName>`<br/>`mcnotify.member.areas.remove` | Removes the specified area. | **areaName:** The name of the area to remove. |
-| `/mcnotify area view <areaName>`<br/>`mcnotify.member.areas.view` | Allows you to view the boundary of the area specified. | **areaName:** The name of the area to view. |
-| `/mcnotify area info <areaName>`<br/>`mcnotify.member.areas.info` | Provides information about the specified area. | **areaName:** The name of the area to view. |
+| `/zone add <zoneName>`<br/>`zx.member.zone.add` | Starts the area creation process. The player is able to select points to define their area. | **zoneName:** The desired name for the area. Optional if you are standing inside of a zone. |
+| `/zone list`<br/>`zx.member.zone.list` | Lists all of the areas that you have defined. | None. |
+| `/zone remove <zoneName>`<br/>`zx.member.zone.remove` | Removes the specified area. | **zoneName:** The name of the area to remove. Optional if you are standing inside of a zone. |
+| `/zone view <zoneName>`<br/>`zx.member.zone.view` | Allows you to view the boundary of the area specified. | **zoneName:** The name of the area to view. Optional if you are standing inside of a zone. |
+| `/zone info <zoneName>`<br/>`zx.member.zone.info` | Provides information about the specified area. | **zoneName:** The name of the area to view. Optional if you are standing inside of a zone. |
 
 # Allowing access
 Once an area is created, accesss to the area can be limited to specific players. The following commands can be used to add or remove specific players from an area.
 
 | Command Name <img width=800/><br/>Permission Node| Description | Parameters |
 |---|---|---|
-| `/mcnotify area allow <playerName> <areaName>`<br/>`mcnotify.members.areas.allow` | Allows the specified player to break and place blocks within the area. | **playerName:** The player to add to the area. <br/> **areaName:**The name of the area to allow the player to. |
-| `/mcnotify area deny <playerName> <areaName>`<br/>`mcnotify.members.areas.deny` | Prevents the specified player from breaking and placing blocks within the area. | **playerName:** The player to add to the area. <br/> **areaName:**The name of the area to allow the player to. |
-| `/mcnotify area deny all <areaName>`<br/>`mcnotify.members.areas.denyall` | Removes all players from being allowed in the area except for the owner of the area. | **areaName:**The name of the area to deny players from. |
+| `/zone allow <playerName> <zoneName>`<br/>`zx.members.zone.allow` | Allows the specified player to break and place blocks within the area. | **playerName:** The player to add to the area. <br/> **zoneName:**The name of the area to allow the player to. Optional if you are standing inside of a zone. |
+| `/zone deny <playerName> <zoneName>`<br/>`zx.members.zone.deny` | Prevents the specified player from breaking and placing blocks within the area. | **playerName:** The player to add to the area. <br/> **zoneName:**The name of the area to allow the player to. Optional if you are standing inside of a zone. |
+| `/zone deny all <zoneName>`<br/>`zx.members.zone.denyall` | Removes all players from being allowed in the area except for the owner of the area. | **zoneName:**The name of the area to deny players from. Optional if you are standing inside of a zone. |
 
 # Configuring your area
 
@@ -54,16 +62,16 @@ When an area is created, a number of different protections get applied to the ar
 
 | Command Name <img width=800/><br/>Permission Node| Description | Parameters |
 |---|---|---|
-| `/mcnotify area protect <areaName>`<br/>`mcnotify.member.protect.protect` | Prevents blocks from being placed or broken within the area by unallowed players. | **areaName:** The area to protect. |
-| `/mcnotify area mobProtect <areaName>`<br/>`mcnotify.member.protect.mobProtect` | Protects peaceful animals from being harmed by unallowed players. | **areaName:** The area to mobProtect. |
-| `/mcnotify area stopLiquid <areaName>`<br/>`mcnotify.member.protect.stopLiquid` | Stops lava and water from flowing into the area. | **areaName:** The area to stop liquids. |
-| `/mcnotify area chestLock <areaName>`<br/>`mcnotify.member.protect.chestLock` | Prevents chests from being opened by unallowed players. | **areaName:** The area to block chests. |
-| `/mcnotify area noRedstone <areaName>`<br/>`mcnotify.member.protect.noRedstone` | Prevents any restone signals from being activated by unallowed players. | **areaName:** The area to stop redstone. |
-| `/mcnotify area noFire <areaName>`<br/>`mcnotify.member.protect.noFire` | Prevents fire spread in the area. | **areaName:** The area to stop redstone. |
-| `/mcnotify area doorLock <areaName>`<br/>`mcnotify.member.protect.doorLock` | Prevents doors from being opened in the area by unallowed players. | **areaName:** The area to stop redstone. |
-| `/mcnotify area noEnter <areaName>`<br/>`mcnotify.member.protect.noEnter` | Prevents unallowed players from entering the area. | **areaName:** The area to stop redstone. |
-| `/mcnotify area noPvp <areaName>`<br/>`mcnotify.member.protect.noPvp` | Prevents players within the area from being attacked by another player. | **areaName:** The area to protect from pvp. |
-| `/mcnotify area free <areaName>`<br/>`mcnotify.member.protect.free` | Resets the area back to the default protection. | **areaName:** The area to free. |
+| `/zone protect <zoneName>`<br/>`zx.member.protect.protect` | Prevents blocks from being placed or broken within the area by unallowed players. | **zoneName:** The area to protect. |
+| `/zone mobProtect <zoneName>`<br/>`zx.member.protect.mobProtect` | Protects peaceful animals from being harmed by unallowed players. | **zoneName:** The area to mobProtect. |
+| `/zone stopLiquid <zoneName>`<br/>`zx.member.protect.stopLiquid` | Stops lava and water from flowing into the area. | **zoneName:** The area to stop liquids. |
+| `/zone chestLock <zoneName>`<br/>`zx.member.protect.chestLock` | Prevents chests from being opened by unallowed players. | **zoneName:** The area to block chests. |
+| `/zone noRedstone <zoneName>`<br/>`zx.member.protect.noRedstone` | Prevents any restone signals from being activated by unallowed players. | **zoneName:** The area to stop redstone. |
+| `/zone noFire <zoneName>`<br/>`zx.member.protect.noFire` | Prevents fire spread in the area. | **zoneName:** The area to stop redstone. |
+| `/zone doorLock <zoneName>`<br/>`zx.member.protect.doorLock` | Prevents doors from being opened in the area by unallowed players. | **zoneName:** The area to stop redstone. |
+| `/zone noEnter <zoneName>`<br/>`zx.member.protect.noEnter` | Prevents unallowed players from entering the area. | **zoneName:** The area to stop redstone. |
+| `/zone noPvp <zoneName>`<br/>`zx.member.protect.noPvp` | Prevents players within the area from being attacked by another player. | **zoneName:** The area to protect from pvp. |
+| `/zone free <zoneName>`<br/>`zx.member.protect.free` | Resets the area back to the default protection. | **zoneName:** The area to free. |
 
 By default, areas that are created by a player have the following protections:
 - protect
@@ -79,33 +87,36 @@ After you have created an area, it's time to start getting notifications! The fo
 
 | Command Name <img width=800/><br/>Permission Node| Description | Parameters |
 |---|---|---|
-| `/mcnotify watch login <player>`<br/>`mcnotify.member.notify.login` | Notifies you when the specified player logs in. | **player:** The player name. Must be logged in. |
-| `/mcnotify watch playerEnter <area>`<br/>`mcnotify.member.notify.playerEnter` | Notifies you when a player who is not your friend enters your area. | **area:** The name of the area to watch. |
-| `/mcnotify watch explostion <area>`<br/>`mcnotify.member.notify.explosion` | Notifies you when an explosion occurs within an area. | **area:** The name of the area to watch. |
-| /`mcnotify watch blockbreak <area>`<br/>`mcnotify.member.notify.blockbreak` | Notifies you when a block is broken within an area. | **area:** The name of the area to watch. |
-| `/mcnotify watch redstone <area>`<br/>`mcnotify.member.notify.redstone` | Notifies you when redstone is powered within an area. | **area:** The name of the area to watch. |
-| `/mcnotify watch hopper`<br/>`mcnotify.member.notify.hopper` | Notifies you when the selected hopper(s) are full | None |
-| `/mcnotify watch crop <area>`<br/>`mcnotify.member.notify.crop` | Notifies you when crop is fully grown within an area. | **area:** The name of the area to watch. |
-| `/mcnotify watch mobCap <limit> <area>`<br/>`mcnotify.member.notify.mobLimit` | Notifies you if the mobcap has been reacted within an area. | **area:** The name of the area to watch. |
-| `/mcnotify watch enterNether <player>`<br/>`mcnotify.member.notify.enterNether` | Notifies you if the specified player enters the nether. | **player:** The name of the player. Must be online. |
-| `/mcnotify watch enterEnd <player>`<br/>`mcnotify.member.notify.enterEnd` | Notifies you if the specified player enters the end. | **player:** The name of the player. Must be online. |
-| `/mcnotify watch enterWorld <player>`<br/>`mcnotify.member.notify.enterWorld` | Notifies you if the specified player enters the Overworld. | **player**: The name of the player. Must be online. |
-| `/mcnotify watch list`<br/>`mcnotify.member.notify` | Lists all of the events you are currently watching. | None. |
-| `/mcnotify unwatch <eventId>`<br/>`mcnotify.member.notify` | Stops you from watching the specific event. Because multiple events can be watched for different areas, the eventId is required. Get the eventId by using `/mcnotify watch list`. | **eventId:** The Id of the event you would like to stop watching. |
+| `/watch login <player>`<br/>`zx.member.notify.login` | Notifies you when the specified player logs in. | **player:** The player name. Must be logged in. |
+| `/watch playerEnter <area>`<br/>`zx.member.notify.playerEnter` | Notifies you when a player who is not your friend enters your area. | **area:** The name of the area to watch. |
+| `/watch explostion <area>`<br/>`zx.member.notify.explosion` | Notifies you when an explosion occurs within an area. | **area:** The name of the area to watch. |
+| `/watch blockbreak <area>`<br/>`zx.member.notify.blockbreak` | Notifies you when a block is broken within an area. | **area:** The name of the area to watch. |
+| `/watch redstone <area>`<br/>`zx.member.notify.redstone` | Notifies you when redstone is powered within an area. | **area:** The name of the area to watch. |
+| `/watch hopper`<br/>`zx.member.notify.hopper` | Notifies you when the selected hopper(s) are full | None |
+| `/watch crop <area>`<br/>`zx.member.notify.crop` | Notifies you when crop is fully grown within an area. | **area:** The name of the area to watch. |
+| `/watch mobCap <limit> <area>`<br/>`zx.member.notify.mobLimit` | Notifies you if the mobcap has been reacted within an area. | **area:** The name of the area to watch. |
+| `/watch enterNether <player>`<br/>`zx.member.notify.enterNether` | Notifies you if the specified player enters the nether. | **player:** The name of the player. Must be online. |
+| `/watch enterEnd <player>`<br/>`zx.member.notify.enterEnd` | Notifies you if the specified player enters the end. | **player:** The name of the player. Must be online. |
+| `/watch enterWorld <player>`<br/>`zx.member.notify.enterWorld` | Notifies you if the specified player enters the Overworld. | **player**: The name of the player. Must be online. |
+| `/watch list`<br/>`zx.member.notify` | Lists all of the events you are currently watching. | None. |
+| `/unwatch <eventId>`<br/>`zx.member.notify` | Stops you from watching the specific event. Because multiple events can be watched for different areas, the eventId is required. Get the eventId by using `/ZoneX watch list`. | **eventId:** The Id of the event you would like to stop watching. |
 
 # Admin controls
 
-Have a player that needs more protection? Need to remove an area? Admin controls allow modifying other players areas to allow full control over where players are creating their areas. With a useful permission node, `mcnotify.admin.*`, all admin commands can be provided with a single permission node.
+Have a player that needs more protection? 
+Need to remove an area? 
+Admin controls allow modifying other players areas to allow full control over where players are creating their areas. 
+With a useful permission node, `zx.admin.*`, all admin commands can be provided with a single permission node.
 
 ### Area Administration
 
 | Command Name <img width=800/><br/>Permission Node| Description | Parameters |
 |---|---|---|
-|`/mcnotify admin area list <playerName>`<br/>`mcnotify.admin.areas.listAny`| Lists all of a player's areas. | **playerName:** The name of the player to list the areas of. |
-|`/mcnotify admin area view <playerName> <areaName>`<br/>`mcnotify.admin.areas.viewAny`| Views the specified player's area. | **playerName:** The name of the player who owns the area.<br/>**areaName:** The name of the player's area to view. |
-|`/mcnotify admin area info <playerName> <areaName>`<br/>`mcnotify.admin.areas.infoAny`| Views information about the specified player's area. | **playerName:** The name of the player who owns the area.<br/>**areaName:** The name of the player's area to view info about. |
-|`/mcnotify admin area remove <playerName> <areaName>`<br/>`mcnotify.admin.areas.removeAny`| Removes the specified player's area. | **playerName:** The name of the player who owns the area.<br/>**areaName:** The name of the player's area to remove. |
-|`/mcnotify admin area remove <playerName> <areaName>`<br/>`mcnotify.admin.areas.removeAny`| Removes the specified player's area. | **playerName:** The name of the player who owns the area.<br/>**areaName:** The name of the player's area to remove. |
-|`/mcnotify admin area create <playerName> <areaName>`<br/>`mcnotify.admin.areas.createAny`| Creates an area for the specified player. | **playerName:** The name of the player to create the area for.<br/>**areaName:** The name of the area to create. |
-|`/mcnotify admin area rename <playerName> <oldAreaName> <newAreaName>`<br/>`mcnotify.admin.areas.renameAny`| Renames the specified area. | **playerName:** The name of the player to create the area for.<br/>**oldAreaName:** The name of the area to rename.<br/>**newAreaName:** The new name of the area. |
-|`/mcnotify admin area toggle <protectionType> <playerName> <newAreaName>`<br/>`mcnotify.admin.areas.protectAny`| Applys or removes a specified protection type from the specified player's area of the given name. | **protectionType:** The tyope of protection to apply to the area.<br/>**playerName:** The name of the player who owns the area.<br/>**areaName:** The name of the area to protect.<br/>**newAreaName:** The new name of the area. |
+|`/zx area list <playerName>`<br/>`zx.admin.zone.listAny`| Lists all of a player's areas. | **playerName:** The name of the player to list the areas of. |
+|`/zx area view <playerName> <zoneName>`<br/>`zx.admin.zone.viewAny`| Views the specified player's area. | **playerName:** The name of the player who owns the area.<br/>**zoneName:** The name of the player's area to view. |
+|`/zx area info <playerName> <zoneName>`<br/>`zx.admin.zone.infoAny`| Views information about the specified player's area. | **playerName:** The name of the player who owns the area.<br/>**zoneName:** The name of the player's area to view info about. |
+|`/zx area remove <playerName> <zoneName>`<br/>`zx.admin.zone.removeAny`| Removes the specified player's area. | **playerName:** The name of the player who owns the area.<br/>**zoneName:** The name of the player's area to remove. |
+|`/zx area remove <playerName> <zoneName>`<br/>`zx.admin.zone.removeAny`| Removes the specified player's area. | **playerName:** The name of the player who owns the area.<br/>**zoneName:** The name of the player's area to remove. |
+|`/zx area create <playerName> <zoneName>`<br/>`zx.admin.zone.createAny`| Creates an area for the specified player. | **playerName:** The name of the player to create the area for.<br/>**zoneName:** The name of the area to create. |
+|`/zx area rename <playerName> <oldzoneName> <newzoneName>`<br/>`zx.admin.zone.renameAny`| Renames the specified area. | **playerName:** The name of the player to create the area for.<br/>**oldzoneName:** The name of the area to rename.<br/>**newzoneName:** The new name of the area. |
+|`/zx area toggle <protectionType> <playerName> <newzoneName>`<br/>`zx.admin.zone.protectAny`| Applys or removes a specified protection type from the specified player's area of the given name. | **protectionType:** The tyope of protection to apply to the area.<br/>**playerName:** The name of the player who owns the area.<br/>**zoneName:** The name of the area to protect.<br/>**newzoneName:** The new name of the area. |

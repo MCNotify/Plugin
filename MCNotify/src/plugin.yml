@@ -1,10 +1,19 @@
-name: MCNotify
+name: ZoneX
 version: 0.0.1
 authors: [QuinnBast]
-main: org.mcnotify.MCNotify
+main: org.zonex.ZoneX
 database: true
 api-version: 1.14
 commands:
-  mcnotify:
-    description: Type "/mcnotify help" for more informaiton!
-    usage: /mcnotify
+  zone:
+    descriotion: Commands to help manage a zone.
+    usage: /zone help
+  watch:
+    description: Get notifications for various in-game events!
+    usage: /watch help
+  unwatch:
+    description: Stop watching an event.
+    usage: /unwatch <eventId>
+  zx:
+    description: Admin commands for ZoneX
+    usage: /zx help
