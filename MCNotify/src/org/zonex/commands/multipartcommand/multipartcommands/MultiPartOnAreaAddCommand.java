@@ -36,13 +36,13 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         if(this.poly.getLength() >= 3){
 
             if(ZoneX.areaManager.addNewArea(new Area(player, this.poly, this.areaName, player.getWorld().getName()))){
-                this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Area created successfully.");
+                this.player.sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.GRAY + "Area created successfully.");
             } else {
-                this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Error creating area.");
+                this.player.sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.GRAY + "Error creating area.");
             }
 
         } else {
-            this.player.sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Polygon needs at least 3 points. Failed to create area.");
+            this.player.sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.GRAY + "Polygon needs at least 3 points. Failed to create area.");
         }
         this.cleanup();
     }
@@ -57,18 +57,17 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         // Show particles around the area that is selected.
         if(poly.getLength() == 2) {
             RegisterCommands.particleManager.startAreaVeiwParticleThread(((BlockPlaceEvent) event).getPlayer(), poly);
-            return;
         }
 
 
-        ((BlockPlaceEvent) event).getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Selected point: " + location.getBlockX() + ", " + location.getBlockZ());
+        ((BlockPlaceEvent) event).getPlayer().sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.GRAY + "Selected point: " + location.getBlockX() + ", " + location.getBlockZ());
 
         if(poly.getLength() >= 3){
             if(poly.getLength() == 3) {
-                ((BlockPlaceEvent) event).getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Drop the barrier when finished.");
+                ((BlockPlaceEvent) event).getPlayer().sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.GRAY + "Drop the barrier when finished.");
             }
         } else {
-            ((BlockPlaceEvent) event).getPlayer().sendMessage(ChatColor.GREEN + "[MCNotify] " + ChatColor.GRAY + "Polygon needs " + (3 - poly.getLength()) + " more points.");
+            ((BlockPlaceEvent) event).getPlayer().sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.GRAY + "Polygon needs " + (3 - poly.getLength()) + " more points.");
         }
 
         ((BlockPlaceEvent) event).setCancelled(true);
@@ -90,7 +89,7 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
 
         Block block = placeEvent.getBlockPlaced();
 
-        if(block.getType() != Material.BARRIER){
+        if(block.getType() != Material.IRON_BLOCK){
             return false;
         }
 
@@ -108,7 +107,7 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         Item item = dropItemEvent.getItemDrop();
         ItemStack itemstack = dropItemEvent.getItemDrop().getItemStack();
 
-        if(itemstack.getType() != Material.BARRIER){
+        if(itemstack.getType() != Material.IRON_BLOCK){
             return false;
         }
 
@@ -130,7 +129,7 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
             if(itemstack == null){
                 continue;
             }
-            if(itemstack.getType() == Material.BARRIER){
+            if(itemstack.getType() == Material.IRON_BLOCK){
                 if(itemstack.getEnchantments().containsKey(Enchantment.BINDING_CURSE)){
                     itemstack.setAmount(0);
                 }

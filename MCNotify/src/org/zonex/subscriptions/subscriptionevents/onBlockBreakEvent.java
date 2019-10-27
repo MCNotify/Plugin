@@ -26,7 +26,7 @@ public class onBlockBreakEvent implements Listener {
             // Only trigger if the player moves into the boundary.
             if(poly.contains(blockPoint)) {
                 // Player is inside the boundary.
-                subscription.onEvent();
+                subscription.onEvent("A " + breakEvent.getBlock().getType().toString() + " has been broken in " + areaName + " at " + blockPoint.x + ", " + blockPoint.y);
             }
         }
     }

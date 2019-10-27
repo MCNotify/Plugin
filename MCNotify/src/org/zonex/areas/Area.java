@@ -2,7 +2,11 @@ package org.zonex.areas;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.zonex.ZoneX;
 import org.zonex.areas.protection.Protection;
 
@@ -11,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Area implements ConfigurationSerializable {
+public class Area {
 
     private OfflinePlayer owner;
     private Polygon polygon;
@@ -38,6 +42,15 @@ public class Area implements ConfigurationSerializable {
         this.world = world;
         this.protections = Protection.getDefaultProtections();
         this.whitelist = new ArrayList<>();
+
+        // Determine the id of the subscription
+        ArrayList<Area> playerAreas = ZoneX.areaManager.getAreas(owner.getUniqueId());
+        if(playerAreas.size() > 0) {
+            int lastAreaId = playerAreas.get(playerAreas.size() - 1).getAreaId();
+            this.areaId = lastAreaId + 1;
+        } else {
+            this.areaId = 1;
+        }
     }
 
     public OfflinePlayer getOwner(){
@@ -163,29 +176,33 @@ public class Area implements ConfigurationSerializable {
     }
 
 
-    @Override
-    public Map<String, Object> serialize() {
 
-        LinkedHashMap result = new LinkedHashMap<>();
-        result.put("name", areaName);
-        result.put("protections", this.getProtectionsAsString());
-        result.put("whitelist", this.getWhitelistAsString());
-        result.put("polygon", polygon.getJson().toJSONString());
-        result.put("areaId", String.valueOf(areaId));
-        result.put("world", world);
-        result.put("owner", owner.getUniqueId().toString());
-        return result;
+    public String serialize() {
+
+        JSONObject json = new JSONObject();
+        json.put("name", areaName);
+        json.put("protections", this.getProtectionsAsString());
+        json.put("whitelist", this.getWhitelistAsString());
+        json.put("polygon", polygon.getJson().toJSONString());
+        json.put("areaId", String.valueOf(areaId));
+        json.put("world", world);
+        json.put("owner", owner.getUniqueId().toString());
+        return json.toJSONString();
     }
 
-    public static Area deserialize(Map<String, Object> args){
-        OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(((String)args.get("owner"))));
-        Polygon poly = new Polygon((String)args.get("polygon"));
-        int areaId = Integer.valueOf((String)args.get("areaId"));
-        String areaName = (String)args.get("name");
-        String world = (String)args.get("world");
-        ArrayList<Protection> protections = Protection.fromString((String)args.get("protections"));
+    public static Area deserialize(String serializedString) throws ParseException {
 
-        String whitelistString = (String)args.get("whitelist");
+        Object deserialized = new JSONParser().parse(serializedString);
+        JSONObject deserializedJson = (JSONObject) deserialized;
+
+        OfflinePlayer owner = Bukkit.getOfflinePlayer(UUID.fromString(((String)deserializedJson.get("owner"))));
+        Polygon poly = new Polygon((String)deserializedJson.get("polygon"));
+        int areaId = Integer.valueOf((String)deserializedJson.get("areaId"));
+        String areaName = (String)deserializedJson.get("name");
+        String world = (String)deserializedJson.get("world");
+        ArrayList<Protection> protections = Protection.fromString((String)deserializedJson.get("protections"));
+
+        String whitelistString = (String)deserializedJson.get("whitelist");
         ArrayList<OfflinePlayer> playerList = new ArrayList<>();
         if(whitelistString.length() > 0) {
             for (String s : whitelistString.split(",")) {

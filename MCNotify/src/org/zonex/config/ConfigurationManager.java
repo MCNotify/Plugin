@@ -38,13 +38,25 @@ public class ConfigurationManager {
                 e.printStackTrace();
             }
             System.out.println("[ZoneX] WARNING: Plugin disabled until configuring /plugins/ZoneX/ZoneX.yml");
-        }
+        } else {
+            customConfig= new YamlConfiguration();
+            try {
+                customConfig.load(customConfigFile);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
 
-        customConfig= new YamlConfiguration();
-        try {
-            customConfig.load(customConfigFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            // Check if there are any additional configuration values that have been added that need to be placed in the config file.
+            for(Configuration configuration : Configuration.values()){
+                if(customConfig.get(configuration.getYamlName()) == null){
+                    customConfig.set(configuration.getYamlName(), configuration.getDefaultValue());
+                }
+                try {
+                    customConfig.save(customConfigFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

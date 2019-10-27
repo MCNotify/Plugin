@@ -2,6 +2,7 @@ package org.zonex.datastore;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.zonex.datastore.fileModels.FileAreaTable;
+import org.zonex.datastore.fileModels.FileCommunicationTable;
 import org.zonex.datastore.fileModels.FileSubscriptionTable;
 
 import java.io.File;
@@ -22,6 +23,10 @@ public class FlatFile {
 
     public FileSubscriptionTable subscriptionTable(){
         return new FileSubscriptionTable(yamlConfiguration, file);
+    }
+
+    public FileCommunicationTable communicationTable(){
+        return new FileCommunicationTable(yamlConfiguration, file);
     }
 
 }

@@ -142,6 +142,31 @@ public class WatchCommandHandler extends AbstractCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        return null;
+        List<String> list = new ArrayList<String>();
+        if(args.length == 0) {
+            list.add("list");
+            list.add("help");
+            list.add("remove");
+            for(Events event : Events.values()){
+                list.add(event.getCommandName());
+            }
+        } else if (args.length == 1) {
+            if(args[0].toLowerCase().equals("remove"))
+            switch(args[0]){
+                case "remove":
+                    for(Subscription subscription : ZoneX.subscriptionManager.getPlayerSubscriptions((Player)sender)){
+                        list.add(String.valueOf(subscription.getSubscriptionId()));
+                    }
+                    break;
+                default:
+                    Events eventType = Events.fromCommand(args[0].toLowerCase());
+
+                    if (eventType != null) {
+                        // Get the first argument of the event
+                        list.add(eventType.getJsonKeys()[0]);
+                    }
+            }
+        }
+        return list;
     }
 }

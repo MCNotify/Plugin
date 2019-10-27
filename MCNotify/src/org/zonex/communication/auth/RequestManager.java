@@ -1,4 +1,4 @@
-package org.zonex.authenticator;
+package org.zonex.communication.auth;
 
 import org.zonex.config.Configuration;
 
@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
+import java.util.Collections;
+import java.util.List;
 
 public class RequestManager {
 
@@ -25,6 +27,7 @@ public class RequestManager {
         con.setRequestMethod(method);
         con.setRequestProperty("User-Agent", USER_AGENT);
         con.setRequestProperty("Cookie", "server_secret_key=" + Configuration.SECRET_KEY.getValue() + ";");
+        con.setRequestProperty("Cookie", "server_secret_key=" + getIPAddress(true));
         if(body != null) {
             con.setDoOutput(true);
             con.setRequestProperty("Content-Type", "application/json");
@@ -56,5 +59,37 @@ public class RequestManager {
         in.close();
 
         return response.toString();
+    }
+
+    /**
+     * Get IP address from first non-localhost interface
+     * @param useIPv4   true=return ipv4, false=return ipv6
+     * @return  address or empty string
+     */
+    private static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                        boolean isIPv4 = sAddr.indexOf(':')<0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) { } // for now eat exceptions
+        return "";
     }
 }

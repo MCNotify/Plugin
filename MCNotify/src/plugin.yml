@@ -1,7 +1,8 @@
 name: ZoneX
-version: 0.0.1
+version: 0.1.0
 authors: [QuinnBast]
 main: org.zonex.ZoneX
+softdepend: [DiscordSRV]
 database: true
 api-version: 1.14
 commands:

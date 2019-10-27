@@ -1,4 +1,4 @@
-package org.zonex.authenticator;
+package org.zonex.communication.auth;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

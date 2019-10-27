@@ -27,7 +27,7 @@ public class onPlayerMove implements Listener {
             // Only trigger if the player moves into the boundary.
             if(!poly.contains(oldPlayerPoint) && poly.contains(newPlayerPoint)) {
                 // Player is inside the boundary.
-                subscription.onEvent();
+                subscription.onEvent(moveEvent.getPlayer().getDisplayName() + " has entered " + areaName + ".");
             }
         }
     }

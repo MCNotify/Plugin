@@ -2,6 +2,7 @@ package org.zonex.datastore.fileModels;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.json.simple.parser.ParseException;
 import org.zonex.areas.Area;
 import org.zonex.datastore.baseModels.BaseAreaModel;
 
@@ -30,7 +31,13 @@ public class FileAreaTable extends BaseAreaModel {
             for (String uuid : areaConfig.getKeys(false)) {
                 // Loop areas
                 for(String areaName: areaConfig.getConfigurationSection(uuid).getKeys(false)) {
-                    areaList.add(((Area) (areaConfig.get(uuid + "." + areaName))));
+                    try {
+                        areaList.add(((Area.deserialize((String)areaConfig.get(uuid + "." + areaName)))));
+                    } catch (ParseException e) {
+                        // Unable to parse the area
+                        System.out.println("[ZoneX] unable to parse Area JSON at: " + uuid + "." + areaName);
+                        continue;
+                    }
                 }
             }
         }
@@ -46,7 +53,14 @@ public class FileAreaTable extends BaseAreaModel {
             if (areaConfig.getConfigurationSection(uuid) != null) {
                 // Loop areas
                 for (String key : areaConfig.getConfigurationSection(uuid).getKeys(false)) {
-                    Area area = ((Area) (areaConfig.get(uuid + "." + key)));
+                    Area area = null;
+                    try {
+                        area = ((Area.deserialize((String)areaConfig.get(uuid + "." + key))));
+                    } catch (ParseException e) {
+                        // Unable to parse the area
+                        System.out.println("[ZoneX] unable to parse Area JSON at: " + uuid + "." + key);
+                        continue;
+                    }
                     areaList.add(area);
                 }
             }
@@ -61,7 +75,14 @@ public class FileAreaTable extends BaseAreaModel {
             for (String uuid : areaConfig.getKeys(false)) {
                 // Loop areas
                 for (String areaName : areaConfig.getConfigurationSection(uuid).getKeys(false)) {
-                    Area area = (Area) areaConfig.get(uuid + "." + areaName);
+                    Area area = null;
+                    try {
+                        area = (Area.deserialize((String)areaConfig.get(uuid + "." + areaName)));
+                    } catch (ParseException e) {
+                        // Unable to parse the area
+                        System.out.println("[ZoneX] unable to parse Area JSON at: " + uuid + "." + areaName);
+                        return null;
+                    }
                     if (area.getAreaId() == id) {
                         return area;
                     }
@@ -73,7 +94,7 @@ public class FileAreaTable extends BaseAreaModel {
 
     @Override
     public boolean insert(Area area) {
-        areaConfig.set(area.getOwner().getUniqueId().toString() + "." + area.getAreaName(), area);
+        areaConfig.set(area.getOwner().getUniqueId().toString() + "." + area.getAreaName(), area.serialize());
         try {
             yamlConfiguration.save(file);
         } catch (IOException e) {
@@ -85,7 +106,7 @@ public class FileAreaTable extends BaseAreaModel {
     @Override
     public boolean update(Area area) {
         if(areaConfig != null) {
-            areaConfig.set(area.getOwner().getUniqueId().toString() + "." + area.getAreaName(), area);
+            areaConfig.set(area.getOwner().getUniqueId().toString() + "." + area.getAreaName(), area.serialize());
             try {
                 yamlConfiguration.save(file);
             } catch (IOException e) {

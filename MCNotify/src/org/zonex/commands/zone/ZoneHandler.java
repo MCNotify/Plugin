@@ -15,6 +15,7 @@ import org.zonex.commands.AbstractCommand;
 import org.zonex.commands.RegisterCommands;
 import org.zonex.commands.HelpFactory;
 import org.zonex.commands.multipartcommand.multipartcommands.MultiPartOnAreaAddCommand;
+import org.zonex.config.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,18 +46,23 @@ public class ZoneHandler extends AbstractCommand {
                     return;
                 }
 
+                if(ZoneX.areaManager.getAreas(player.getUniqueId()).size() >= Integer.valueOf(Configuration.AREA_LIMIT.getValue())){
+                    player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " You can only have " + Configuration.AREA_LIMIT.getValue() + " areas.");
+                    return;
+                }
+
                 // Generate a new multi-part command listener
                 new MultiPartOnAreaAddCommand(player, args[1]);
 
                 // Generate an item with unique tags to identify in the event.
-                ItemStack itemStack = new ItemStack(Material.BARRIER);
+                ItemStack itemStack = new ItemStack(Material.IRON_BLOCK);
 
                 // Bind it to the player until the command is finished.
                 itemStack.addUnsafeEnchantment(Enchantment.BINDING_CURSE, 1);
 
                 player.getInventory().addItem(itemStack);
 
-                player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " Use the barrier to create your area.");
+                player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " Use the iron to create your area.");
                 break;
             }
             case "list": {
@@ -283,6 +289,31 @@ public class ZoneHandler extends AbstractCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String[] args) {
-        return null;
+        List<String> list = new ArrayList<String>();
+        if(args.length == 0) {
+            list.add("list");
+            list.add("add");
+            list.add("remove");
+            list.add("deny");
+            list.add("allow");
+            list.add("view");
+            list.add("help");
+            list.add("info");
+
+            for(Protection protection : Protection.values()){
+                list.add(protection.getCommand());
+            }
+        } else if(args.length == 1){
+            switch(args[0].toLowerCase()){
+                case "view":
+                case "info":
+                    // Loop the player's areas
+                    for(Area area : ZoneX.areaManager.getAreas(((Player)sender).getUniqueId())){
+                        list.add(area.getAreaName());
+                    }
+                    break;
+            }
+        }
+        return list;
     }
 }

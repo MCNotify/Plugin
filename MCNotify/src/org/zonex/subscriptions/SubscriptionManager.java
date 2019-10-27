@@ -18,11 +18,11 @@ public class SubscriptionManager {
 
     private void loadDatabase() throws SQLException {
 
-        System.out.println("[MCNotify] Loading subscriptions...");
+        System.out.println("[ZoneX] Loading subscriptions...");
 
         this.subscriptions = ZoneX.datastore.subscriptionTable().selectAll();
 
-        System.out.println("[MCNotify] " + String.valueOf(subscriptions.size()) + " Subscriptions loaded.");
+        System.out.println("[ZoneX] " + String.valueOf(subscriptions.size()) + " Subscriptions loaded.");
     }
 
     public ArrayList<Subscription> getPlayerSubscriptions(Player player){

@@ -2,6 +2,7 @@ package org.zonex.datastore;
 
 import org.zonex.datastore.dbModels.DbAreaTable;
 import org.zonex.config.Configuration;
+import org.zonex.datastore.dbModels.DbCommunicationTable;
 import org.zonex.datastore.dbModels.DbSubscriptionTable;
 
 import java.sql.*;
@@ -114,6 +115,14 @@ public class Database {
     public DbSubscriptionTable subscriptionTable(){
         if(this.isConnected) {
             return new DbSubscriptionTable(connection);
+        } else {
+            return null;
+        }
+    }
+
+    public DbCommunicationTable communicationTable(){
+        if(this.isConnected) {
+            return new DbCommunicationTable(connection);
         } else {
             return null;
         }

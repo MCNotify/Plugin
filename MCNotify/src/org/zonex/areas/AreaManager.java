@@ -19,15 +19,16 @@ public class AreaManager {
 
     public void loadDatabase() throws SQLException {
 
-        System.out.println("[MCNotify] Loading areas...");
+        System.out.println("[ZoneX] Loading areas...");
 
-        for(Area area : ZoneX.datastore.areaTable().selectAll()){
-            this.addOldArea(area);
-        }
 
         ArrayList<Area> areaList = ZoneX.datastore.areaTable().selectAll();
 
-        System.out.println("[MCNotify] " + String.valueOf(areaList.size()) + " Areas loaded.");
+        for(Area area : areaList){
+            this.addOldArea(area);
+        }
+
+        System.out.println("[ZoneX] " + areaList.size() + " Areas loaded.");
     }
 
     public boolean addOldArea(Area area){
@@ -55,7 +56,6 @@ public class AreaManager {
         } else {
             playerAreas = this.areaList.get(area.getOwner().getUniqueId());
         }
-
 
         for(Area a : playerAreas){
             if(a.getOwner() == area.getOwner() && a.getAreaName().toLowerCase().equals(area.getAreaName().toLowerCase())){

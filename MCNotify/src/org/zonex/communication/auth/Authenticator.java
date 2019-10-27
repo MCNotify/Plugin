@@ -1,8 +1,9 @@
-package org.zonex.authenticator;
+package org.zonex.communication.auth;
 
 import org.bukkit.Bukkit;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.zonex.ZoneX;
 import org.zonex.config.Configuration;
 
 import java.io.IOException;
@@ -21,23 +22,24 @@ public class Authenticator {
     public void init(){
         JSONObject jsonBody = new JSONObject();
 
-        jsonBody.put("server_name", this.getIPAddress(true));
         jsonBody.put("server_port", Bukkit.getServer().getPort());
         jsonBody.put("recovery_email", Configuration.RECOVERY_EMAIL.getValue());
 
         try {
-            Response response = RequestManager.sendRequest("GET", "servers.php", jsonBody.toJSONString());
+            Response response = RequestManager.sendRequest("POST", "servers.php", jsonBody.toJSONString());
             if(response.getResponseCode() == 200){
 
-                // If the request was successful, determine the subscription level
+                // If the request was successful, determine the server's subscription level
                 JSONObject json = response.getResponseBody();
                 this.server_id = Math.toIntExact((Long) json.get("server_id"));
                 this.subscriptionLevel = Math.toIntExact((Long) json.get("subscription_level"));
-                System.out.println("[MCNotify] Connection successful. Subscription Level: " + subscriptionLevel);
+                System.out.println("[ZoneX] Connection successful. Subscription Level: " + subscriptionLevel);
             } else if (response.getResponseCode() == 401) {
-                System.out.println("[MCNotify] ERROR: Server Secret Key is required.");
+                System.out.println("[ZoneX] ERROR: Server not authorized. Disabling plugin.");
+                System.out.println("[ZoneX] Don't share your secret key ;)");
+                Bukkit.getPluginManager().disablePlugin(ZoneX.plugin);
             } else {
-                System.out.println("[MCNotify] ERROR: Could not reach MCNotify servers. Are you connected to the internet?");
+                System.out.println("[ZoneX] ERROR: Could not reach servers. Are you connected to the internet?");
             }
         } catch (IOException e) {
             e.printStackTrace();

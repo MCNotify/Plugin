@@ -1,17 +1,16 @@
 package org.zonex;
 
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.zonex.areas.Area;
-import org.zonex.authenticator.Authenticator;
+import org.zonex.communication.auth.Authenticator;
 import org.zonex.areas.AreaManager;
 import org.zonex.commands.RegisterCommands;
+import org.zonex.communication.notifications.CommunicationHandler;
 import org.zonex.config.EventRegistry;
+import org.zonex.config.Metrics;
 import org.zonex.datastore.Datastore;
-import org.zonex.subscriptions.Subscription;
 import org.zonex.subscriptions.SubscriptionManager;
 import org.zonex.config.ConfigurationManager;
-import org.zonex.authenticator.RequestManager;
+import org.zonex.communication.auth.RequestManager;
 
 import java.sql.SQLException;
 
@@ -24,22 +23,23 @@ public class ZoneX extends JavaPlugin {
     public static AreaManager areaManager;
     public static RequestManager requestManager;
     public static Datastore datastore;
+    public static CommunicationHandler communicationManager;
 
     public static EventRegistry eventRegistry;
 
     @Override
     public void onEnable(){
         plugin = this;
-        // Register serialized classes
-        ConfigurationSerialization.registerClass(Area.class, "Area");
-        ConfigurationSerialization.registerClass(Subscription.class, "Subscription");
 
+        // Initializes authentication to the MCNotify servers and checks if the server is authenticated.
+
+        // Disabling server authentication for initial release.
+        // Users should not have to register with my severs to use the plugin while it is free!
+        // auth = new Authenticator();
+        // auth.init();
 
         // Generate the configuration file if it doesn't exist. Otherwise, load the configuration file.
         config = new ConfigurationManager(this);
-
-        // Initializes authentication to the MCNotify servers and checks if the users is authenticated.
-        auth = new Authenticator();
 
         // Sets up/loads the datastore
         datastore = new Datastore(getDataFolder().getAbsolutePath() + "/data/data.mcn");
@@ -62,7 +62,13 @@ public class ZoneX extends JavaPlugin {
         // Register events
         eventRegistry = new EventRegistry(plugin);
 
+        // Setup the communication protocol
+        communicationManager = new CommunicationHandler();
+
         new RegisterCommands();
+
+        Metrics metrics = new Metrics(this);
+
         System.out.println("[ZoneX] Plugin enabled.");
     }
 

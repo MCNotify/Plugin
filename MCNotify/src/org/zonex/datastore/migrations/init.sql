@@ -87,3 +87,16 @@ CREATE TABLE `subscriptions` (
  `deleted_on` timestamp NULL DEFAULT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `communications` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `target` VARCHAR(255) NOT NULL,
+ `subscriberUuid` varchar(255) NOT NULL,
+ `verificationCode` varchar(255) NOT NULL,
+ `protocol` varchar(255) NOT NULL,
+ `verified` BOOLEAN NOT NULL,
+ `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ `modified_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ `deleted_on` timestamp NULL DEFAULT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;

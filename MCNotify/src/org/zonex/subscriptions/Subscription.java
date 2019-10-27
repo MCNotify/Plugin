@@ -2,16 +2,15 @@ package org.zonex.subscriptions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.zonex.ZoneX;
 import org.zonex.subscriptions.subscriptionevents.Events;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-public class Subscription implements ConfigurationSerializable {
+import java.util.ArrayList;
+public class Subscription {
 
     int subscriptionId;
     Events eventType;
@@ -22,6 +21,15 @@ public class Subscription implements ConfigurationSerializable {
         this.subscriber = subscriber;
         this.eventType = eventType;
         this.subscriptionJson = subscriptionData;
+
+        // Determine the id of the subscription
+        ArrayList<Subscription> playerSubscriptions = ZoneX.subscriptionManager.getPlayerSubscriptions(subscriber.getPlayer());
+        if(playerSubscriptions.size() > 0) {
+            int lastSubscriptionId = playerSubscriptions.get(playerSubscriptions.size() - 1).getSubscriptionId();
+            this.subscriptionId = lastSubscriptionId + 1;
+        } else {
+            this.subscriptionId = 1;
+        }
     }
 
     public Subscription(int event_id, OfflinePlayer subscriber, Events eventType, JSONObject subscriptionData){
@@ -31,15 +39,12 @@ public class Subscription implements ConfigurationSerializable {
         this.subscriptionJson = subscriptionData;
     }
 
-    private void pushnotification(){
-        // Send a push notification to the player
-    }
-
-    public void onEvent(){
+    public void onEvent(String eventMessage){
         if(this.subscriber.isOnline()) {
-            this.subscriber.getPlayer().sendMessage(this.eventType.toString() + " event triggered!");
+            ZoneX.communicationManager.sendIngameMessage(this.subscriber.getPlayer(), eventMessage);
+            ZoneX.communicationManager.sendCommunications(this.subscriber.getPlayer(), eventMessage);
         } else {
-            this.pushnotification();
+            ZoneX.communicationManager.sendCommunications(this.subscriber.getPlayer(), eventMessage);
         }
     }
 
@@ -63,26 +68,28 @@ public class Subscription implements ConfigurationSerializable {
         this.subscriptionId = id;
     }
 
-    @Override
-    public Map<String, Object> serialize() {
+    public String serialize() {
 
-        LinkedHashMap result = new LinkedHashMap();
+        JSONObject result = new JSONObject();
+
         result.put("subscriptionId", String.valueOf(subscriptionId));
         result.put("eventType", eventType.toString());
         result.put("subscriber", subscriber.getUniqueId().toString());
         result.put("subscriptionJson", subscriptionJson.toJSONString());
 
-        return result;
+        return result.toJSONString();
     }
 
-    public static Subscription deserialize(Map<String, Object> args){
-        int subscriptionId = Integer.valueOf((String)args.get("subscriptionId"));
-        Events eventType = Events.fromString((String)args.get("eventType"));
-        OfflinePlayer subscriber = Bukkit.getOfflinePlayer((String)args.get("subscriber"));
+    public static Subscription deserialize(String serialized) throws ParseException {
+        Object deserialized = new JSONParser().parse(serialized);
+        JSONObject deserializedJson = (JSONObject) deserialized;
+        int subscriptionId = Integer.valueOf((String)deserializedJson.get("subscriptionId"));
+        Events eventType = Events.fromString((String)deserializedJson.get("eventType"));
+        OfflinePlayer subscriber = Bukkit.getOfflinePlayer((String)deserializedJson.get("subscriber"));
 
         Object jsonobj = null;
         try {
-            jsonobj = new JSONParser().parse((String)args.get("subscriptionJson"));
+            jsonobj = new JSONParser().parse((String)deserializedJson.get("subscriptionJson"));
         } catch (ParseException e) {
             e.printStackTrace();
         }

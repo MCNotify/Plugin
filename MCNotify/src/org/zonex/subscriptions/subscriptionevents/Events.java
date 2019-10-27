@@ -55,7 +55,7 @@ public enum Events {
 
     public static Events fromString(String eventName){
         for(Events e : Events.values()){
-            if(e.getCommandName().equals(eventName)){
+            if(e.getCommandName().toLowerCase().equals(eventName.toLowerCase())){
                 return e;
             }
         }

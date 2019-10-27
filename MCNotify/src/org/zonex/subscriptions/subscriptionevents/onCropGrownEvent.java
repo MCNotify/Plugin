@@ -32,7 +32,7 @@ public class onCropGrownEvent implements Listener {
                     // Only trigger if the player moves into the boundary.
                     if (poly.contains(blockPoint)) {
                         // Crop is inside the boundary.
-                        subscription.onEvent();
+                        subscription.onEvent(growEvent.getBlock().getType() + " is fully grown in " + areaName + ".");
                     }
                 }
             }

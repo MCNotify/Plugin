@@ -3,6 +3,7 @@ package org.zonex.config;
 import org.zonex.ZoneX;
 
 public enum Configuration {
+    /** Configuration **/
     SECRET_KEY("server.secret_key", randomAlphaNumeric(64)),
     RECOVERY_EMAIL("server.recovery_email", ""),
 
@@ -13,6 +14,23 @@ public enum Configuration {
     DATABSE_USERNAME("server.database.username", "root"),
     DATABASE_PASSWORD("server.database.password", ""),
 
+    /** Communication **/
+    INGAME_NOTIFICATIONS_ENABLED("communication.enabled", "true"),
+
+    TWILIO_ENABLED("communication.twilio.enabled", "false"),
+    TWILIO_ACCOUNT_SID("communication.twilio.account.sid", ""),
+    TWILIO_PHONE_NUMBER("communication.twilio.account.number", ""),
+    TWILIO_AUTH_TOKEN("communication.twilio.account.authToken", ""),
+
+    EMAIL_ENABLED("communication.email.enabled", "false"),
+    EMAIL_SMTP_SERVER("communication.email.smtp.server", ""),
+    EMAIL_USERNAME("communication.email.smtp.username", ""),
+    EMAIL_PASSWORD("communication.email.smtp.password", ""),
+    EMAIL_FROM_ADDRESS("communication.email.smtp.fromEmail", ""),
+
+    DISCORD_SRV_ENABLED("communication.discord.enabled", "false"),
+
+    /** Area Protection **/
     AREA_DEFAULT_PROTECT("areas.default.protect", "true"),
     AREA_DEFAULT_MOBPROTECT("areas.default.mobProtect", "true"),
     AREA_DEFAULT_STOPLIQUID("areas.default.stopLiquid", "true"),
@@ -25,13 +43,18 @@ public enum Configuration {
     AREA_DEFAULT_NOPVP("areas.default.noPvp", "true"),
     AREA_LIMIT("areas.limit", "3"),
 
+    /** Subscriptions **/
     ON_PLAYER_JOIN_APPROVAL("events.onplayerjoin.approval_required", "true"),
     ON_PLAYER_JOIN_ALLOWED("events.onplayerjoin.allow", "false"),
     ON_PLAYER_ENTER_ALLOWED("events.onplayerenter.allow", "true"),
     ON_BLOCK_BREAK_ALLOWED("events.onblockbreak.allow", "true"),
     ON_CROP_GROW_ALLOWED("events.oncropgrow.allow", "true"),
     ON_ENTITY_EXPLODE_ALLOWED("events.onentityexplode.allow", "true"),
-    ON_REDSTONE_ALLOWED("events.onredstone.allow", "true");
+    ON_REDSTONE_ALLOWED("events.onredstone.allow", "true"),
+
+    /** Subscription Communication Details **/
+    ON_PLAYER_ENTER_DETAILED_MESSAGE("events.onplayerenter.lang.showplayer", "true"),
+    ON_BLOCK_BREAK_DETAILED_MESSAGE("events.onplayerenter.lang.showplayer", "true");
 
 
 

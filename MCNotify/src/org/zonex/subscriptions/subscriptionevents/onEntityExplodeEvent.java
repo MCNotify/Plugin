@@ -26,7 +26,7 @@ public class onEntityExplodeEvent implements Listener {
             // Only trigger if the player moves into the boundary.
             if(poly.contains(explodePoint)) {
                 // Player is inside the boundary.
-                subscription.onEvent();
+                subscription.onEvent("A block has exploded in " + areaName + " at " + explodePoint.x + ", " + explodePoint.y + ".");
             }
         }
     }

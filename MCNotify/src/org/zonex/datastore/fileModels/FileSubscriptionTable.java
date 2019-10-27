@@ -7,8 +7,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.zonex.ZoneX;
 import org.zonex.datastore.baseModels.BaseSubscriptionModel;
 import org.zonex.subscriptions.Subscription;
+import org.zonex.subscriptions.SubscriptionManager;
 import org.zonex.subscriptions.subscriptionevents.Events;
 
 import java.io.File;
@@ -35,7 +37,13 @@ public class FileSubscriptionTable extends BaseSubscriptionModel {
         if(configurationSection != null) {
             for (String uuid : configurationSection.getKeys(false)) {
                 for(String key : configurationSection.getConfigurationSection(uuid).getKeys(false)) {
-                    subscriptionList.add(((Subscription) (configurationSection.get(uuid + "." + key))));
+                    try {
+                        subscriptionList.add((Subscription.deserialize((String) configurationSection.get(uuid + "." + key))));
+                    } catch (ParseException e) {
+                        // Unable to parse the subscription
+                        System.out.println("[ZoneX] unable to parse Subscription JSON at:" + uuid + "." + key);
+                        return subscriptionList;
+                    }
                 }
             }
         }
@@ -48,7 +56,14 @@ public class FileSubscriptionTable extends BaseSubscriptionModel {
         if(configurationSection != null) {
             if (configurationSection.getConfigurationSection(uuid) != null) {
                 for (String key : configurationSection.getConfigurationSection(uuid).getKeys(false)) {
-                    Subscription subscription = ((Subscription) (configurationSection.get(uuid + "." + key)));
+                    Subscription subscription = null;
+                    try {
+                        subscription = (Subscription.deserialize((String)configurationSection.get(uuid + "." + key)));
+                    } catch (ParseException e) {
+                        // Unable to parse the subscription
+                        System.out.println("[ZoneX] unable to parse Subscription JSON at:" + uuid + "." + key);
+                        return subscriptionList;
+                    }
                     subscriptionList.add(subscription);
                 }
             }
@@ -58,7 +73,7 @@ public class FileSubscriptionTable extends BaseSubscriptionModel {
 
     @Override
     public boolean insert(Subscription subscription) {
-        configurationSection.set(subscription.getSubscriber().getUniqueId().toString() + "." + String.valueOf(subscription.getSubscriptionId()), subscription);
+        configurationSection.set(subscription.getSubscriber().getUniqueId().toString() + "." + String.valueOf(subscription.getSubscriptionId()), subscription.serialize());
         try {
             yamlConfiguration.save(file);
         } catch (IOException e) {
@@ -76,35 +91,5 @@ public class FileSubscriptionTable extends BaseSubscriptionModel {
             e.printStackTrace();
         }
         return true;
-    }
-
-    private Subscription getSubscription(ConfigurationSection resultSet) throws SQLException {
-        int subscriptionId = resultSet.getInt("id");
-        String subsciberUuid = resultSet.getString("uuid");
-        String eventName = resultSet.getString("event_name");
-        String eventProperties = resultSet.getString("event_properties");
-
-
-        OfflinePlayer subscriber = null;
-
-        if(subsciberUuid != null && subsciberUuid != "") {
-            UUID uuid = UUID.fromString(subsciberUuid);
-            if(uuid != null) {
-                OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-                if (op != null) {
-                    subscriber = op;
-                }
-            }
-        }
-
-        Object jsonobj = null;
-        try {
-            jsonobj = new JSONParser().parse(eventProperties);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        JSONObject jsonObject = (JSONObject) jsonobj;
-
-        return new Subscription(subscriptionId, subscriber, Events.valueOf(eventName), new JSONObject(jsonObject));
     }
 }

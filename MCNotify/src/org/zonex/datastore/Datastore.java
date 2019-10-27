@@ -4,6 +4,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.zonex.config.Configuration;
 import org.zonex.datastore.baseModels.BaseAreaModel;
+import org.zonex.datastore.baseModels.BaseCommunicationModel;
 import org.zonex.datastore.baseModels.BaseSubscriptionModel;
 
 import java.io.File;
@@ -45,6 +46,7 @@ public class Datastore {
             yamlConfiguration.options().copyDefaults(true);
             yamlConfiguration.createSection("areas");
             yamlConfiguration.createSection("subscriptions");
+            yamlConfiguration.createSection("communications");
             try {
                 yamlConfiguration.save(file);
             } catch (IOException e) {
@@ -77,6 +79,14 @@ public class Datastore {
             return this.database.subscriptionTable();
         } else {
             return this.flatfile.subscriptionTable();
+        }
+    }
+
+    public BaseCommunicationModel communicationTable(){
+        if(this.isUsingDatabase){
+            return this.database.communicationTable();
+        } else {
+            return this.flatfile.communicationTable();
         }
     }
 
