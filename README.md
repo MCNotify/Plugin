@@ -83,7 +83,19 @@ By default, areas that are created by a player have the following protections:
 The default protections can be changed to allow for more or less protection in your world through the configuration files.
 
 # Getting Notifications!
-After you have created an area, it's time to start getting notifications! The following commands help you subscribe to various events.
+After you have created an area, it's time to start getting notifications! In order to do this, your server admins need to have configured some external communication services. This plugin has the capability of sending email, sms, and discord messages (potentially more in the future). The following commands will setup a notification system to a specific protocol:
+
+| Command Name | Description | Parameters |
+|---|---|---|
+| `/zx sms <phoneNumber>` | Register your phone number to receive SMS notifications. | **phoneNumber:** Format: +1XXXXXXXXX |
+| `/zx email <email>` | Register your email address to receive email notifications. | **email:** Your email |
+| `/zx discord` | Register your discord account to receive discord notifications. | N/A |
+| `/zx sms stop` | Stop receiving text notifications | N/A |
+| `/zx email stop` | Stop receiving email notifications. | N/A |
+| `/zx discord stop` | Stop receiving discord notifications. | N/A |
+| `/zx devices` | Shows all currently connected communication protocols | N/A |
+
+Once you have subscribed to a communication protocol, you can watch certain events in your zones with the following commands:
 
 | Command Name <img width=800/><br/>Permission Node| Description | Parameters |
 |---|---|---|
