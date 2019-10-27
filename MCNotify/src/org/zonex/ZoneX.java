@@ -1,10 +1,12 @@
 package org.zonex;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.zonex.communication.auth.Authenticator;
 import org.zonex.areas.AreaManager;
 import org.zonex.commands.RegisterCommands;
 import org.zonex.communication.notifications.CommunicationHandler;
+import org.zonex.communication.notifications.CommunicationProtocol;
 import org.zonex.config.EventRegistry;
 import org.zonex.config.Metrics;
 import org.zonex.datastore.Datastore;
@@ -13,6 +15,9 @@ import org.zonex.config.ConfigurationManager;
 import org.zonex.communication.auth.RequestManager;
 
 import java.sql.SQLException;
+import java.util.logging.Filter;
+import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
 
 public class ZoneX extends JavaPlugin {
 

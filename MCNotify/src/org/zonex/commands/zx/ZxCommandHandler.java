@@ -1,5 +1,6 @@
 package org.zonex.commands.zx;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,6 +16,8 @@ import org.zonex.config.Configuration;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Filter;
+import java.util.logging.LogRecord;
 
 public class ZxCommandHandler extends AbstractCommand {
 
@@ -47,6 +50,7 @@ public class ZxCommandHandler extends AbstractCommand {
                         return;
                     }
 
+
                     // Check if the user already subscribes via email.
                     CommunicationMethod method = ZoneX.communicationManager.getCommunicationMethod((Player) sender, CommunicationProtocol.EMAIL);
                     if (method == null || !method.isVerified()) {
@@ -73,6 +77,7 @@ public class ZxCommandHandler extends AbstractCommand {
                         sender.sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.WHITE + "You will no longer receive text notifications.");
                         return;
                     }
+
 
                     // Check if the user already subscribes via sms.
                     CommunicationMethod method = ZoneX.communicationManager.getCommunicationMethod((Player) sender, CommunicationProtocol.SMS);

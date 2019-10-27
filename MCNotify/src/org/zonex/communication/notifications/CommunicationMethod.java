@@ -1,5 +1,6 @@
 package org.zonex.communication.notifications;
 
+import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -71,7 +72,10 @@ public abstract class CommunicationMethod {
     public String serialize(){
         JSONObject result = new JSONObject();
 
-        result.put("target", target);
+        // Encrypt the target so that server owners cannot spy on a player's phone number, email address, discord account, etc.
+        byte[] bytesEncoded = Base64.encodeBase64(target.getBytes());
+
+        result.put("target", new String(bytesEncoded));
         result.put("subscriberUuid", player.getUniqueId().toString());
         result.put("verified", isVerified);
         result.put("verificationCode", verificationCode);
@@ -85,7 +89,10 @@ public abstract class CommunicationMethod {
         Object deserialized = new JSONParser().parse(jsonString);
         JSONObject deserializedJson = (JSONObject) deserialized;
 
-        String target = (String)deserializedJson.get("target");
+        // Decode the player's personal information
+        byte[] valueDecoded = Base64.decodeBase64((String)deserializedJson.get("target"));
+
+        String target = new String(valueDecoded);
         OfflinePlayer subscriber = Bukkit.getOfflinePlayer(UUID.fromString((String)deserializedJson.get("subscriberUuid")));
         boolean isVerified = (boolean)deserializedJson.get("verified");
         String verificationCode = (String)deserializedJson.get("verificationCode");
