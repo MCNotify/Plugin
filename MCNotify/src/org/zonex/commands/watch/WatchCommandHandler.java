@@ -2,21 +2,53 @@ package org.zonex.commands.watch;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.zonex.ZoneX;
 import org.zonex.commands.AbstractCommand;
+import org.zonex.commands.autocomplete.*;
+import org.zonex.config.Permission;
 import org.zonex.subscriptions.Subscription;
 import org.zonex.subscriptions.subscriptionevents.Events;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class WatchCommandHandler extends AbstractCommand {
     
     public WatchCommandHandler(){
         super("watch", false);
+
+
+        AutoCompleter autoCompleter = new AutoCompleter();
+        autoCompleter.addNode(new CommandAutoCompleteNode("list"));
+        autoCompleter.addNode(new CommandAutoCompleteNode("help"));
+        autoCompleter.addNode(new CommandAutoCompleteNode("remove").addChild(new WatchListAutoCompleteNode()));
+
+        for(Events event : Events.values()){
+            CommandAutoCompleteNode baseNode = (CommandAutoCompleteNode)new CommandAutoCompleteNode(event.getCommandName()).requiresPermissionNode(event.getPermissionNode());
+
+            AutoCompleteNode lastNode = baseNode;
+
+            // Determine arguments
+            for(String s : event.getJsonKeys()){
+                AutoCompleteNode thisNode = null;
+                switch(s){
+                    case "areaName":
+                        thisNode = new ZoneNameAutoCompleteNode();
+                    case "watchedPlayer":
+                        thisNode = new PlayerNameAutoCompleteNode();
+                    default:
+                        thisNode = new CommandAutoCompleteNode(s);
+                }
+                lastNode.addChild(thisNode);
+                lastNode = thisNode;
+            }
+
+            autoCompleter.addNode(baseNode);
+        }
+        this.setAutoCompleter(autoCompleter);
     }
     
     @Override
@@ -24,12 +56,7 @@ public class WatchCommandHandler extends AbstractCommand {
         Player player = (Player) sender;
         switch(args[0].toLowerCase()){
             case "list":
-                ArrayList<Subscription> playerSubscriptions = new ArrayList<>();
-                for(Subscription subscription : ZoneX.subscriptionManager.getSubscriptions()){
-                    if(subscription.getSubscriber() == player){
-                        playerSubscriptions.add(subscription);
-                    }
-                }
+                ArrayList<Subscription> playerSubscriptions = ZoneX.subscriptionManager.getPlayerSubscriptions(player);
 
                 if (playerSubscriptions.size() == 0) {
                     player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " You are not subscribed to any events.");
@@ -37,7 +64,7 @@ public class WatchCommandHandler extends AbstractCommand {
                     player.sendMessage(ChatColor.GOLD + "=== Subscription Id : Subscription Name ===");
 
                     for(Subscription subscription : playerSubscriptions){
-                        player.sendMessage("" + ChatColor.GRAY + subscription.getSubscriptionId() + " : " + subscription.getEventType().toString());
+                        player.sendMessage("" + ChatColor.GRAY + subscription.getSubscriptionId() + " : " + subscription.getPlayerFriendlyDescription());
                     }
                 }
                 break;
@@ -69,7 +96,7 @@ public class WatchCommandHandler extends AbstractCommand {
                 for(Subscription subscription : ZoneX.subscriptionManager.getPlayerSubscriptions(player)){
                     if(subscription.getSubscriptionId() == subscriptionId){
                         if(ZoneX.subscriptionManager.removeSubscription(subscription)){
-                            player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " You have unsubscribed from watching " + subscription.getEventType().getDescription());
+                            player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " You have unsubscribed from watching " + subscription.getPlayerFriendlyDescription());
                         } else {
                             player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " An error occured while try to unsubscribe.");
                         }
@@ -115,8 +142,9 @@ public class WatchCommandHandler extends AbstractCommand {
                             i++;
                         }
 
+                        Subscription subscription = new Subscription(player, eventType, subscriptionJson);
                         if (ZoneX.subscriptionManager.addSubscription(new Subscription(player, eventType, subscriptionJson))) {
-                            player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " Successfully subscribed to " + eventType + " event.");
+                            player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " Successfully subscribed to " + subscription.getPlayerFriendlyDescription() + " event.");
                         } else {
                             player.sendMessage(ChatColor.GREEN + "[ZoneX]" + ChatColor.GRAY + " Unable to subscribe to event.");
                         }
@@ -138,35 +166,5 @@ public class WatchCommandHandler extends AbstractCommand {
                 }
                 break;
         }
-    }
-
-    @Override
-    public List<String> tabComplete(CommandSender sender, String[] args) {
-        List<String> list = new ArrayList<String>();
-        if(args.length == 0) {
-            list.add("list");
-            list.add("help");
-            list.add("remove");
-            for(Events event : Events.values()){
-                list.add(event.getCommandName());
-            }
-        } else if (args.length == 1) {
-            if(args[0].toLowerCase().equals("remove"))
-            switch(args[0]){
-                case "remove":
-                    for(Subscription subscription : ZoneX.subscriptionManager.getPlayerSubscriptions((Player)sender)){
-                        list.add(String.valueOf(subscription.getSubscriptionId()));
-                    }
-                    break;
-                default:
-                    Events eventType = Events.fromCommand(args[0].toLowerCase());
-
-                    if (eventType != null) {
-                        // Get the first argument of the event
-                        list.add(eventType.getJsonKeys()[0]);
-                    }
-            }
-        }
-        return list;
     }
 }

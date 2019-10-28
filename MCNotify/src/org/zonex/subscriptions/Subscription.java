@@ -10,6 +10,8 @@ import org.zonex.subscriptions.subscriptionevents.Events;
 
 
 import java.util.ArrayList;
+import java.util.UUID;
+
 public class Subscription {
 
     int subscriptionId;
@@ -68,6 +70,28 @@ public class Subscription {
         this.subscriptionId = id;
     }
 
+    public String getPlayerFriendlyDescription(){
+        switch(this.eventType){
+            case ON_BLOCK_BREAK:
+            case ON_BLOCK_EXPLODE:
+            case ON_CROP_GROWN:
+            case ON_PLAYER_MOVE:
+            case ON_REDSTONE_ACTIVE:
+            // case ON_HOPPER_FULL:
+            // case ON_MOB_LIMIT:
+                String[] areaArgs = { (String)this.subscriptionJson.get("areaName") };
+                return this.eventType.getPlayerFieldlyDescription(areaArgs);
+            case ON_PLAYER_JOIN:
+            // case ON_PLAYER_DEATH:
+            // case ON_PLAYER_ENTER_END:
+            // case ON_PLAYER_ENTER_NETHER:
+            // case ON_PLAYER_ENTER_WORLD:
+                String[] playerArgs = { (String)this.subscriptionJson.get("watchedPlayer") };
+                return this.eventType.getPlayerFieldlyDescription(playerArgs);
+        }
+        return "";
+    }
+
     public String serialize() {
 
         JSONObject result = new JSONObject();
@@ -85,7 +109,7 @@ public class Subscription {
         JSONObject deserializedJson = (JSONObject) deserialized;
         int subscriptionId = Integer.valueOf((String)deserializedJson.get("subscriptionId"));
         Events eventType = Events.fromString((String)deserializedJson.get("eventType"));
-        OfflinePlayer subscriber = Bukkit.getOfflinePlayer((String)deserializedJson.get("subscriber"));
+        OfflinePlayer subscriber = Bukkit.getOfflinePlayer(UUID.fromString(((String)deserializedJson.get("subscriber"))));
 
         Object jsonobj = null;
         try {

@@ -12,6 +12,7 @@ import java.util.UUID;
 public class AreaManager {
 
     HashMap<UUID, ArrayList<Area>> areaList = new HashMap<>();
+    private int areaCount = 0;
 
     public AreaManager(){
 
@@ -25,6 +26,7 @@ public class AreaManager {
         ArrayList<Area> areaList = ZoneX.datastore.areaTable().selectAll();
 
         for(Area area : areaList){
+            areaCount++;
             this.addOldArea(area);
         }
 
@@ -53,6 +55,7 @@ public class AreaManager {
         if(this.areaList.get(area.getOwner().getUniqueId()) == null){
             playerAreas = new ArrayList<Area>();
             this.areaList.put(area.getOwner().getUniqueId(), playerAreas);
+            areaCount++;
         } else {
             playerAreas = this.areaList.get(area.getOwner().getUniqueId());
         }
@@ -80,6 +83,7 @@ public class AreaManager {
 
                 if(ZoneX.datastore.areaTable().delete(area)){
                     playerAreas.remove(area);
+                    areaCount--;
                     return true;
                 }
 
@@ -119,6 +123,10 @@ public class AreaManager {
             }
         }
         return null;
+    }
+
+    public int countZones(){
+        return areaCount;
     }
 
 }

@@ -1,5 +1,6 @@
 package org.zonex.datastore.dbModels;
 
+import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.zonex.communication.notifications.*;
@@ -72,9 +73,13 @@ public class DbCommunicationTable extends BaseCommunicationModel {
         try {
             statement = connection.prepareStatement("INSERT INTO communications (subscriberUuid, target, verified, verificationCode, protocol) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
+
+            // Encrypt the target so that server owners cannot spy on a player's phone number, email address, discord account, etc.
+            byte[] bytesEncoded = Base64.encodeBase64(method.getTarget().getBytes());
+
             statement.setString(1, method.getPlayer().getUniqueId().toString());
             statement.setBoolean(3, method.isVerified());
-            statement.setString(2, method.getTarget());
+            statement.setString(2, new String(bytesEncoded));
             statement.setString(4, method.getVerificationCode());
             statement.setString(5, method.getProtocol().toString());
 
@@ -97,8 +102,12 @@ public class DbCommunicationTable extends BaseCommunicationModel {
         try {
             statement = connection.prepareStatement("UPDATE communications SET verified = ?, target = ? where subscriberUuid = ? AND protocol = ?");
 
+
+            // Encrypt the target so that server owners cannot spy on a player's phone number, email address, discord account, etc.
+            byte[] bytesEncoded = Base64.encodeBase64(method.getTarget().getBytes());
+
             statement.setBoolean(1, method.isVerified());
-            statement.setString(2, method.getTarget());
+            statement.setString(2, new String(bytesEncoded));
             statement.setString(3, method.getPlayer().getUniqueId().toString());
             statement.setString(4, method.getProtocol().toString());
 
@@ -137,6 +146,11 @@ public class DbCommunicationTable extends BaseCommunicationModel {
         String target = resultSet.getString("target");
         String verificationCode = resultSet.getString("verificationCode");
         boolean verified = resultSet.getBoolean("verified");
+
+
+        // Decode the player's personal information
+        byte[] valueDecoded = Base64.decodeBase64(target);
+        target = new String(valueDecoded);
 
 
         OfflinePlayer subscriber = null;

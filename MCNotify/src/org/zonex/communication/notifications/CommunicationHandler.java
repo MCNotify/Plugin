@@ -3,20 +3,14 @@ package org.zonex.communication.notifications;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 import org.zonex.ZoneX;
-import org.zonex.communication.auth.RequestManager;
-import org.zonex.communication.auth.Response;
-import org.zonex.subscriptions.Subscription;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CommunicationHandler {
 
     HashMap<OfflinePlayer, ArrayList<CommunicationMethod>> communications = new HashMap<>();
+    private int totalCommunications = 0;
 
     public CommunicationHandler(){
         this.loadCommunications();
@@ -36,6 +30,7 @@ public class CommunicationHandler {
 
                 methods.add(method);
                 communications.put(method.getPlayer(), methods);
+                totalCommunications++;
             }
         }
 
@@ -57,6 +52,7 @@ public class CommunicationHandler {
 
         methods.add(method);
         ZoneX.datastore.communicationTable().insert(method);
+        totalCommunications++;
         if(method.getProtocol() != CommunicationProtocol.DISCORD){
             method.executeProtocol("Welcome to ZoneX. " + method.getPlayer().getName() + " has requested to receive notifications at this location. Actions from the minecraft server: " + Bukkit.getServer().getName() + "(" + Bukkit.getIp() + ") will be sent after verification. You can verify this device with the verification code: " + method.getVerificationCode() + ". If this was not you, ignore this correspondence.");
         }
@@ -95,6 +91,7 @@ public class CommunicationHandler {
                 if(method.getProtocol() == protocol){
                     ZoneX.datastore.communicationTable().delete(method);
                     methods.remove(method);
+                    totalCommunications--;
                     return true;
                 }
             }
@@ -104,28 +101,21 @@ public class CommunicationHandler {
 
     public void sendIngameMessage(OfflinePlayer player, String message){
         if(player != null) {
-            // Check if the player is subscribed to recieve in-game messages.
-            for (CommunicationMethod method : communications.get(player)) {
-                if (method.getProtocol() == CommunicationProtocol.INGAME) {
-                    method.executeProtocol(message);
-                } else {
-                    // Check if they have verified their other protocols. Send a warning if not verified.
-                    if (!method.isVerified()) {
-                        player.getPlayer().sendMessage("[ZoneX] You have not verified this method of communication. You need to verify this method before recieving notifications. /zx verify " + method.getProtocol().toString() + "<code>");
-                    }
-                }
-            }
+            new IngameNotification(player).executeProtocol(message);
         }
     }
 
     public void sendCommunications(OfflinePlayer player, String message){
-//        if(player.isOnline()){
-//            this.sendIngameMessage(player, message);
-//            return;
-//        }
-        for(CommunicationMethod method : communications.get(player)){
-            if(method.isVerified()){
-                method.executeProtocol(message);
+        if(player.isOnline()){
+            this.sendIngameMessage(player, message);
+            return;
+        }
+        ArrayList<CommunicationMethod> comms = communications.get(player);
+        if(comms != null) {
+            for (CommunicationMethod method : comms) {
+                if (method.isVerified()) {
+                    method.executeProtocol(message);
+                }
             }
         }
     }
@@ -150,6 +140,10 @@ public class CommunicationHandler {
         } else {
             return null;
         }
+    }
+
+    public int getTotalCommunicationMethods() {
+        return this.totalCommunications;
     }
 
 }

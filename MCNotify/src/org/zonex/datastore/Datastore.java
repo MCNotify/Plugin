@@ -19,7 +19,7 @@ public class Datastore {
 
     public Datastore(String fileLocation) {
         this.FILE_LOCATION = fileLocation;
-        if(Configuration.DATABASE_ENABLED.getValue() == "true"){
+        if(Configuration.DATABASE_ENABLED.getValue().equals("true")){
             if(!this.setupDatabase()){
                 this.setupFlatFile();
             }
@@ -32,9 +32,11 @@ public class Datastore {
     private boolean setupDatabase(){
         this.database = new Database();
         if(!this.database.isConnected()){
+            System.out.println("[ZoneX] Could not connect to database! Falling back to flat file");
             this.isUsingDatabase = false;
         } else {
             System.out.println("[ZoneX] Connected to database");
+            this.isUsingDatabase = true;
         }
         return this.isUsingDatabase;
     }
@@ -90,4 +92,7 @@ public class Datastore {
         }
     }
 
+    public boolean isUsingDatabase() {
+        return isUsingDatabase;
+    }
 }

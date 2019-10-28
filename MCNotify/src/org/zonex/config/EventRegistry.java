@@ -18,7 +18,7 @@ public class EventRegistry {
 
         this.plugin = plugin;
 
-        System.out.println("[MCNotify] Registering events...");
+        System.out.println("[ZoneX] Registering events...");
 
         listeners.add(new onPlayerMove());
         listeners.add(new onPlayerJoin());
@@ -29,12 +29,14 @@ public class EventRegistry {
         listeners.add(new MultiPartItemSpawnEvent());
         listeners.add(new MultiPartBlockPlaceEvent());
         listeners.add(new ProtectionEvents());
+        listeners.add(new onPlayerDeath());
+        listeners.add(new onPlayerChangeWorld());
 
         for(Listener l : listeners){
             plugin.getServer().getPluginManager().registerEvents(l, plugin);
         }
 
-        System.out.println("[MCNotify] Events registered.");
+        System.out.println("[ZoneX] Events registered.");
     }
 
 

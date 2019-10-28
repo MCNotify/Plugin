@@ -5,7 +5,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.zonex.ZoneX;
 import org.zonex.commands.AbstractCommand;
+import org.zonex.commands.autocomplete.AutoCompleter;
+import org.zonex.commands.autocomplete.CommandAutoCompleteNode;
+import org.zonex.commands.autocomplete.WatchListAutoCompleteNode;
 import org.zonex.subscriptions.Subscription;
+import org.zonex.subscriptions.subscriptionevents.Events;
 
 import java.util.List;
 
@@ -13,6 +17,10 @@ public class UnwatchCommandHandler extends AbstractCommand {
 
     public UnwatchCommandHandler(){
         super("unwatch", false);
+
+        AutoCompleter autoCompleter = new AutoCompleter();
+        autoCompleter.addNode(new WatchListAutoCompleteNode());
+        this.setAutoCompleter(autoCompleter);
     }
 
     @Override
@@ -47,10 +55,5 @@ public class UnwatchCommandHandler extends AbstractCommand {
                 return;
             }
         }
-    }
-
-    @Override
-    public List<String> tabComplete(CommandSender sender, String[] args) {
-        return null;
     }
 }

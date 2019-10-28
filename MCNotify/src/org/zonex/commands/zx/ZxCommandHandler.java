@@ -7,11 +7,15 @@ import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.zonex.ZoneX;
+import org.zonex.commands.autocomplete.AutoCompleteNode;
+import org.zonex.commands.autocomplete.AutoCompleter;
+import org.zonex.commands.autocomplete.CommandAutoCompleteNode;
 import org.zonex.communication.auth.Response;
 import org.zonex.commands.AbstractCommand;
 import org.zonex.commands.HelpFactory;
 import org.zonex.communication.notifications.*;
 import org.zonex.config.Configuration;
+import org.zonex.config.Permission;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +27,18 @@ public class ZxCommandHandler extends AbstractCommand {
 
     public ZxCommandHandler(){
         super("zx", true);
+        AutoCompleter autoCompleter = new AutoCompleter();
+        autoCompleter.addNode(new CommandAutoCompleteNode("help"));
+        autoCompleter.addNode(new CommandAutoCompleteNode("about"));
+        autoCompleter.addNode(new CommandAutoCompleteNode("email"));
+        autoCompleter.addNode(new CommandAutoCompleteNode("sms"));
+        autoCompleter.addNode(new CommandAutoCompleteNode("discord"));
+        autoCompleter.addNode(new CommandAutoCompleteNode("verify").addChild(new CommandAutoCompleteNode("email")).addChild(new CommandAutoCompleteNode("sms")));
+        autoCompleter.addNode(new CommandAutoCompleteNode("devices"));
+
+        autoCompleter.addNode(new CommandAutoCompleteNode("area").requiresPermissionNode(Permission.ADMIN));
+        autoCompleter.addNode(new CommandAutoCompleteNode("watch").requiresPermissionNode(Permission.ADMIN));
+        this.setAutoCompleter(autoCompleter);
     }
 
     @Override
@@ -154,35 +170,5 @@ public class ZxCommandHandler extends AbstractCommand {
                 }
                 break;
         }
-    }
-
-    @Override
-    public List<String> tabComplete(CommandSender sender, String[] args) {
-        List<String> list = new ArrayList<String>();
-        if(args.length == 0){
-            list.add("help");
-            list.add("about");
-            list.add("email");
-            list.add("sms");
-            list.add("discord");
-            list.add("verify");
-            list.add("devices");
-
-
-
-            if(sender.hasPermission("zx.admin.*")){
-               list.add("area");
-               list.add("watch");
-            }
-        } else if(args.length == 1) {
-            switch(args[0].toLowerCase()){
-                case "verify":
-                    list.add("email");
-                    list.add("sms");
-                    break;
-            }
-        }
-
-        return list;
     }
 }

@@ -10,11 +10,16 @@ import org.zonex.communication.notifications.CommunicationProtocol;
 import org.zonex.config.EventRegistry;
 import org.zonex.config.Metrics;
 import org.zonex.datastore.Datastore;
+import org.zonex.subscriptions.Subscription;
 import org.zonex.subscriptions.SubscriptionManager;
 import org.zonex.config.ConfigurationManager;
 import org.zonex.communication.auth.RequestManager;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.logging.Filter;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
@@ -73,6 +78,30 @@ public class ZoneX extends JavaPlugin {
         new RegisterCommands();
 
         Metrics metrics = new Metrics(this);
+        metrics.addCustomChart(new Metrics.SingleLineChart("zone", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return ZoneX.areaManager.countZones();
+            }
+        }));
+        metrics.addCustomChart(new Metrics.SingleLineChart("subscriptions", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return ZoneX.subscriptionManager.getSubscriptions().size();
+            }
+        }));
+        metrics.addCustomChart(new Metrics.SingleLineChart("externalCommunications", new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return ZoneX.communicationManager.getTotalCommunicationMethods();
+            }
+        }));
+        metrics.addCustomChart(new Metrics.SimplePie("storage_format", new Callable<String>() {
+            @Override
+            public String  call() throws Exception {
+                return ZoneX.datastore.isUsingDatabase() ? "Database" : "Flat file";
+            }
+        }));
 
         System.out.println("[ZoneX] Plugin enabled.");
     }

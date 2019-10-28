@@ -28,7 +28,7 @@ public class SubscriptionManager {
     public ArrayList<Subscription> getPlayerSubscriptions(Player player){
         ArrayList<Subscription> subscriptions = new ArrayList<>();
         for(Subscription subscription : this.subscriptions){
-            if(subscription.getSubscriber() == player){
+            if(subscription.getSubscriber().getUniqueId().equals(player.getUniqueId())){
                 subscriptions.add(subscription);
             }
         }

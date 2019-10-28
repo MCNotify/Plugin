@@ -20,20 +20,20 @@ public class Database {
     private boolean isConnected = false;
 
     public Database() {
-        System.out.println("[MCNotify] Attempting to connect to database...");
+        System.out.println("[ZoneX] Attempting to connect to database...");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection = (Connection) DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/", this.username, this.password);
 
-            System.out.println("[MCNotify] Successfully connected to database.");
-            System.out.println("[MCNotify] Checking database tables...");
+            System.out.println("[ZoneX] Successfully connected to database.");
+            System.out.println("[ZoneX] Checking database tables...");
 
             // Attempt to create the MCNotify datastore
             Statement stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS `MCNotify`");
+            stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS `ZoneX`");
 
-            connection.setCatalog("MCNotify");
-            System.out.println("[MCNotify] Successfully linked with `MCNotify` database.");
+            connection.setCatalog("ZoneX");
+            System.out.println("[ZoneX] Successfully linked with `ZoneX` database.");
 
             if(connection != null && !connection.isClosed()) {
                 this.check_migrations();
@@ -42,7 +42,7 @@ public class Database {
             this.isConnected = true;
 
         } catch (SQLException e) {
-            System.out.println("[MCNotify] WARNING: Unable to connect to database! Falling back to flat file.");
+            System.out.println("[ZoneX] WARNING: Unable to connect to database! Falling back to flat file.");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -57,14 +57,14 @@ public class Database {
         int start_id = 0;
 
         // Check if the migration table exists.
-        System.out.println("[MCNotify] Checking migrations...");
+        System.out.println("[ZoneX] Checking migrations...");
         try {
             // Access the datastore's migration table to see if it exists.
             DatabaseMetaData meta = connection.getMetaData();
             ResultSet results = meta.getTables(null, null, "Migrations", new String[]{"TABLE"});
             if(results.next()){
                 if(results.getString("TABLE_NAME").equals("migrations")){
-                    System.out.println("[MCNotify] Migration table exists.");
+                    System.out.println("[ZoneX] Migration table exists.");
                 }
 
                 // If table exists, determine the last migration that was performed.
@@ -76,7 +76,7 @@ public class Database {
                     start_id = migrationResult.getInt("id");
                 }
             } else {
-                System.out.println("[MCNotify] Migration table does not exist.");
+                System.out.println("[ZoneX] Migration table does not exist.");
             }
 
             // From the last migration, loop through the migration scripts and execute them.
@@ -85,7 +85,7 @@ public class Database {
             }
 
 
-            System.out.println("[MCNotify] Migrations Completed.");
+            System.out.println("[ZoneX] Migrations Completed.");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class Database {
     }
 
     private void runScript(String pathToScript){
-        System.out.println("[MCNotify] Attempting to run " + pathToScript);
+        System.out.println("[ZoneX] Attempting to run " + pathToScript);
         Scanner s = null;
         s = new Scanner(getClass().getResourceAsStream(pathToScript));
         s.useDelimiter("(;(\r)?\n)|(--\n)");
@@ -152,7 +152,7 @@ public class Database {
                     }
                 }
             } catch (SQLException e) {
-                System.out.println("[MCNotify] SQL Error when executing " + pathToScript + ". " + e.getMessage());
+                System.out.println("[ZoneX] SQL Error when executing " + pathToScript + ". " + e.getMessage());
             } finally
             {
                 if (st != null) {
