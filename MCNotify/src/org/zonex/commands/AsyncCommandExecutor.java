@@ -12,6 +12,10 @@ import org.zonex.communication.notifications.CommunicationProtocol;
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 
+/**
+ * Class to allow commands to be executed asynchronously.
+ * This allows database calls to not freeze the server while a command is trying to execute.
+ */
 public abstract class AsyncCommandExecutor implements CommandExecutor {
 
     public AsyncCommandExecutor(){

@@ -11,6 +11,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+/**
+ * A type of communication method. Allows players to recieve emails
+ */
 public class EmailNotification extends CommunicationMethod {
 
     private final String SMTP_SERVER = Configuration.EMAIL_SMTP_SERVER.getValue();
@@ -18,6 +21,7 @@ public class EmailNotification extends CommunicationMethod {
     private final String PASSWORD = Configuration.EMAIL_PASSWORD.getValue();
     private final String EMAIL_FROM = Configuration.EMAIL_FROM_ADDRESS.getValue();
     private final boolean isEnabled = Boolean.valueOf(Configuration.EMAIL_ENABLED.getValue());
+
 
     public EmailNotification(OfflinePlayer player, String targetEmail){
         super(player, CommunicationProtocol.EMAIL);
@@ -28,7 +32,10 @@ public class EmailNotification extends CommunicationMethod {
         super(player, CommunicationProtocol.EMAIL, isVerified, verificationCode, target);
     }
 
-
+    /**
+     * Sends an email to the player.
+     * @param message the message to send to the player.
+     */
     @Override
     public void executeProtocol(String message) {
         if(Boolean.valueOf(Configuration.EMAIL_ENABLED.getValue())) {

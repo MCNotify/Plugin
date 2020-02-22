@@ -2,6 +2,9 @@ package org.zonex.config;
 
 import org.zonex.ZoneX;
 
+/**
+ * An enumertaion of all configuration settings and their default values.
+ */
 public enum Configuration {
     /** Configuration **/
     SECRET_KEY("server.secret_key", randomAlphaNumeric(64)),
@@ -61,6 +64,7 @@ public enum Configuration {
     private final String yamlName;
     private final String defaultValue;
 
+
     Configuration(String name, String defaultValue){
         this.yamlName = name;
         this.defaultValue = defaultValue;
@@ -77,19 +81,34 @@ public enum Configuration {
         return builder.toString();
     }
 
-
+    /**
+     * Gets the value of the configuration
+     * @return the value of the configuration
+     */
     public String getValue(){
         return ZoneX.config.getConfigValue(this.yamlName);
     };
 
+    /**
+     * Gets the configuration path in the yaml file
+     * @return The yaml name for the configuration
+     */
     public String getYamlName(){
         return this.yamlName;
     }
 
+    /**
+     * Sets the configuration value
+     * @param value the value to set the configuration to
+     */
     public void setValue(String value){
         ZoneX.config.setConfigValue(this.yamlName, value);
     }
 
+    /**
+     * Gets the default value for the configuration
+     * @return the default value
+     */
     public String getDefaultValue(){
         return this.defaultValue;
     }

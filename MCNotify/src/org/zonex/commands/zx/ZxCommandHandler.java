@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 
+/**
+ * Handles commands with /zx
+ * These commands are administrative and general help information.
+ */
 public class ZxCommandHandler extends AbstractCommand {
 
     public ZxCommandHandler(){

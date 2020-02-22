@@ -6,12 +6,19 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.zonex.config.Configuration;
 
+/**
+ * Handles sending messages to discord
+ */
 public class DiscordSender {
 
     private DiscordSRV discordSrv;
     private boolean enabled;
 
+    /**
+     * Creates a new discord sender.
+     */
     public DiscordSender(){
+        // Checks if discord is configured
         if(Boolean.valueOf(Configuration.DISCORD_SRV_ENABLED.getValue())) {
             DiscordSRV discord = DiscordSRV.getPlugin();
             if (discord != null) {
@@ -24,6 +31,11 @@ public class DiscordSender {
         }
     }
 
+    /**
+     * Sends a discord message to the player
+     * @param target the player to send the discord message to
+     * @param message the discord message to send
+     */
     public void sendDiscordMessage(Player target, String message){
         if(this.enabled) {
             if(DiscordSRV.getPlugin().getAccountLinkManager() != null) {
@@ -37,6 +49,11 @@ public class DiscordSender {
         }
     }
 
+    /**
+     * Checks if the player has verified their discord
+     * @param player the player to check is verified
+     * @return if the player is verified
+     */
     public boolean playerIsVerified(OfflinePlayer player){
         if(this.enabled){
             if(DiscordSRV.getPlugin().getAccountLinkManager() != null) {
@@ -51,6 +68,11 @@ public class DiscordSender {
         return false;
     }
 
+    /**
+     * Gets the player's discord name
+     * @param player the player to get the discord name of
+     * @return the player's discord name
+     */
     public String getDiscordName(OfflinePlayer player){
         if(this.enabled){
             if(DiscordSRV.getPlugin().getAccountLinkManager() != null) {

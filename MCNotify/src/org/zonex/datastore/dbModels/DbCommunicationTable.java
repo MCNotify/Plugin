@@ -10,6 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Database storage for player communication methods
+ */
 public class DbCommunicationTable extends BaseCommunicationModel {
 
     private Connection connection;

@@ -20,10 +20,24 @@ import org.zonex.areas.Polygon;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * A multi-part command for creating an area.
+ */
 public class MultiPartOnAreaAddCommand extends MultiPartCommand {
 
+    /**
+     * The player's current polygon
+     */
     Polygon poly = new Polygon();
+
+    /**
+     * An array of selected locations.
+     */
     ArrayList<Location> selectedLocations = new ArrayList<>();
+
+    /**
+     * The name of the player's area.
+     */
     String areaName;
 
     public MultiPartOnAreaAddCommand(Player player, String areaName) {
@@ -31,8 +45,13 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         this.areaName = areaName;
     }
 
+    /**
+     * The finish event for the area creation mutlipart command.
+     * @param event the itemDrop event when the player drops the area creation tool.
+     */
     @Override
     public void onFinish(Event event) {
+        // Ensure that a shape with area was created.
         if(this.poly.getLength() >= 3){
 
             if(ZoneX.areaManager.addNewArea(new Area(player, this.poly, this.areaName, player.getWorld().getName()))){
@@ -47,6 +66,10 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         this.cleanup();
     }
 
+    /**
+     * Event that is triggered when a new point is selected in the player's area.
+     * @param event the PlaceBlock event that triggered the new point in the area
+     */
     @Override
     public void onUpdateEvent(Event event) {
         // Event will be a PlayerInteractEvent type
@@ -54,25 +77,34 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         Location location = placeEvent.getBlockPlaced().getLocation();
         this.poly.addPoint(new Point(location.getBlockX(), location.getBlockZ()));
 
-        // Show particles around the area that is selected.
+        // If the polygon is big enough, start to show particles around the selected area.
         if(poly.getLength() == 2) {
             RegisterCommands.particleManager.startAreaVeiwParticleThread(((BlockPlaceEvent) event).getPlayer(), poly);
         }
 
-
+        // Message the user the selected point
         ((BlockPlaceEvent) event).getPlayer().sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.GRAY + "Selected point: " + location.getBlockX() + ", " + location.getBlockZ());
 
+        // If the area is big enough, tell the user how to quit the creation of the area.
         if(poly.getLength() >= 3){
             if(poly.getLength() == 3) {
                 ((BlockPlaceEvent) event).getPlayer().sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.GRAY + "Drop the barrier when finished.");
             }
         } else {
+            // If the polygon is not big enough, tell the player how many more points they need to select.
             ((BlockPlaceEvent) event).getPlayer().sendMessage(ChatColor.GREEN + "[ZoneX] " + ChatColor.GRAY + "Polygon needs " + (3 - poly.getLength()) + " more points.");
         }
 
+        // Cancel placing the barrier item.
         ((BlockPlaceEvent) event).setCancelled(true);
     }
 
+    /**
+     * Checks if the specified event is an event that would update the multi-part command.
+     * This event checks for block place events with the iron block item that has the curse of binding.
+     * @param event the event to check
+     * @return if the event should progress the multi-part command.
+     */
     @Override
     public boolean checkUpdateEvent(Event event) {
 
@@ -96,6 +128,12 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         return true;
     }
 
+    /**
+     * Checks if the specified event is an event that would finish the multipart command.
+     * For this command, the finish event is dropping the iron block.
+     * @param event the event to check
+     * @return if the event is an event that would finish the multipart command
+     */
     @Override
     public boolean checkFinishEvent(Event event) {
         if(!(event instanceof PlayerDropItemEvent)){
@@ -121,6 +159,9 @@ public class MultiPartOnAreaAddCommand extends MultiPartCommand {
         return true;
     }
 
+    /**
+     * Stops the multi-part command and cleans up any started processes and data
+     */
     @Override
     public void cleanup() {
         RegisterCommands.particleManager.stopAreaViewParticleThread(player);

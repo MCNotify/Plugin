@@ -3,6 +3,9 @@ package org.zonex.subscriptions.subscriptionevents;
 import org.bukkit.entity.Player;
 import org.zonex.config.Permission;
 
+/**
+ * An enumeration of potential event types that the player can subscribe to watch.
+ */
 public enum Events {
     ON_PLAYER_MOVE("ON_PLAYER_MOVE", "playerEnter", Permission.WATCH_ZONE_ENTER, new String[] {"areaName"}, new String[] {"areaName"}, "Sends notifications when an unallowed player enters the area.", "Player enters {0}"),
     ON_PLAYER_JOIN("ON_PLAYER_JOIN", "login", Permission.WATCH_PLAYER_LOGIN, new String[] {"watchedPlayer"}, new String[] {"watchedPlayerName"}, "Sends a notification when the specified player joins the game.", "{0} joins server"),
@@ -36,30 +39,52 @@ public enum Events {
         this.playerFieldlyDescription = playerFriedlyDescription;
     }
 
+    /**
+     * Gets the name of the event type as a string
+     * @return The name of the event
+     */
     public String toString(){
         return this.eventName;
     }
 
+    /**
+     * Gets the name of the event that is recognized as a command
+     * @return The command name for the event type
+     */
     public String getCommandName(){
         return this.commandName;
     }
 
+    /**
+     * JSON keys that define additional information about the event
+     * @return An array of strings listing possible JSON keys for this event type.
+     */
     public String[] getJsonKeys(){
         return this.JsonKeys;
     }
 
+    /**
+     * Returns a list of player friendly attribute names
+     * @return An array of strings that are player friendly
+     */
     public String[] getPlayerFriendlyKeyNames(){
         return this.playerFriendlyKeyNames;
     }
 
+    /**
+     * The permission node required to watch this event.
+     * @return The permission required to watch this event.
+     */
     public Permission getPermissionNode(){
         return this.permissionNode;
     }
 
-    public boolean hasPermission(Player p){
-        return this.hasPermission(p);
-    }
 
+    /**
+     * Parses an event type from a command string.
+     * @param commandName the command string to parse the event from
+     * @return The event type of the command string. Null if no match.
+     */
     public static Events fromCommand(String commandName){
         for(Events e : Events.values()){
             if(e.getCommandName().toLowerCase().equals(commandName.toLowerCase())){
@@ -69,6 +94,11 @@ public enum Events {
         return null;
     }
 
+    /**
+     * Creates an event type from a string of the event name
+     * @param eventName the name of the event
+     * @return The event type of the string. Null if no match.
+     */
     public static Events fromString(String eventName){
         for(Events e : Events.values()){
             if(e.getCommandName().toLowerCase().equals(eventName.toLowerCase())){
@@ -78,10 +108,19 @@ public enum Events {
         return null;
     }
 
+    /**
+     * Gets a player friendly description of when this event type is triggered.
+     * @return A description of when the event is triggered
+     */
     public String getDescription(){
         return this.description;
     }
 
+    /**
+     * Gets a player friendly description of the watched event
+     * @param args Arguments to replace in the description
+     * @return A player friendly description of the event.
+     */
     public String getPlayerFieldlyDescription(String[] args){
         int counter = 0;
         String replacement = this.playerFieldlyDescription;

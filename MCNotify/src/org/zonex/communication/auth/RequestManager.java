@@ -10,6 +10,10 @@ import java.net.*;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Network request manager to send API requests.
+ * Not currently in use.
+ */
 public class RequestManager {
 
     private static final String USER_AGENT = "Mozilla/5.0";

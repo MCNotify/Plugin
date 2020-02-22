@@ -11,6 +11,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Database storage for player areas
+ */
 public class DbAreaTable extends BaseAreaModel {
 
     private Connection connection;

@@ -1,5 +1,8 @@
 package org.zonex.communication.notifications;
 
+/**
+ * An enumeration of all communication protocols
+ */
 public enum CommunicationProtocol {
 
     EMAIL("email"),

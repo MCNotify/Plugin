@@ -9,13 +9,26 @@ import org.json.simple.parser.ParseException;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * A polygon.
+ */
 public class Polygon {
 
+    /**
+     * A list of points
+     */
     private ArrayList<Point> points = new ArrayList<>();
 
+    /**
+     * Polygon constructor
+     */
     public Polygon(){
     }
 
+    /**
+     * Creates a polygon from a JSON string.
+     * @param polygonJson A JSON string representing a polygon
+     */
     public Polygon(String polygonJson){
         try {
             Object obj = new JSONParser().parse(polygonJson);
@@ -32,14 +45,19 @@ public class Polygon {
         }
     }
 
+    /**
+     * Gets the number of points in the polygon
+     * @return how many points are in the polygon
+     */
     public int getLength(){
         return this.points.size();
     }
 
     /**
+     * Checks if a point is contained within the polygon
      * https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon
      * @param test The point to test inside the polygon
-     * @return
+     * @return if the point is within the polygon.
      */
     public boolean contains(Point test) {
         int i;
@@ -56,19 +74,36 @@ public class Polygon {
         return result;
     }
 
+    /**
+     * Checks if a location is in the polygon
+     * @param location the location to check
+     * @return if the location is inside the polygon
+     */
     public boolean contains(Location location){
         Point testPoint = new Point(location.getBlockX(), location.getBlockZ());
         return this.contains(testPoint);
     }
 
+    /**
+     * Adds a point to the polygon
+     * @param point the point to add to the polygon
+     */
     public void addPoint(Point point){
         this.points.add(point);
     }
 
+    /**
+     * Gets a list of points within the polygon
+     * @return a list of points in the polygon
+     */
     public ArrayList<Point> getPoints(){
         return this.points;
     }
 
+    /**
+     * Converst the polygon to a json object.
+     * @return a json object representing the polygon object
+     */
     public JSONObject getJson(){
         JSONObject json = new JSONObject();
         JSONArray pointArray = new JSONArray();
@@ -82,6 +117,10 @@ public class Polygon {
         return json;
     }
 
+    /**
+     * Gets a player friendly representation of the polygon's points.
+     * @return a player friendly string of the polygon
+     */
     public String getPlayerFriendlyString(){
         String points = "";
         for(Point p : this.points){
@@ -91,6 +130,10 @@ public class Polygon {
         return points;
     }
 
+    /**
+     * Gets how much area the polygon covers
+     * @return the area taken up by the polygon
+     */
     public float getArea(){
 
         float yArea = 0;

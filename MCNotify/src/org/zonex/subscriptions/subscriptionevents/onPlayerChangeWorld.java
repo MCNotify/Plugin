@@ -8,6 +8,10 @@ import org.zonex.ZoneX;
 import org.zonex.subscriptions.Subscription;
 
 public class onPlayerChangeWorld implements Listener {
+    /**
+     * Checks teleport events to see if the event is being watched by a subscription. If it is, it triggers the event.
+     * @param teleportEvent The teleport event
+     */
     @EventHandler
     public void onPlayerChangeWorld(PlayerTeleportEvent teleportEvent){
         if(teleportEvent.getFrom().getWorld() != teleportEvent.getTo().getWorld()) {

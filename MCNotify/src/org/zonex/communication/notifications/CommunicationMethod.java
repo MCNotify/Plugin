@@ -12,6 +12,9 @@ import org.zonex.subscriptions.Subscription;
 import java.security.SecureRandom;
 import java.util.UUID;
 
+/**
+ * Base instance of a communication method
+ */
 public abstract class CommunicationMethod {
 
     String target;
@@ -20,6 +23,11 @@ public abstract class CommunicationMethod {
     String verificationCode = null;
     CommunicationProtocol protocol;
 
+    /**
+     * Constructor
+     * @param player the player to communicate with
+     * @param protocol the protocol the player wants to use
+     */
     public CommunicationMethod(OfflinePlayer player, CommunicationProtocol protocol){
         this.player = player;
         this.protocol = protocol;
@@ -34,6 +42,14 @@ public abstract class CommunicationMethod {
         this.verificationCode = sb.toString();
     }
 
+    /**
+     * Constructor for database loading
+     * @param player the player to communicate with
+     * @param protocol the protocol the player wants to communicate with
+     * @param isVerified if the player has verified this communication method
+     * @param verificationCode the player's verification code
+     * @param target the player's username/email/phonenumber/username/etc. to target with the communication protocol
+     */
     CommunicationMethod(OfflinePlayer player, CommunicationProtocol protocol, boolean isVerified, String verificationCode, String target){
         this.target = target;
         this.player = player;
@@ -42,33 +58,65 @@ public abstract class CommunicationMethod {
         this.verificationCode = verificationCode;
     }
 
+    /**
+     * Executes communication to the player through this communication protocol. Method should never be called directly.
+     * All communication protocols should be invoked from the CommunicationHandler.
+     * @param message the message to send
+     */
     public abstract void executeProtocol(String message);
 
+    /**
+     * Gets the verification code
+     * @return the player's verification code
+     */
     public String getVerificationCode(){
         return this.verificationCode;
     }
 
+    /**
+     * The protocol the player wants to use
+     * @return A communication protocol
+     */
     public CommunicationProtocol getProtocol(){
         return this.protocol;
     }
 
+    /**
+     * The target for the protocol
+     * @return the players email/phone/discord/etc. to target
+     */
     public String getTarget(){
         return this.target;
     }
 
+    /**
+     * Verifies the user
+     */
     public void verify(){
         this.isVerified = true;
     }
 
+    /**
+     * Gets the player using this communication method.
+     * @return
+     */
     public OfflinePlayer getPlayer(){
         return this.player;
     }
 
+    /**
+     * Checks if the player is verified
+     * @return if the player is verified.
+     */
     public boolean isVerified(){
         return this.isVerified;
     }
 
 
+    /**
+     * Serialize this object for flat file storage
+     * @return A JSON string for flat file storage.
+     */
     public String serialize(){
         JSONObject result = new JSONObject();
 
@@ -84,6 +132,12 @@ public abstract class CommunicationMethod {
         return result.toJSONString();
     }
 
+    /**
+     * Deserializes a string
+     * @param jsonString the JSON string of a communication method
+     * @return an instance of a CommunicationMethod object.
+     * @throws ParseException if the JSON cannot be parsed an exception is thrown.
+     */
     public static CommunicationMethod deserialize(String jsonString) throws ParseException {
 
         Object deserialized = new JSONParser().parse(jsonString);

@@ -24,19 +24,60 @@ import java.util.logging.Filter;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 
+/**
+ * Entry point for the plugin
+ */
 public class ZoneX extends JavaPlugin {
 
+    /**
+     * The plugin instance
+     */
     public static ZoneX plugin;
+
+    /**
+     * The authenticator for network authentication (when implemented)
+     */
     public static Authenticator auth;
+
+    /**
+     * ConfigurationManager that loads the user defined settings into the application. Allows retrieving the settings
+     * to ensure the application behaves according to the selected settings
+     */
     public static ConfigurationManager config;
+
+    /**
+     * Subscription manager to manage user notification subscriptions and to send out notifications to users
+     */
     public static SubscriptionManager subscriptionManager;
+
+    /**
+     * Area manager that managers a player's areas and area protection
+     */
     public static AreaManager areaManager;
+
+    /**
+     * Api module for networking (when implemented)
+     */
     public static RequestManager requestManager;
+
+    /**
+     * Datastore element for easy access to data without worrying about if the user is using local storage or database
+     */
     public static Datastore datastore;
+
+    /**
+     * Communication handler that handles sending out notifications to externally linked apps
+     */
     public static CommunicationHandler communicationManager;
 
+    /**
+     * Event listener
+     */
     public static EventRegistry eventRegistry;
 
+    /**
+     * OnEnable method that enables the plugin
+     */
     @Override
     public void onEnable(){
         plugin = this;
@@ -77,6 +118,7 @@ public class ZoneX extends JavaPlugin {
 
         new RegisterCommands();
 
+        // BStats tracking
         Metrics metrics = new Metrics(this);
         metrics.addCustomChart(new Metrics.SingleLineChart("zone", new Callable<Integer>() {
             @Override

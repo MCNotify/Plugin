@@ -8,8 +8,12 @@ import org.zonex.datastore.dbModels.DbSubscriptionTable;
 import java.sql.*;
 import java.util.Scanner;
 
+/**
+ * Jdbc database connector
+ */
 public class Database {
 
+    // Uses the configuration files settings when created.
     private String host = Configuration.DATABASE_HOST.getValue();
     private String port = Configuration.DATABASE_PORT.getValue();
     private String username = Configuration.DATABSE_USERNAME.getValue();
@@ -19,6 +23,9 @@ public class Database {
     private Connection connection;
     private boolean isConnected = false;
 
+    /**
+     * Creates a new database connection using configuration file parameters.
+     */
     public Database() {
         System.out.println("[ZoneX] Attempting to connect to database...");
         try {
@@ -48,6 +55,9 @@ public class Database {
         }
     }
 
+    /**
+     * Checks if any database migrations need to be applied. If migrations need to be applied it will apply them
+     */
     private void check_migrations(){
 
         // List of migration scripts.
@@ -92,10 +102,18 @@ public class Database {
         }
     }
 
+    /**
+     * Checks if the database connection was successfully connected
+     * @return if the database is connected
+     */
     public boolean isConnected(){
         return this.isConnected;
     }
 
+    /**
+     * Gets the database connection
+     * @return the database connection
+     */
     public Connection getConnection(){
         if(this.isConnected) {
             return connection;
@@ -104,6 +122,10 @@ public class Database {
         }
     }
 
+    /**
+     * Returns the area table
+     * @return the area table
+     */
     public DbAreaTable areaTable(){
         if(this.isConnected) {
             return new DbAreaTable(connection);
@@ -112,6 +134,10 @@ public class Database {
         }
     }
 
+    /**
+     * Returns the subscription table
+     * @return the subscription table
+     */
     public DbSubscriptionTable subscriptionTable(){
         if(this.isConnected) {
             return new DbSubscriptionTable(connection);
@@ -120,6 +146,10 @@ public class Database {
         }
     }
 
+    /**
+     * Returns the communication table
+     * @return the communication table
+     */
     public DbCommunicationTable communicationTable(){
         if(this.isConnected) {
             return new DbCommunicationTable(connection);
@@ -128,6 +158,10 @@ public class Database {
         }
     }
 
+    /**
+     * Executes an .sql script on the database. This method is used for migrations
+     * @param pathToScript The path to the script to execute
+     */
     private void runScript(String pathToScript){
         System.out.println("[ZoneX] Attempting to run " + pathToScript);
         Scanner s = null;

@@ -12,6 +12,10 @@ import java.awt.*;
 
 public class onBlockBreakEvent implements Listener {
 
+    /**
+     * Checks block break events to see if the event is being watched by a subscription. If it is, it triggers the event.
+     * @param breakEvent The block break event
+     */
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent breakEvent) {
         for(Subscription subscription : ZoneX.subscriptionManager.getSubscriptions(Events.ON_BLOCK_BREAK)){

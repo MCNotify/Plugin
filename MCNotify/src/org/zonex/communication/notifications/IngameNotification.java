@@ -6,6 +6,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.zonex.config.Configuration;
 
+/**
+ * A type of communication method. Handles in game notifications
+ */
 public class IngameNotification extends CommunicationMethod {
     public IngameNotification(OfflinePlayer player) {
         super(player, CommunicationProtocol.INGAME);
@@ -15,6 +18,10 @@ public class IngameNotification extends CommunicationMethod {
         super(player, CommunicationProtocol.EMAIL, isVerified, verificationCode, target);
     }
 
+    /**
+     * Sends an ingame notification
+     * @param message the message to send to the player
+     */
     @Override
     public void executeProtocol(String message) {
         if(Boolean.valueOf(Configuration.INGAME_NOTIFICATIONS_ENABLED.getValue())) {

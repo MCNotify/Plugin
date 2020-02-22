@@ -19,6 +19,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Flat file storage for player subscription events
+ */
 public class FileSubscriptionTable extends BaseSubscriptionModel {
 
     private ConfigurationSection configurationSection;

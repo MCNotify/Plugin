@@ -15,6 +15,10 @@ import java.util.ArrayList;
 
 public class onPlayerJoin implements Listener {
 
+    /**
+     * Checks login events to see if the event is being watched by a subscription. If it is, it triggers the event.
+     * @param loginEvent The login event
+     */
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent loginEvent){
         // Check subscriptions

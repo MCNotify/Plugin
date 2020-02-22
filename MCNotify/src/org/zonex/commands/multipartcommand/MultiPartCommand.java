@@ -5,6 +5,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.zonex.commands.RegisterCommands;
 
+/**
+ * Base multi-part command.
+ */
 public abstract class MultiPartCommand implements Listener {
 
     protected Player player;

@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Flat file storage for player areas
+ */
 public class FileAreaTable extends BaseAreaModel {
 
     private ConfigurationSection areaConfig;

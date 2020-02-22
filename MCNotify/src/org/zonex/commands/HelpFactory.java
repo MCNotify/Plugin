@@ -6,8 +6,15 @@ import org.bukkit.entity.Player;
 import org.zonex.areas.protection.Protection;
 import org.zonex.subscriptions.subscriptionevents.Events;
 
+/**
+ * Class to manage sending help pages.
+ */
 public class HelpFactory {
 
+    /**
+     * Sends a list of all avaliable commands to the player
+     * @param player the player to send commands to
+     */
     public void sendCommandList(CommandSender player){
         // TODO: Generate help pages
 
@@ -55,6 +62,10 @@ public class HelpFactory {
         player.sendMessage(ChatColor.GOLD + "/zone remove <areaName>");
     }
 
+    /**
+     * Sends the list of protection types to the specified player
+     * @param player the player to send the list of protection types to
+     */
     public void sendProtectionList(CommandSender player){
         player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   [MCNotify] ProtectionTypes   " + ChatColor.GOLD + "========");
 
@@ -63,6 +74,10 @@ public class HelpFactory {
         }
     }
 
+    /**
+     * Sends a list of event types to a palyer.
+     * @param player the player to send the list of events to.
+     */
     public void sendEventList(CommandSender player){
         player.sendMessage(ChatColor.GOLD + "========" + ChatColor.GREEN + "   [MCNotify] EventTypes   " + ChatColor.GOLD + "========");
 

@@ -12,6 +12,10 @@ import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Authenticator to verify a user's subscription level.
+ * Not currently in use.
+ */
 public class Authenticator {
 
     private int subscriptionLevel = 0;

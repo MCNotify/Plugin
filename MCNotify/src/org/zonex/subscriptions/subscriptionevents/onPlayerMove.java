@@ -12,6 +12,10 @@ import java.awt.*;
 
 public class onPlayerMove implements Listener {
 
+    /**
+     * Checks move events to see if the event is being watched by a subscription. If it is, it triggers the event.
+     * @param moveEvent The move event
+     */
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent moveEvent){
 

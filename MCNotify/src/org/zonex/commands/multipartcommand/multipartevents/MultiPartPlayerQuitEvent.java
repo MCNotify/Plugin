@@ -8,6 +8,9 @@ import org.zonex.ZoneX;
 import org.zonex.commands.RegisterCommands;
 import org.zonex.particles.ParticleManager;
 
+/**
+ * Handles player quit events to remove players from multi-part commands if they leave.
+ */
 public class MultiPartPlayerQuitEvent implements Listener {
 
     @EventHandler

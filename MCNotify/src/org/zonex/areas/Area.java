@@ -15,16 +15,56 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * A player's area
+ */
 public class Area {
 
+    /**
+     * The owner of the area
+     */
     private OfflinePlayer owner;
+
+    /**
+     * The area's polygon
+     */
     private Polygon polygon;
+
+    /**
+     * The name of the area
+     */
     private String areaName;
+
+    /**
+     * The id of the area
+     */
     private int areaId;
+
+    /**
+     * What world the area is in
+     */
     private String world;
+
+    /**
+     * A list of protections applied to the area
+     */
     private ArrayList<Protection> protections;
+
+    /**
+     * A list of whitelisted players to allow access to
+     */
     private ArrayList<OfflinePlayer> whitelist;
 
+    /**
+     * Loads an area from the database with an area id
+     * @param areaId the area id
+     * @param owner the area owner
+     * @param area the area's polygon
+     * @param areaName the name of the area
+     * @param world the world name
+     * @param protections the list of protections
+     * @param whitelist a list of whitelisted players
+     */
     public Area(int areaId, OfflinePlayer owner, Polygon area, String areaName, String world, ArrayList<Protection> protections, ArrayList<OfflinePlayer> whitelist){
         this.owner = owner;
         this.polygon = area;
@@ -35,6 +75,13 @@ public class Area {
         this.whitelist = whitelist;
     }
 
+    /**
+     * Creates a new area
+     * @param owner the area's owner
+     * @param area the polygon
+     * @param areaName the name of the area
+     * @param world the world name
+     */
     public Area(OfflinePlayer owner, Polygon area, String areaName, String world){
         this.owner = owner;
         this.polygon = area;
@@ -53,28 +100,57 @@ public class Area {
         }
     }
 
+    /**
+     * Get the area's owner
+     * @return the area owner
+     */
     public OfflinePlayer getOwner(){
         return this.owner;
     }
 
+    /**
+     * Gets the area's polygon
+     * @return the area's polygon
+     */
     public Polygon getPolygon(){
         return this.polygon;
     }
 
+    /**
+     * Gets the name of the area
+     * @return the name of the area
+     */
     public String getAreaName() {
         return areaName;
     }
 
+    /**
+     * Get the area id
+     * @return the id of the area
+     */
     public int getAreaId() {
         return areaId;
     }
 
+    /**
+     * Gets the name of the world
+     * @return the world name
+     */
     public String getWorld(){return world;}
 
+    /**
+     * Sets the area id
+     * @param areaId the areaid to set
+     */
     public void setAreaId(int areaId){
         this.areaId = areaId;
     }
 
+    /**
+     * Toggles a protection on the area.
+     * @param protection the protection to toggle
+     * @return if the protection was successfully saved
+     */
     public boolean toggleProtection(Protection protection){
         for(Protection p : this.protections){
             if(p == protection){
@@ -86,6 +162,11 @@ public class Area {
         return this.updateDatabase();
     }
 
+    /**
+     * Adds a player to the area's whitelist
+     * @param newPlayer the player to add to the whitelist
+     * @return if the whitelisted player was saved in storage
+     */
     public boolean addWhitelist(OfflinePlayer newPlayer){
         for(OfflinePlayer p : whitelist){
             if(p.getUniqueId().equals(newPlayer.getUniqueId())){
@@ -96,6 +177,11 @@ public class Area {
         return this.updateDatabase();
     }
 
+    /**
+     * Removes a player from the whitelist
+     * @param removePlayer the player to remove from the whitelist
+     * @return if the whitelisted player was saved in storage
+     */
     public boolean removeWhitelist(OfflinePlayer removePlayer){
         for(OfflinePlayer p : whitelist){
             if(p.getUniqueId().equals(removePlayer.getUniqueId())){
@@ -106,6 +192,10 @@ public class Area {
         return true;
     }
 
+    /**
+     * Gets the list of protections as a string
+     * @return a string representation of the protections
+     */
     public String getProtectionsAsString(){
         String protectionString = "";
         for(Protection p : this.protections){
@@ -114,6 +204,10 @@ public class Area {
         return protectionString;
     }
 
+    /**
+     * Gets a player friendly version of the protections
+     * @return a player friendly list of protections appled to their area
+     */
     public String getPlayerFriendlyProtectionString(){
         String protectionString = "";
         for(Protection p : this.protections){
@@ -128,6 +222,10 @@ public class Area {
 
     }
 
+    /**
+     * Gets a player friendly list of whitelisted users
+     * @return a player friendly whitelisted list
+     */
     public String getPlayerFriendlyWhitelistString(){
         String whitelist = "";
         for(OfflinePlayer p : this.whitelist){
@@ -141,6 +239,10 @@ public class Area {
         return whitelist;
     }
 
+    /**
+     * Gets the whitelisted players as a string
+     * @return a string of whitelisted players
+     */
     public String getWhitelistAsString(){
         String whitelist = "";
         for(OfflinePlayer p : this.whitelist){
@@ -149,6 +251,11 @@ public class Area {
         return whitelist;
     }
 
+    /**
+     * Checks if a player is allowed in the area's whitelist
+     * @param player the player to check permission for
+     * @return if the player is allowed in the area
+     */
     public boolean isAllowed(OfflinePlayer player){
         if(player.getUniqueId().equals(this.owner.getUniqueId())){
             return true;
@@ -162,6 +269,11 @@ public class Area {
         return false;
     }
 
+    /**
+     * Check if an area has the specified protection
+     * @param protection the protection to check
+     * @return if the area is protected by the specified protection
+     */
     public boolean hasProtection(Protection protection){
         for(Protection p : this.protections){
             if(p == protection){
@@ -171,12 +283,19 @@ public class Area {
         return false;
     }
 
+    /**
+     * Updates this area in the database
+     * @return if the area was saved in storage
+     */
     private boolean updateDatabase(){
         return ZoneX.datastore.areaTable().update(this);
     }
 
 
-
+    /**
+     * Serializes the area to save in flat file storage
+     * @return a JSON string of the area
+     */
     public String serialize() {
 
         JSONObject json = new JSONObject();
@@ -190,6 +309,12 @@ public class Area {
         return json.toJSONString();
     }
 
+    /**
+     * Parses a JSON string of an area into an Area object.
+     * @param serializedString the JSON string.
+     * @return the Area instance.
+     * @throws ParseException if the JSON was poorly formatted a ParseException is thrown.
+     */
     public static Area deserialize(String serializedString) throws ParseException {
 
         Object deserialized = new JSONParser().parse(serializedString);

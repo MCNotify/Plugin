@@ -5,6 +5,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.zonex.commands.RegisterCommands;
 
+/**
+ * Handles item drop events for multi-part commands.
+ */
 public class MultiPartItemSpawnEvent implements Listener {
 
     @EventHandler

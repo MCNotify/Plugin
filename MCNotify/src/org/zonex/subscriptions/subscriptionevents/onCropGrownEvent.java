@@ -14,6 +14,10 @@ import java.awt.*;
 
 public class onCropGrownEvent implements Listener {
 
+    /**
+     * Checks crop grow events to see if the event is being watched by a subscription. If it is, it triggers the event.
+     * @param growEvent The crop grow event
+     */
     @EventHandler
     public void onCropGrownEvent(BlockGrowEvent growEvent) {
         for (Subscription subscription : ZoneX.subscriptionManager.getSubscriptions(Events.ON_CROP_GROWN)) {

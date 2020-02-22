@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Flat file storage for player communication methods
+ */
 public class FileCommunicationTable extends BaseCommunicationModel {
 
     private ConfigurationSection configurationSection;

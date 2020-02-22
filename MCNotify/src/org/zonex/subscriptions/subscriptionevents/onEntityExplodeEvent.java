@@ -12,6 +12,10 @@ import java.awt.*;
 
 public class onEntityExplodeEvent implements Listener {
 
+    /**
+     * Checks explode events to see if the event is being watched by a subscription. If it is, it triggers the event.
+     * @param explodeEvent The explode event
+     */
     @EventHandler
     public void onEntityExplosionEvent(EntityExplodeEvent explodeEvent){
         for(Subscription subscription : ZoneX.subscriptionManager.getSubscriptions(Events.ON_BLOCK_EXPLODE)){

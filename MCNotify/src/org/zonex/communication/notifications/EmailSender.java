@@ -7,6 +7,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+/**
+ * Class to handle sending email.
+ */
 public class EmailSender {
 
     private final String SMTP_SERVER = Configuration.EMAIL_SMTP_SERVER.getValue();
@@ -19,6 +22,11 @@ public class EmailSender {
 
     }
 
+    /**
+     * Sends an email to the specified email
+     * @param target the email to send a message to
+     * @param notificationText The notification message
+     */
     public void sendEmail(String target, String notificationText) {
         //Get the session object
         Properties props = new Properties();

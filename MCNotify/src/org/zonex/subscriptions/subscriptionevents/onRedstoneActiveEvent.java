@@ -12,6 +12,10 @@ import java.awt.*;
 
 public class onRedstoneActiveEvent implements Listener {
 
+    /**
+     * Checks redstone events to see if the event is being watched by a subscription. If it is, it triggers the event.
+     * @param redstoneEvent The redstone event
+     */
     @EventHandler
     public void onRedstoneActiveEvent(BlockRedstoneEvent redstoneEvent){
         for(Subscription subscription : ZoneX.subscriptionManager.getSubscriptions(Events.ON_REDSTONE_ACTIVE)){

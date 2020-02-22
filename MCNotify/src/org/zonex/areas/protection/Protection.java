@@ -5,6 +5,9 @@ import org.zonex.config.Permission;
 
 import java.util.ArrayList;
 
+/**
+ * An enumeration of the protections that can be appled to an area.
+ */
 public enum Protection {
 
     PROTECT("Protect", "Players cannot place or destroy blocks", "protect", Configuration.AREA_DEFAULT_PROTECT, "Players cannot build or place blocks unless allowed", "Players can place and destroy blocks", Permission.PROTECTION_PROTECT),
@@ -37,30 +40,58 @@ public enum Protection {
         this.permissionNode = permissionString;
     }
 
+    /**
+     * Gets the name of the protection
+     * @return the protection name
+     */
     public String toString(){
         return this.name;
     }
 
+    /**
+     * Gets the name of the protection
+     * @return the protection name
+     */
     public String getName(){
         return this.name;
     }
 
+    /**
+     * Gets a description of the protection
+     * @return a description of the protection
+     */
     public String getDescription(){
         return this.description;
     }
 
+    /**
+     * Gets the command name of the protection
+     * @return the protection command name
+     */
     public String getCommand(){
         return this.command;
     }
 
+    /**
+     * Gets the default protection value for an area from the config
+     * @return
+     */
     public Configuration getDefaultConfig(){
         return this.defaultConfig;
     }
 
+    /**
+     * Gets the permission node for the protection
+     * @return the permission node for the protection
+     */
     public Permission getPermissionNode(){
         return this.permissionNode;
     }
 
+    /**
+     * Gets a list of the default protections for an area.
+     * @return A list of default area protections.
+     */
     public static ArrayList<Protection> getDefaultProtections(){
         ArrayList<Protection> protections = new ArrayList<>();
         for(Protection p : Protection.values()){
@@ -71,6 +102,11 @@ public enum Protection {
         return protections;
     }
 
+    /**
+     * Creates a list of protections from a string of protections
+     * @param protectionString String representation of a list of protections
+     * @return An array of protections that the string represented
+     */
     public static ArrayList<Protection> fromString(String protectionString){
         ArrayList<Protection> protections = new ArrayList<>();
         for(Protection p : Protection.values()){
@@ -81,6 +117,11 @@ public enum Protection {
         return protections;
     }
 
+    /**
+     * Gets a protection from the command name
+     * @param commandName the protection's command name
+     * @return A protection instance. Null if the command name is not found.
+     */
     public static Protection fromCommand(String commandName){
         for(Protection p : Protection.values()){
             if(commandName.toLowerCase().equals(p.command.toLowerCase())){
@@ -90,10 +131,18 @@ public enum Protection {
         return null;
     }
 
+    /**
+     * Gets the message to send to a player if the protection is enabled on their area
+     * @return a player firendly string of the protection applied.
+     */
     public String getEnabledMessage(){
         return this.enabledMessage;
     }
 
+    /**
+     * Gets the message to send to a player if the protection is disabled on their area
+     * @return a player friendly string of the protection applied.
+     */
     public String getDisabledMessage(){
         return this.disabledMessage;
     }

@@ -13,6 +13,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Database storage for player subscription events
+ */
 public class DbSubscriptionTable extends BaseSubscriptionModel {
 
     private Connection connection;

@@ -9,11 +9,19 @@ import org.zonex.subscriptions.subscriptionevents.*;
 
 import java.util.ArrayList;
 
+/**
+ * Registers events when the plugin loads.
+ * Moved to this class to de-clutter the enable method.
+ */
 public class EventRegistry {
 
     ArrayList<Listener> listeners = new ArrayList<>();
     JavaPlugin plugin;
 
+    /**
+     * Creates and registers events for the plugin.
+     * @param plugin the plugin to register events for.
+     */
     public EventRegistry(JavaPlugin plugin){
 
         this.plugin = plugin;
@@ -40,7 +48,10 @@ public class EventRegistry {
     }
 
 
-    // Allows other plugins to link their events to the notification system by simply linking their listeners!
+    /**
+     * Allows other plugins to link their events to the notification system by simply linking their listeners!
+     * @param newListener
+     */
     public void addEvent(Listener newListener){
         listeners.add(newListener);
         plugin.getServer().getPluginManager().registerEvents(newListener, plugin);

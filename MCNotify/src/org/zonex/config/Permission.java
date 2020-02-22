@@ -2,6 +2,9 @@ package org.zonex.config;
 
 import org.bukkit.entity.Player;
 
+/**
+ * An enumeration of permission nodes for the plugin
+ */
 public enum Permission {
     // General
     ADMIN("zx.admin.*"),
@@ -60,10 +63,19 @@ public enum Permission {
         this.permissionNode = perm;
     }
 
+    /**
+     * Returns the string representation of the permission node
+     * @return String representation of the permission node
+     */
     public String getPermissionNode(){
         return this.permissionNode;
     }
 
+    /**
+     * Determines if a player has permissions to access the node.
+     * @param p the player to check access for
+     * @return if the player has access to the permission node
+     */
     public boolean hasPermission(Player p){
         return p.hasPermission(this.permissionNode);
     }

@@ -8,6 +8,9 @@ import org.zonex.commands.zone.ZoneHandler;
 import org.zonex.commands.zx.ZxCommandHandler;
 import org.zonex.particles.ParticleManager;
 
+/**
+ * Registers commands. Used to de-clutter the onEnable main method.
+ */
 public class RegisterCommands {
 
     public RegisterCommands() {
@@ -17,7 +20,10 @@ public class RegisterCommands {
         new WatchCommandHandler();
     }
 
+    // Manages multi-part commands like building an area
     public static MultiPartCommandManager mutiPartManager = new MultiPartCommandManager();
+
+    // Manages particle systems
     public static ParticleManager particleManager = new ParticleManager();
 
 }
